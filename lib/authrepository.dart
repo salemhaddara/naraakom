@@ -17,4 +17,11 @@ class authrepository {
     print('Sending Successful');
     return '2345';
   }
+
+  static Future<bool> setNewPass(String pass) async {
+    print('Setting pass');
+    await Future.delayed(const Duration(seconds: 4));
+    print('pass setting Successful');
+    return true;
+  }
 }

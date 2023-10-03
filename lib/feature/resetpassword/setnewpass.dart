@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/authrepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
-import 'package:naraakom/core/widgets/text700normal.dart';
-
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/button.dart';
@@ -19,35 +19,24 @@ class setnewpass extends StatefulWidget {
 
 class _setnewpassState extends State<setnewpass> {
   String passwordcheck = '';
-
+  String passwordconfirmation = '';
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: white,
-      body:
-          // BlocProvider(
-          //   create: (context) => signupbloc(context.read<authrepository>()),
-          //   child:
-          SafeArea(
-              child: Directionality(
+      body: SafeArea(
+          child: Directionality(
         textDirection:
             defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Container(
             padding: const EdgeInsets.all(16),
-            child: Column(children: [
-              _topbar(size),
-              _setpassImage(size),
-              _newpass(size),
-              _passwordField(size),
-              _confirmpass(size),
-              _confirmpasswordField(size),
-              _spacer(40),
-              _submitnewpassButton(size)
-            ]),
+            child: Column(
+                children: [_topbar(size), _setpassImage(size), _form(size)]),
           ),
         ),
       )),
@@ -55,27 +44,37 @@ class _setnewpassState extends State<setnewpass> {
     );
   }
 
-  Widget _submitnewpassButton(Size size) {
-    // return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
-    return
-        // state.formstatus is formsubmitting
-        //     ? CircularProgressIndicator(
-        //         color: cyan,
-        //       )
-        //     :
-        button(
+  Widget _submitnewpassButton(Size size, BuildContext context) {
+    return button(
       text: language[defaultLang]['confirmpass'],
-      onTap: () {
-        // print(passwordcheck);
-        // if (phoneNumbercheck.isNotEmpty && passwordcheck.isNotEmpty) {
-        //   if (formKey.currentState!.validate()) {
-        //     context.read<loginbloc>().add((loginSubmitted()));
-        //   }
-        // }
+      onTap: () async {
+        if (formkey.currentState!.validate() && passwordcheck.isNotEmpty) {
+          bool check = await authrepository.setNewPass('password');
+          if (check) {
+            Navigator.pushReplacementNamed(context, homePageRoute);
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(showSnackbar('failed', size));
+          }
+        }
       },
       width: size.width,
     );
-    // });
+  }
+
+  _form(Size size) {
+    return Form(
+        key: formkey,
+        child: Column(
+          children: [
+            _newpass(size),
+            _passwordField(size),
+            _confirmpass(size),
+            _confirmpasswordField(size),
+            _spacer(40),
+            _submitnewpassButton(size, context)
+          ],
+        ));
   }
 
   Widget _spacer(double space) {
@@ -85,32 +84,20 @@ class _setnewpassState extends State<setnewpass> {
   }
 
   Widget _confirmpasswordField(Size size) {
-    // return BlocBuilder<loginbloc, loginstate>(
-    //   builder: (context, state) {
     return InputField(
       hint: language[defaultLang]['renternewpass'],
       isPassword: true,
       validator: (password) {
+        if (passwordconfirmation != passwordcheck) {
+          return language[defaultLang]['passdontmatch'];
+        }
         return null;
-
-        // context
-        //     .read<loginbloc>()
-        //     .add(loginPasswordrChanged(password: password));
-        // if (password!.isEmpty) {
-        //   return null;
-        // }
-        // if (!state.isValidPassword) {
-        //   return language[defaultLang]['passerror'];
-        // }
-        // return null;
       },
       initialState: true,
       onChanged: (text) {
-        passwordcheck = text!;
+        passwordconfirmation = text!;
       },
     );
-    // },
-    // );
   }
 
   Widget _confirmpass(Size size) {
@@ -126,32 +113,20 @@ class _setnewpassState extends State<setnewpass> {
   }
 
   Widget _passwordField(Size size) {
-    // return BlocBuilder<loginbloc, loginstate>(
-    //   builder: (context, state) {
     return InputField(
       hint: language[defaultLang]['enternewpass'],
       isPassword: true,
       validator: (password) {
+        if (passwordcheck.isNotEmpty && passwordcheck.length < 8) {
+          return language[defaultLang]['passerror'];
+        }
         return null;
-
-        // context
-        //     .read<loginbloc>()
-        //     .add(loginPasswordrChanged(password: password));
-        // if (password!.isEmpty) {
-        //   return null;
-        // }
-        // if (!state.isValidPassword) {
-        //   return language[defaultLang]['passerror'];
-        // }
-        // return null;
       },
       initialState: true,
       onChanged: (text) {
         passwordcheck = text!;
       },
     );
-    // },
-    // );
   }
 
   Widget _newpass(Size size) {

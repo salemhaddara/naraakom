@@ -7,13 +7,13 @@ class signinrichtext extends StatelessWidget {
   final String startText;
   final String clickableText;
   final VoidCallback onClick;
-
-  const signinrichtext({
-    super.key,
-    required this.startText,
-    required this.clickableText,
-    required this.onClick,
-  });
+  final double? fontsize;
+  const signinrichtext(
+      {super.key,
+      required this.startText,
+      required this.clickableText,
+      required this.onClick,
+      this.fontsize});
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +23,16 @@ class signinrichtext extends StatelessWidget {
           TextSpan(
             text: startText,
             style: GoogleFonts.nunito(
-                color: grey, fontWeight: FontWeight.w400, fontSize: 16),
+                color: grey,
+                fontWeight: FontWeight.w400,
+                fontSize: fontsize ?? 16),
           ),
           TextSpan(
             text: clickableText,
             style: GoogleFonts.nunito(
-                color: cyan, fontWeight: FontWeight.w400, fontSize: 16),
+                color: cyan,
+                fontWeight: FontWeight.w400,
+                fontSize: fontsize ?? 16),
             recognizer: TapGestureRecognizer()..onTap = onClick,
           ),
         ],

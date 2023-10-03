@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authrepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
-import 'package:naraakom/feature/chooseLang.dart/chooseLangScreen.dart';
+import 'package:naraakom/core/widgets/MyNavigationBar.dart';
+import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/login/login.dart';
+import 'package:naraakom/feature/notifications/notificationScreen.dart';
 import 'package:naraakom/feature/resetpassword/otpverification.dart';
 import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import 'package:naraakom/feature/signup/signup.dart';
@@ -23,7 +25,11 @@ void main() {
             create: (context) => authrepository(),
             child: const otpverification(),
           ),
-      setnewpassRoute: (context) => const setnewpass()
+      setnewpassRoute: (context) => const setnewpass(),
+      homePageRoute: (context) => MyNavigationBar(
+            index: 0,
+          ),
+      notificationsRoute: (context) => const notificationScreen()
     },
   ));
 }
