@@ -7,6 +7,7 @@ import 'package:naraakom/core/widgets/text700normal.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 
+// ignore: camel_case_types
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
 
@@ -14,6 +15,7 @@ class profileScreen extends StatefulWidget {
   State<profileScreen> createState() => _profileScreenState();
 }
 
+// ignore: camel_case_types
 class _profileScreenState extends State<profileScreen> {
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,9 @@ class _profileScreenState extends State<profileScreen> {
               SliverAppBar(
                 backgroundColor: cyan,
                 expandedHeight: size.height * 0.08,
+                centerTitle: false,
                 title: text700normal(
-                  text: 'My Account',
+                  text: language[defaultLang]['myaccount'],
                   color: white,
                   fontsize: 22,
                 ),
@@ -57,18 +60,22 @@ class _profileScreenState extends State<profileScreen> {
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
-                    _accountTitle('Personalization'),
-                    _accountTile(size, 'profile.svg', 'Profile', true, false),
-                    _accountTile(
-                        size, 'language.svg', 'Language', false, false),
-                    _accountTile(size, 'wallet.svg', 'Wallet', false, false),
-                    _accountTile(size, 'chats.svg', 'Chats', false, true),
-                    _accountTitle('About'),
-                    _accountTile(size, 'help.svg', 'Help Center', true, false),
-                    _accountTile(
-                        size, 'terms.svg', 'Terms of use', false, false),
-                    _accountTile(size, 'privacypolicy.svg', 'Privacy Policy',
-                        false, true),
+                    _accountTitle(language[defaultLang]['Personalization']),
+                    _accountTile(size, 'profile.svg',
+                        language[defaultLang]['Profile'], true, false),
+                    _accountTile(size, 'language.svg',
+                        language[defaultLang]['Language'], false, false),
+                    _accountTile(size, 'wallet.svg',
+                        language[defaultLang]['Wallet'], false, false),
+                    _accountTile(size, 'chats.svg',
+                        language[defaultLang]['Chats'], false, true),
+                    _accountTitle(language[defaultLang]['About']),
+                    _accountTile(size, 'help.svg',
+                        language[defaultLang]['Help Center'], true, false),
+                    _accountTile(size, 'terms.svg',
+                        language[defaultLang]['Terms of use'], false, false),
+                    _accountTile(size, 'privacypolicy.svg',
+                        language[defaultLang]['Privacy Policy'], false, true),
                     _logoutbutton(size)
                   ],
                 ),
@@ -97,7 +104,7 @@ class _profileScreenState extends State<profileScreen> {
         ),
         Expanded(
             child: text400normal(
-          text: 'Log out',
+          text: language[defaultLang]['logout'],
           color: lightblack,
           fontsize: 16,
         )),

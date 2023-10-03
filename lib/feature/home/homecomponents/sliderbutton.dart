@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 
+// ignore: must_be_immutable, camel_case_types
 class sliderbutton extends StatelessWidget {
   String? text = '';
   sliderbutton({super.key, this.text});
