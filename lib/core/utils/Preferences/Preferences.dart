@@ -17,4 +17,20 @@ class Preferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('language');
   }
+
+  static Future<bool> saveUserId(String userid) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('userid', userid);
+  }
+
+  static Future<String?> getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userid');
+  }
+
+  // ignore: non_constant_identifier_names
+  static Future<bool> UsedIdExist() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('userid');
+  }
 }

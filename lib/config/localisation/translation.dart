@@ -57,7 +57,8 @@ Map<String, dynamic> language = {
     'home': 'Home',
     'search': 'Search',
     'schedule': 'Schedule',
-    'account': 'Account'
+    'account': 'Account',
+    'booknow': 'Book Now'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -115,6 +116,7 @@ Map<String, dynamic> language = {
     'home': 'الصفحة الرئيسية',
     'search': 'بحث',
     'schedule': 'الجدول',
-    'account': 'الحساب'
+    'account': 'الحساب',
+    'booknow': 'احجز الآن'
   }
 };

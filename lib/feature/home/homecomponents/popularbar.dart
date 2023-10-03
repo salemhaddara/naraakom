@@ -25,7 +25,7 @@ class popularbar extends StatelessWidget {
             fontsize: 18,
           )),
           text400normal(
-            text: 'See All',
+            text: language[defaultLang]['seeall'],
             color: cyan,
             fontsize: 14,
           )

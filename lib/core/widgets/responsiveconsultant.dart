@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
+import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
@@ -9,8 +11,9 @@ import 'package:naraakom/feature/signup/signupcomponents/siginrichtext.dart';
 // ignore: camel_case_types, must_be_immutable
 class responiveconsultant extends StatefulWidget {
   bool islarge = false;
-
-  responiveconsultant({super.key, required this.islarge});
+  ConsultantModel consultant;
+  responiveconsultant(
+      {super.key, required this.islarge, required this.consultant});
 
   @override
   State<responiveconsultant> createState() => _responiveconsultantState();
@@ -61,7 +64,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
                             alignment: AlignmentDirectional.centerStart,
                             child: text600normal(
                                 align: TextAlign.start,
-                                text: 'Salem Haddara',
+                                text: widget.consultant.name,
                                 fontsize: 16,
                                 color: darkblack),
                           ),
@@ -72,7 +75,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
                             alignment: AlignmentDirectional.centerStart,
                             child: text400normal(
                                 align: TextAlign.start,
-                                text: 'Family Consultant',
+                                text: widget.consultant.category,
                                 fontsize: 14,
                                 color: darkblack),
                           ),
@@ -86,12 +89,13 @@ class _responiveconsultantState extends State<responiveconsultant> {
                                 SvgPicture.asset('assets/images/rating.svg'),
                                 text600normal(
                                     align: TextAlign.start,
-                                    text: ' 4.5 ',
+                                    text: ' ${widget.consultant.rating} ',
                                     fontsize: 12,
                                     color: darkblack),
                                 text400normal(
                                     align: TextAlign.start,
-                                    text: '(126 Visitors)',
+                                    text:
+                                        '(${widget.consultant.visitors} Visitors)',
                                     fontsize: 12,
                                     color: darkblack),
                               ],
@@ -131,7 +135,10 @@ class _responiveconsultantState extends State<responiveconsultant> {
   _button() {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: button(text: 'Book Now', width: double.infinity, onTap: () {}));
+        child: button(
+            text: language[defaultLang]['booknow'],
+            width: double.infinity,
+            onTap: () {}));
   }
 
   _row(String image, String text, bool isrichtext) {

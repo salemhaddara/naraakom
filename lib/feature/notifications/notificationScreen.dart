@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naraakom/core/utils/Models/NotificationModel.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
+import 'package:naraakom/feature/mainbloc/contentbloc.dart';
+import 'package:naraakom/feature/mainbloc/contentstate.dart';
 import 'package:naraakom/feature/notifications/notificationComponents/notificationContainer.dart';
 
 import '../../config/localisation/translation.dart';
@@ -26,11 +29,15 @@ class _notificationScreenState extends State<notificationScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     return Scaffold(
-        backgroundColor: white,
-        body: Directionality(
+      backgroundColor: white,
+      body: Directionality(
           textDirection:
               defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-          child: Container(
+          child:
+              //   BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+              // print(state.userdata!.email);
+              // return
+              Container(
             padding: EdgeInsets.only(
               top: size.height * .05,
             ),
@@ -59,8 +66,11 @@ class _notificationScreenState extends State<notificationScreen> {
                     }),
               )
             ]),
+          )
+          // ;
+          // }
           ),
-        ));
+    );
   }
 
   _earlierbar(Size size) {

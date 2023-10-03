@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/feature/signup/signupcomponents/acceptterms.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
@@ -80,7 +81,7 @@ class _signupState extends State<signup> {
             _passwordTitle(size),
             _passwordInputField(size),
             _acceptTermsTitle(size),
-            _signUpButton(size)
+            _signUpButton(size, context)
           ],
         ));
   }
@@ -178,10 +179,19 @@ class _signupState extends State<signup> {
         onClick: () {});
   }
 
-  Widget _signUpButton(Size size) {
+  Widget _signUpButton(Size size, BuildContext pagecontext) {
+    bool Navigated = false;
     return BlocBuilder<signupbloc, signupstate>(builder: (context, state) {
+      if (state.formstatus is signupsubmissionsuccess && !Navigated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(pagecontext).pop();
+        });
+        Navigated = true;
+        return Container();
+      }
       return state.formstatus is signupformsubmitting
           ? CircularProgressIndicator(
+              strokeWidth: 6,
               color: cyan,
             )
           : button(

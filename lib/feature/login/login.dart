@@ -51,7 +51,7 @@ class _loginState extends State<login> {
                   _SignInTitle(size),
                   _form(size),
                   _forgetPassword(size, context),
-                  _signinButton(size),
+                  _signinButton(size, context),
                   _donthaveaccount(size)
                 ],
               ),
@@ -182,16 +182,24 @@ class _loginState extends State<login> {
     );
   }
 
-  Widget _signinButton(Size size) {
+  Widget _signinButton(Size size, BuildContext pagecontext) {
+    bool Navigated = false;
     return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
+      if (state.formstatus is submissionsuccess && !Navigated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(pagecontext).pushReplacementNamed(homePageRoute);
+        });
+        Navigated = true;
+        return Container();
+      }
       return state.formstatus is formsubmitting
           ? CircularProgressIndicator(
               color: cyan,
+              strokeWidth: 6,
             )
           : button(
               text: language[defaultLang]['signin'],
               onTap: () {
-                print(passwordcheck);
                 if (phoneNumbercheck.isNotEmpty && passwordcheck.isNotEmpty) {
                   if (formKey.currentState!.validate()) {
                     context.read<loginbloc>().add((loginSubmitted()));
