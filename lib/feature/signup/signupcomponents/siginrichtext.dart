@@ -23,9 +23,10 @@ class signinrichtext extends StatelessWidget {
           TextSpan(
             text: startText,
             style: GoogleFonts.nunito(
-                color: grey,
-                fontWeight: FontWeight.w400,
-                fontSize: fontsize ?? 16),
+              color: grey,
+              fontWeight: FontWeight.w400,
+              fontSize: fontsize ?? 16,
+            ),
           ),
           TextSpan(
             text: clickableText,

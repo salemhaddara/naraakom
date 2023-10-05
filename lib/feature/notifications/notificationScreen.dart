@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,8 @@ import '../../config/theme/colors.dart';
 
 // ignore: camel_case_types
 class notificationScreen extends StatefulWidget {
-  const notificationScreen({super.key});
+  contentbloc mybloc;
+  notificationScreen({super.key, required this.mybloc});
 
   @override
   State<notificationScreen> createState() => _notificationScreenState();
@@ -22,55 +25,53 @@ class notificationScreen extends StatefulWidget {
 
 // ignore: camel_case_types
 class _notificationScreenState extends State<notificationScreen> {
-  List notifications = List.empty(growable: true);
+  List<NotificationModel> notifications = List.empty(growable: true);
+  late contentbloc mybloc;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-
+    mybloc = widget.mybloc;
     return Scaffold(
-      backgroundColor: white,
-      body: Directionality(
+        backgroundColor: white,
+        body: Directionality(
           textDirection:
               defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-          child:
-              //   BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
-              // print(state.userdata!.email);
-              // return
-              Container(
-            padding: EdgeInsets.only(
-              top: size.height * .05,
-            ),
-            child: Column(children: [
-              _topbar(size),
-              Expanded(
-                child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(0),
-                    itemCount: 8,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return _todaybar(size);
-                      }
-                      if (index == 3) {
-                        return _earlierbar(size);
-                      }
-                      return notificationContainer(
-                        notification: NotificationModel(
-                            senderName: 'Salem Haddara',
-                            notificationtext: 'accepted your appointment',
-                            notificationtime: '4:07 PM',
-                            senderprofileURL: '',
-                            isRead: false),
-                      );
-                    }),
-              )
-            ]),
-          )
-          // ;
-          // }
-          ),
-    );
+          child: BlocProvider.value(
+              value: mybloc,
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: size.height * .05,
+                ),
+                child: Column(children: [
+                  _topbar(size),
+                  Expanded(
+                    child: BlocBuilder<contentbloc, contentstate>(
+                        builder: ((context, state) {
+                      notifications.addAll(state.userdata!.notifications);
+                      //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
+                      return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.all(0),
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) {
+                            return notificationContainer(
+                              notification: NotificationModel(
+                                  senderName: notifications[index].senderName,
+                                  notificationtext:
+                                      notifications[index].notificationtext,
+                                  notificationtime:
+                                      notifications[index].notificationtime,
+                                  senderprofileURL:
+                                      notifications[index].senderprofileURL,
+                                  isRead: notifications[index].isRead),
+                            );
+                          });
+                    })),
+                  )
+                ]),
+              )),
+        ));
   }
 
   _earlierbar(Size size) {

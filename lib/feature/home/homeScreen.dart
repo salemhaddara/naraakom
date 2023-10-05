@@ -8,6 +8,7 @@ import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
 import 'package:naraakom/feature/home/homecomponents/autoslider.dart';
 import 'package:naraakom/feature/home/homecomponents/popularbar.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
@@ -19,6 +20,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/utils/Models/User.dart';
+import '../categoryViewer/CategoryViewer.dart';
 import '../mainbloc/contentevent.dart';
 import 'homecomponents/sliderbutton.dart';
 
@@ -71,7 +73,7 @@ class _homeScreenState extends State<homeScreen> {
                     ),
                   ),
                   flexibleSpace: FlexibleSpaceBar(
-                    background: _buildHomeTopBar(size),
+                    background: _buildHomeTopBar(size, context),
                   ),
                 ),
               ];
@@ -125,10 +127,35 @@ class _homeScreenState extends State<homeScreen> {
         consultants.addAll(state.consultants!.toList());
         return Column(
           children: [
-            responiveconsultant(islarge: false, consultant: consultants[0]),
+            responiveconsultant(
+              islarge: false,
+              consultant: consultants[0],
+              onClick: () {
+                Future.delayed(Duration.zero, () {
+                  PersistentNavBarNavigator.pushNewScreen(
+                    context,
+                    screen: consultantinfo(
+                      consultant: consultants[1],
+                    ),
+                    withNavBar: true,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                });
+              },
+            ),
             responiveconsultant(
               islarge: false,
               consultant: consultants[1],
+              onClick: () {
+                PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: consultantinfo(
+                    consultant: consultants[0],
+                  ),
+                  withNavBar: true,
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                );
+              },
             ),
           ],
         );
@@ -224,59 +251,83 @@ class _homeScreenState extends State<homeScreen> {
       child: Column(
         children: [
           _categoryRow(
-            size,
-            '${assetprefix}familyconsultant.svg',
-            language[defaultLang]['familyconsultant'],
-            '${assetprefix}professionalconsultant.svg',
-            language[defaultLang]['professionalconsultant'],
-            '${assetprefix}educationnalconsultant.svg',
-            language[defaultLang]['educationnalconsultant'],
-          ),
+              size,
+              '${assetprefix}familyconsultant.svg',
+              language[defaultLang]['familyconsultant'],
+              () {
+                _navigateWithCategory(language['en']['familyconsultant']);
+              },
+              '${assetprefix}professionalconsultant.svg',
+              language[defaultLang]['professionalconsultant'],
+              () {
+                _navigateWithCategory(language['en']['professionalconsultant']);
+              },
+              '${assetprefix}educationnalconsultant.svg',
+              language[defaultLang]['educationnalconsultant'],
+              () {
+                _navigateWithCategory(language['en']['educationnalconsultant']);
+              }),
           _categoryRow(
             size,
             '${assetprefix}behaviorconsultant.svg',
             language[defaultLang]['behaviorconsultant'],
+            () {
+              _navigateWithCategory(language['en']['behaviorconsultant']);
+            },
             '${assetprefix}psychologicalconsultant.svg',
             language[defaultLang]['psychologicalconsultant'],
+            () {
+              _navigateWithCategory(language['en']['psychologicalconsultant']);
+            },
             '${assetprefix}humandevelopment.svg',
             language[defaultLang]['humandevelopment'],
+            () {
+              _navigateWithCategory(language['en']['humandevelopment']);
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _categoryRow(Size size, image1, text1, image2, text2, image3, text3) {
+  Widget _categoryRow(Size size, image1, text1, Function onClick1, image2,
+      text2, Function onClick2, image3, text3, Function onClick3) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _categoryContainer(size, image1, text1),
-        _categoryContainer(size, image2, text2),
-        _categoryContainer(size, image3, text3)
+        _categoryContainer(size, image1, text1, onClick1),
+        _categoryContainer(size, image2, text2, onClick2),
+        _categoryContainer(size, image3, text3, onClick3)
       ],
     );
   }
 
-  Widget _categoryContainer(Size size, String image, String text) {
-    return Container(
-      width: ((size.width / 3) - 30),
-      height: ((size.width / 3) - 30),
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-          color: white,
-          border: Border.all(color: lightblack, width: 0.2),
-          borderRadius: const BorderRadius.all(Radius.circular(8))),
-      child: Column(children: [
-        Expanded(flex: 2, child: SvgPicture.asset(image)),
-        Expanded(
-            child: text700normal(
-          text: text,
-          fontsize: 12,
-          color: darkblack,
-          align: TextAlign.center,
-        ))
-      ]),
+  Widget _categoryContainer(
+      Size size, String image, String text, Function onClick) {
+    return GestureDetector(
+      onTap: () {
+        onClick();
+      },
+      child: Container(
+        width: ((size.width / 3) - 30),
+        height: ((size.width / 3) - 30),
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+            color: white,
+            border: Border.all(color: lightblack, width: 0.2),
+            borderRadius: const BorderRadius.all(Radius.circular(8))),
+        child: Column(children: [
+          Expanded(flex: 2, child: SvgPicture.asset(image)),
+          Expanded(
+              child: text700normal(
+            text: text,
+            fontsize: 12,
+            color: darkblack,
+            align: TextAlign.center,
+          ))
+        ]),
+      ),
     );
   }
 
@@ -289,7 +340,7 @@ class _homeScreenState extends State<homeScreen> {
     );
   }
 
-  Widget _buildHomeTopBar(Size size) {
+  Widget _buildHomeTopBar(Size size, BuildContext bloccontext) {
     return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
       if (state.requeststate is userDataRequest_SUCCESS) {
         userdata = ((state.requeststate as userDataRequest_SUCCESS).userdata);
@@ -376,7 +427,8 @@ class _homeScreenState extends State<homeScreen> {
                             onTap: () {
                               PersistentNavBarNavigator.pushNewScreen(
                                 context,
-                                screen: const notificationScreen(),
+                                screen: notificationScreen(
+                                    mybloc: BlocProvider.of(bloccontext)),
                                 withNavBar: false,
                                 pageTransitionAnimation:
                                     PageTransitionAnimation.cupertino,
@@ -421,6 +473,19 @@ class _homeScreenState extends State<homeScreen> {
             ],
           ),
         ),
+      );
+    });
+  }
+
+  _navigateWithCategory(String category) {
+    Future.delayed(Duration.zero, () {
+      PersistentNavBarNavigator.pushNewScreen(
+        context,
+        screen: categoryViewer(
+          category: category,
+        ),
+        withNavBar: true,
+        pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
     });
   }

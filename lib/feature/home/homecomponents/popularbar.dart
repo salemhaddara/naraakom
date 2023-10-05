@@ -3,6 +3,8 @@ import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/categoryViewer/CategoryViewer.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 // ignore: camel_case_types, must_be_immutable
 class popularbar extends StatelessWidget {
@@ -24,10 +26,22 @@ class popularbar extends StatelessWidget {
             text: language[defaultLang]['popularconusltant'],
             fontsize: 18,
           )),
-          text400normal(
-            text: language[defaultLang]['seeall'],
-            color: cyan,
-            fontsize: 14,
+          GestureDetector(
+            onTap: () {
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: categoryViewer(
+                  category: 'Family Consultant',
+                ),
+                withNavBar: true,
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+            },
+            child: text400normal(
+              text: language[defaultLang]['seeall'],
+              color: cyan,
+              fontsize: 14,
+            ),
           )
         ],
       ),

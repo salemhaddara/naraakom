@@ -34,6 +34,7 @@ class contentbloc extends Bloc<contentevent, contentstate> {
         emit(state.copyWith(requeststate: userDataRequest_IN_PROGRESS()));
         User user = await repo.getUserWithId('id');
         emit(state.copyWith(
+            userdata: user,
             requeststate: userDataRequest_SUCCESS(userdata: user)));
       } catch (e) {
         emit(state.copyWith(

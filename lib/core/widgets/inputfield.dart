@@ -10,15 +10,19 @@ class InputField extends StatefulWidget {
   final String hint;
   bool initialState = false;
   final String? Function(String?) validator;
+  Color? color;
   final Function(String?) onChanged;
-  InputField({
-    Key? key,
-    required this.isPassword,
-    required this.hint,
-    required this.initialState,
-    required this.validator,
-    required this.onChanged,
-  }) : super(key: key);
+  double? height;
+  InputField(
+      {Key? key,
+      required this.isPassword,
+      required this.hint,
+      required this.initialState,
+      required this.validator,
+      required this.onChanged,
+      this.height,
+      this.color})
+      : super(key: key);
 
   @override
   _InputFieldState createState() => _InputFieldState(initialState);
@@ -35,9 +39,10 @@ class _InputFieldState extends State<InputField> {
     return Stack(
       children: [
         Container(
-            height: 54,
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(13)))),
+            height: widget.height ?? 54,
+            decoration: BoxDecoration(
+                color: homebackgrey,
+                borderRadius: const BorderRadius.all(Radius.circular(13)))),
         Container(
           constraints: const BoxConstraints(minHeight: 54),
           child: TextFormField(
@@ -46,6 +51,7 @@ class _InputFieldState extends State<InputField> {
             },
             obscureText: isVisible,
             cursorColor: cyan,
+            maxLines: widget.height != null ? 4 : 1,
             validator: widget.validator,
             autovalidateMode: AutovalidateMode.always,
             style: GoogleFonts.nunitoSans(
@@ -59,7 +65,7 @@ class _InputFieldState extends State<InputField> {
                   : GoogleFonts.nunitoSans(color: Colors.red),
               hintText: widget.hint,
               filled: true,
-              fillColor: lightcyan,
+              fillColor: widget.color ?? lightcyan,
               errorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(13)),
                   borderSide: BorderSide(color: Colors.red)),

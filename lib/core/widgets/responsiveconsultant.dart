@@ -12,8 +12,12 @@ import 'package:naraakom/feature/signup/signupcomponents/siginrichtext.dart';
 class responiveconsultant extends StatefulWidget {
   bool islarge = false;
   ConsultantModel consultant;
+  Function onClick;
   responiveconsultant(
-      {super.key, required this.islarge, required this.consultant});
+      {super.key,
+      required this.islarge,
+      required this.consultant,
+      required this.onClick});
 
   @override
   State<responiveconsultant> createState() => _responiveconsultantState();
@@ -31,7 +35,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
         color: white,
         borderRadius: const BorderRadius.all(Radius.circular(13)),
         child: SizedBox(
-          height: widget.islarge ? 300 : 100,
+          height: widget.islarge ? 322 : 100,
           child: Column(children: [
             SizedBox(
               height: 100,
@@ -110,9 +114,14 @@ class _responiveconsultantState extends State<responiveconsultant> {
             ),
             if (widget.islarge)
               SizedBox(
-                height: 200,
+                height: 222,
                 child: Column(
                   children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 25),
+                      color: lightcyan,
+                      height: 2,
+                    ),
                     _row(
                         'specialist.svg',
                         'A consultant specializing in family counseling and improve relationships',
@@ -134,11 +143,13 @@ class _responiveconsultantState extends State<responiveconsultant> {
 
   _button() {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: button(
             text: language[defaultLang]['booknow'],
             width: double.infinity,
-            onTap: () {}));
+            onTap: () {
+              widget.onClick();
+            }));
   }
 
   _row(String image, String text, bool isrichtext) {

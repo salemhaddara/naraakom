@@ -14,6 +14,7 @@ class Repository {
         id: 'id3',
         consultation_rate: 250,
         visitors: 1000,
+        experience: 3,
         biography: 'later',
         specializations: [],
         bookings: []));
@@ -26,6 +27,7 @@ class Repository {
         consultation_rate: 250,
         visitors: 1000,
         biography: 'later',
+        experience: 5,
         specializations: [],
         bookings: []));
     return consultants;
@@ -44,7 +46,7 @@ class Repository {
               notificationtext: 'notificationtext',
               notificationtime: '10 AM',
               senderprofileURL: '',
-              isRead: true)
+              isRead: false)
         ]);
   }
 }

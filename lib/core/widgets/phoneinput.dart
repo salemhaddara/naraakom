@@ -11,7 +11,8 @@ import 'inputFormater.dart';
 // ignore: camel_case_types, must_be_immutable
 class phoneinput extends StatefulWidget {
   Function(PhoneNumber) onChanged;
-  phoneinput({super.key, required this.onChanged});
+  Color? color;
+  phoneinput({super.key, required this.onChanged, this.color});
 
   @override
   State<phoneinput> createState() => _phoneinputState();
@@ -25,7 +26,7 @@ class _phoneinputState extends State<phoneinput> {
         Container(
           height: 64,
           decoration: BoxDecoration(
-              color: lightcyan,
+              color: widget.color ?? lightcyan,
               borderRadius: const BorderRadius.all(Radius.circular(13))),
         ),
         IntlPhoneField(
@@ -54,7 +55,7 @@ class _phoneinputState extends State<phoneinput> {
                 borderSide: BorderSide(color: Colors.red)),
           ),
           initialCountryCode: 'QA',
-          disableLengthCheck: false,
+          disableLengthCheck: true,
           cursorColor: cyan,
           autovalidateMode: AutovalidateMode.always,
           style: GoogleFonts.nunitoSans(

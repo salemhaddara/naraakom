@@ -4,9 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/home/homeScreen.dart';
 import 'package:naraakom/feature/profile/profileScreen.dart';
+import 'package:naraakom/feature/search/searchScreen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/theme/colors.dart';
+import '../../feature/schedule/schedulescreen.dart';
 
 // ignore: must_be_immutable
 class MyNavigationBar extends StatefulWidget {
@@ -58,8 +60,8 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
   List<Widget> _buildScreens() {
     return [
       const homeScreen(),
-      const homeScreen(),
-      const homeScreen(),
+      const searchScreen(),
+      const schedulescreen(),
       const profileScreen(),
     ];
   }

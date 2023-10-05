@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/chats/conversationsScreen.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
@@ -61,21 +63,68 @@ class _profileScreenState extends State<profileScreen> {
                 delegate: SliverChildListDelegate(
                   [
                     _accountTitle(language[defaultLang]['Personalization']),
-                    _accountTile(size, 'profile.svg',
-                        language[defaultLang]['Profile'], true, false),
-                    _accountTile(size, 'language.svg',
-                        language[defaultLang]['Language'], false, false),
-                    _accountTile(size, 'wallet.svg',
-                        language[defaultLang]['Wallet'], false, false),
-                    _accountTile(size, 'chats.svg',
-                        language[defaultLang]['Chats'], false, true),
+                    _accountTile(
+                      size,
+                      'profile.svg',
+                      language[defaultLang]['Profile'],
+                      true,
+                      false,
+                      () {},
+                    ),
+                    _accountTile(
+                      size,
+                      'language.svg',
+                      language[defaultLang]['Language'],
+                      false,
+                      false,
+                      () {},
+                    ),
+                    _accountTile(
+                      size,
+                      'wallet.svg',
+                      language[defaultLang]['Wallet'],
+                      false,
+                      false,
+                      () {},
+                    ),
+                    _accountTile(
+                      size,
+                      'chats.svg',
+                      language[defaultLang]['Chats'],
+                      false,
+                      true,
+                      () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: const conversationsScreen(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
+                    ),
                     _accountTitle(language[defaultLang]['About']),
-                    _accountTile(size, 'help.svg',
-                        language[defaultLang]['Help Center'], true, false),
-                    _accountTile(size, 'terms.svg',
-                        language[defaultLang]['Terms of use'], false, false),
-                    _accountTile(size, 'privacypolicy.svg',
-                        language[defaultLang]['Privacy Policy'], false, true),
+                    _accountTile(
+                        size,
+                        'help.svg',
+                        language[defaultLang]['Help Center'],
+                        true,
+                        false,
+                        () {}),
+                    _accountTile(
+                        size,
+                        'terms.svg',
+                        language[defaultLang]['Terms of use'],
+                        false,
+                        false,
+                        () {}),
+                    _accountTile(
+                        size,
+                        'privacypolicy.svg',
+                        language[defaultLang]['Privacy Policy'],
+                        false,
+                        true,
+                        () {}),
                     _logoutbutton(size)
                   ],
                 ),
@@ -112,13 +161,8 @@ class _profileScreenState extends State<profileScreen> {
     );
   }
 
-  Widget _accountTile(
-    Size size,
-    String image,
-    String text,
-    bool radiustop,
-    bool radiusdown,
-  ) {
+  Widget _accountTile(Size size, String image, String text, bool radiustop,
+      bool radiusdown, Function onTap) {
     return Container(
       height: 54,
       width: size.width,
@@ -132,28 +176,33 @@ class _profileScreenState extends State<profileScreen> {
           )),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
       padding: const EdgeInsets.all(16),
-      child: Row(children: [
-        SvgPicture.asset('assets/images/$image'),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-            child: text400normal(
-          text: text,
-          color: lightblack,
-          fontsize: 16,
-        )),
-        SizedBox(
-          width: 32,
-          height: 32,
-          child: Transform.rotate(
-            angle: defaultLang == 'en' ? 3.14159265 : 0,
-            child: SvgPicture.asset(
-              'assets/images/back.svg',
+      child: GestureDetector(
+        onTap: () {
+          onTap();
+        },
+        child: Row(children: [
+          SvgPicture.asset('assets/images/$image'),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+              child: text400normal(
+            text: text,
+            color: lightblack,
+            fontsize: 16,
+          )),
+          SizedBox(
+            width: 32,
+            height: 32,
+            child: Transform.rotate(
+              angle: defaultLang == 'en' ? 3.14159265 : 0,
+              child: SvgPicture.asset(
+                'assets/images/back.svg',
+              ),
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

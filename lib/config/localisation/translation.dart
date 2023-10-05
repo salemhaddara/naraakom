@@ -58,7 +58,20 @@ Map<String, dynamic> language = {
     'search': 'Search',
     'schedule': 'Schedule',
     'account': 'Account',
-    'booknow': 'Book Now'
+    'booknow': 'Book Now',
+    'biography': 'Biography',
+    'specializations': 'Specializations',
+    'selectdate': 'Select Date',
+    'selecttime': 'Select Time',
+    'notice':
+        'We will connect you to the consultant at the date you chose, please make sure you are available at this time',
+    'reviews': 'Reviews',
+    'years': 'Years',
+    'visitors': 'Visitors',
+    'consultationprice': 'Consultation Price',
+    'consultantinfo': 'Consultation Info',
+    'bookappointment': 'Book Appointment',
+    'all': 'All',
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -117,6 +130,19 @@ Map<String, dynamic> language = {
     'search': 'بحث',
     'schedule': 'الجدول',
     'account': 'الحساب',
-    'booknow': 'احجز الآن'
+    'booknow': 'احجز الآن',
+    'biography': 'سيرة ذاتية',
+    'specializations': 'تخصصات',
+    'selectdate': 'اختر التاريخ',
+    'selecttime': 'اختر الوقت',
+    'notice':
+        'سنقوم بربطك بالمستشار في التاريخ الذي اخترته، يرجى التأكد من تواجدك في هذا الوقت',
+    'reviews': 'التقييمات',
+    'years': 'سنوات',
+    'visitors': 'زوار',
+    'consultationprice': 'سعر الاستشارة',
+    'consultantinfo': 'معلومات الاستشارة',
+    'bookappointment': 'حجز موعد',
+    'all': 'الكل',
   }
 };

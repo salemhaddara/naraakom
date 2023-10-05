@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/feature/signup/signupcomponents/acceptterms.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
@@ -124,6 +123,7 @@ class _signupState extends State<signup> {
     return InputField(
       hint: '',
       isPassword: false,
+      color: homebackgrey,
       validator: (name) {
         if (name!.isEmpty) {
           return null;
@@ -155,6 +155,7 @@ class _signupState extends State<signup> {
   Widget _emailInputField(Size size) {
     return InputField(
       hint: '',
+      color: homebackgrey,
       isPassword: false,
       validator: (email) {
         if (email!.isEmpty) {
