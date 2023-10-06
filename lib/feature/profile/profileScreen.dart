@@ -87,7 +87,7 @@ class _profileScreenState extends State<profileScreen> {
                       false,
                       () {},
                     ),
-                    _accountTile(
+                    _chatTile(
                       size,
                       'chats.svg',
                       language[defaultLang]['Chats'],
@@ -102,6 +102,7 @@ class _profileScreenState extends State<profileScreen> {
                               PageTransitionAnimation.cupertino,
                         );
                       },
+                      true,
                     ),
                     _accountTitle(language[defaultLang]['About']),
                     _accountTile(
@@ -158,6 +159,49 @@ class _profileScreenState extends State<profileScreen> {
           fontsize: 16,
         )),
       ]),
+    );
+  }
+
+  Widget _chatTile(Size size, String image, String text, bool radiustop,
+      bool radiusdown, Function onTap, bool withNotification) {
+    return Container(
+      height: 54,
+      width: size.width,
+      decoration: BoxDecoration(
+          color: white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(radiustop ? 10 : 0),
+            topRight: Radius.circular(radiustop ? 10 : 0),
+            bottomLeft: Radius.circular(radiustop ? 0 : 10),
+            bottomRight: Radius.circular(radiustop ? 0 : 10),
+          )),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+      padding: const EdgeInsets.all(16),
+      child: GestureDetector(
+        onTap: () {
+          onTap();
+        },
+        child: Row(children: [
+          SvgPicture.asset('assets/images/$image'),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+              child: text400normal(
+            text: text,
+            color: lightblack,
+            fontsize: 16,
+          )),
+          if (withNotification)
+            Container(
+                width: 24,
+                height: 24,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.red),
+                child: text400normal(text: '4', color: white, fontsize: 12)),
+        ]),
+      ),
     );
   }
 

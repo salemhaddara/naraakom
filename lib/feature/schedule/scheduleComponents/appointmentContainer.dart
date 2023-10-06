@@ -223,7 +223,8 @@ class _appointmentContainerState extends State<appointmentContainer> {
           child: Row(
             children: [
               SvgPicture.asset(
-                widget.schedule.status == 'confirmed'
+                widget.schedule.status == 'confirmed' ||
+                        widget.schedule.status == 'completed'
                     ? 'assets/images/confirmed.svg'
                     : 'assets/images/canceled.svg',
                 height: 8,

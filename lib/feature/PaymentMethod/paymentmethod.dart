@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/inputfield.dart';
@@ -66,7 +67,10 @@ class _PaymentMethodsBottomSheetState extends State<PaymentMethodsBottomSheet> {
                       topLeft: Radius.circular(14),
                       topRight: Radius.circular(14))),
               child: Row(children: [
-                text600normal(text: 'Add New Card', fontsize: 16, color: white),
+                text600normal(
+                    text: language[defaultLang]['addnewcard'],
+                    fontsize: 16,
+                    color: white),
                 const Spacer(),
                 GestureDetector(
                     onTap: () {
@@ -128,7 +132,10 @@ class PaymentMethodForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          text400normal(text: 'Card Number', color: darkblack, fontsize: 14),
+          text400normal(
+              text: language[defaultLang]['cardnumber'],
+              color: darkblack,
+              fontsize: 14),
           const SizedBox(height: 16),
           InputField(
             hint: '1234 5678 9101 1121',
@@ -188,10 +195,12 @@ class PaymentMethodForm extends StatelessWidget {
             alignment: AlignmentDirectional.bottomStart,
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: text400normal(
-                text: 'Card Holder Name', color: darkblack, fontsize: 14),
+                text: language[defaultLang]['cardholdername'],
+                color: darkblack,
+                fontsize: 14),
           ),
           InputField(
-            hint: 'Card Holder Name',
+            hint: '',
             isPassword: false,
             initialState: false,
             validator: (text) {
@@ -201,7 +210,7 @@ class PaymentMethodForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           button(
-              text: 'Add New Card',
+              text: language[defaultLang]['addnewcard'],
               width: MediaQuery.of(context).size.width,
               onTap: () {}),
           const SizedBox(height: 32),
@@ -227,7 +236,9 @@ class PayPalPaymentMethodForm extends StatelessWidget {
             alignment: AlignmentDirectional.bottomStart,
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: text400normal(
-                text: 'Paypal Account Email', color: darkblack, fontsize: 14),
+                text: language[defaultLang]['paypalaccountemail'],
+                color: darkblack,
+                fontsize: 14),
           ),
           InputField(
             hint: '',
@@ -240,7 +251,7 @@ class PayPalPaymentMethodForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           button(
-              text: 'Pay With PayPal ',
+              text: language[defaultLang]['paywithpaypal'],
               width: MediaQuery.of(context).size.width,
               onTap: () {}),
           const SizedBox(height: 32),

@@ -1,3 +1,6 @@
+import 'package:naraakom/core/utils/Models/Schedule.dart';
+import 'package:naraakom/core/utils/Models/User.dart';
+
 class authrepository {
   Future<String> login() async {
     print('attempt login');
@@ -20,10 +23,16 @@ class authrepository {
     return '2345';
   }
 
-  static Future<bool> setNewPass(String pass) async {
+  Future<User> setNewPass(String pass, String userId) async {
+    //THE user id is getten from the otp verification so we can modify the user from it
     print('Setting pass');
     await Future.delayed(const Duration(seconds: 4));
     print('pass setting Successful');
-    return true;
+    return User(
+        username: 'username',
+        id: 'id',
+        email: 'email',
+        password: 'password',
+        notifications: []);
   }
 }

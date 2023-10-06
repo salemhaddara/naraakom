@@ -18,3 +18,15 @@ class otpcodeprovidedChanged extends otpevent {
 class otpSubmitted extends otpevent {}
 
 class otpVerifyClicked extends otpevent {}
+
+class newPassSubmitted extends otpevent {}
+
+class userIdChanged extends otpevent {
+  final String? userId;
+  userIdChanged({required this.userId});
+}
+
+class newPassChanged extends otpevent {
+  final String? newPass;
+  newPassChanged({required this.newPass});
+}

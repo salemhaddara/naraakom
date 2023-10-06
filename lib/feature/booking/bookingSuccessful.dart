@@ -5,12 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
+import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/schedule/schedulescreen.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
@@ -71,16 +70,18 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                   Container(
                       margin: const EdgeInsets.only(top: 16),
                       child: text700normal(
-                          text: 'Thank You', fontsize: 24, color: cyan)),
+                          text: language[defaultLang]['thankyou'],
+                          fontsize: 24,
+                          color: cyan)),
                   Container(
                       margin: const EdgeInsets.only(top: 16, bottom: 16),
                       child: text600normal(
-                          text: 'Your Appointment Created',
+                          text: language[defaultLang]['yourappointmentcreated'],
                           fontsize: 18,
                           color: darkblack)),
                 ]),
                 _spacer(5, size),
-                _title('Booking Informations', size),
+                _title(language[defaultLang]['bookinginformations'], size),
                 responiveconsultant(
                     islarge: false,
                     consultant: widget.consultant,
@@ -98,15 +99,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
     return Container(
         margin: const EdgeInsets.all(16),
         child: button(
-            text: 'My Schedule',
+            text: language[defaultLang]['myschedule'],
             width: size.width,
             onTap: () {
-              PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: const schedulescreen(),
-                withNavBar: true,
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
+              Navigator.pushReplacementNamed(context, homePageRoute);
             }));
   }
 
@@ -158,7 +154,9 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                     children: [
                       Row(children: [
                         text400normal(
-                            text: 'Price', fontsize: 16, color: darkblack),
+                            text: language[defaultLang]['price'],
+                            fontsize: 16,
+                            color: darkblack),
                         const Spacer()
                       ]),
                       const Spacer(),
@@ -200,7 +198,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                           Row(
                             children: [
                               text400normal(
-                                  text: 'Date & Time',
+                                  text: language[defaultLang]['datetime'],
                                   fontsize: 16,
                                   color: darkblack),
                               const Spacer()
@@ -256,7 +254,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                       Row(
                         children: [
                           text400normal(
-                              text: 'Appointment Type',
+                              text: language[defaultLang]['appointmenttype'],
                               fontsize: 16,
                               color: darkblack),
                           const Spacer()

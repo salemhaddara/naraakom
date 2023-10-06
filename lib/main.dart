@@ -7,7 +7,7 @@ import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/resetpassword/otpverification.dart';
-import 'package:naraakom/feature/resetpassword/setnewpass.dart';
+import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
 import 'package:naraakom/feature/signup/signup.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 
@@ -25,12 +25,15 @@ void main() {
             create: (context) => authrepository(),
             child: const otpverification(),
           ),
-      setnewpassRoute: (context) => const setnewpass(),
-      homePageRoute: (context) => RepositoryProvider(
-          create: (context) => Repository(),
-          child: MyNavigationBar(
-            index: 0,
-          )),
+      homePageRoute: (context) => MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider(create: (context) => Repository()),
+              RepositoryProvider(create: (context) => scheduleRepo()),
+            ],
+            child: MyNavigationBar(
+              index: 0,
+            ),
+          ),
     },
   ));
 }

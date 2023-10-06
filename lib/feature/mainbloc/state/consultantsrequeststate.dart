@@ -28,3 +28,17 @@ class userDataRequest_FAILED extends consultantsrequeststate {
   Exception exception;
   userDataRequest_FAILED({required this.exception});
 }
+
+class CategorySelectedState extends consultantsrequeststate {
+  final String selectedCategory;
+  final List<ConsultantModel> filteredList;
+
+  CategorySelectedState(this.selectedCategory, this.filteredList);
+}
+
+class SearchState extends consultantsrequeststate {
+  final String text;
+  final List<ConsultantModel> searchedconsultants;
+
+  SearchState(this.text, this.searchedconsultants);
+}

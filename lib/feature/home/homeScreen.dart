@@ -49,9 +49,11 @@ class _homeScreenState extends State<homeScreen> {
     ));
     return Scaffold(
       body: BlocProvider<contentbloc>(
-        create: (context) => contentbloc(context.read<Repository>())
-          ..add(ConsultantsRequested())
-          ..add(UserDataRequested()),
+        create: (context) {
+          return contentbloc(context.read<Repository>())
+            ..add(ConsultantsRequested())
+            ..add(UserDataRequested());
+        },
         child: Directionality(
           textDirection:
               defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
@@ -130,14 +132,15 @@ class _homeScreenState extends State<homeScreen> {
             responiveconsultant(
               islarge: false,
               consultant: consultants[0],
-              onClick: () {
+              onClick: () {},
+              onclicknotlarge: () {
                 Future.delayed(Duration.zero, () {
                   PersistentNavBarNavigator.pushNewScreen(
                     context,
                     screen: consultantinfo(
-                      consultant: consultants[1],
+                      consultant: consultants[0],
                     ),
-                    withNavBar: true,
+                    withNavBar: false,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
                 });
@@ -146,13 +149,14 @@ class _homeScreenState extends State<homeScreen> {
             responiveconsultant(
               islarge: false,
               consultant: consultants[1],
-              onClick: () {
+              onClick: () {},
+              onclicknotlarge: () {
                 PersistentNavBarNavigator.pushNewScreen(
                   context,
                   screen: consultantinfo(
-                    consultant: consultants[0],
+                    consultant: consultants[1],
                   ),
-                  withNavBar: true,
+                  withNavBar: false,
                   pageTransitionAnimation: PageTransitionAnimation.cupertino,
                 );
               },
@@ -192,25 +196,34 @@ class _homeScreenState extends State<homeScreen> {
                     Positioned(
                       top: 20,
                       left: 20,
-                      child: SizedBox(
+                      child: Container(
+                        alignment: AlignmentDirectional.topStart,
                         height: constraints.maxHeight / 2,
-                        width: constraints.maxWidth / 2 + 50,
+                        width: constraints.maxWidth / 2,
                         child: Column(
                           children: [
-                            Expanded(
-                              child: text700normal(
-                                text: 'The Best Consultant for your Life',
-                                fontsize: 16,
-                                color: darkblack,
-                              ),
+                            Row(
+                              children: [
+                                text700normal(
+                                  text: language[defaultLang]
+                                      ['thebestConsultant'],
+                                  fontsize: 16,
+                                  color: darkblack,
+                                ),
+                                const Spacer()
+                              ],
                             ),
-                            Expanded(
-                              child: text400normal(
-                                text: 'To follow up via a voice or video call',
-                                fontsize: 14,
-                                color: darkblack,
-                                align: TextAlign.start,
-                              ),
+                            Row(
+                              children: [
+                                text400normal(
+                                  text: language[defaultLang]
+                                      ['followwithvoiceandvideo'],
+                                  fontsize: 14,
+                                  color: darkblack,
+                                  align: TextAlign.start,
+                                ),
+                                const Spacer()
+                              ],
                             ),
                           ],
                         ),
@@ -222,7 +235,7 @@ class _homeScreenState extends State<homeScreen> {
                       bottom: 20,
                       left: 20,
                       child: sliderbutton(
-                        text: 'Book Now',
+                        text: language[defaultLang]['booknow'],
                       ),
                     ),
                   ],
@@ -255,34 +268,40 @@ class _homeScreenState extends State<homeScreen> {
               '${assetprefix}familyconsultant.svg',
               language[defaultLang]['familyconsultant'],
               () {
-                _navigateWithCategory(language['en']['familyconsultant']);
+                _navigateWithCategory(language['en']['familyconsultant'],
+                    language[defaultLang]['familyconsultant']);
               },
               '${assetprefix}professionalconsultant.svg',
               language[defaultLang]['professionalconsultant'],
               () {
-                _navigateWithCategory(language['en']['professionalconsultant']);
+                _navigateWithCategory(language['en']['professionalconsultant'],
+                    language[defaultLang]['professionalconsultant']);
               },
               '${assetprefix}educationnalconsultant.svg',
               language[defaultLang]['educationnalconsultant'],
               () {
-                _navigateWithCategory(language['en']['educationnalconsultant']);
+                _navigateWithCategory(language['en']['educationnalconsultant'],
+                    language[defaultLang]['educationnalconsultant']);
               }),
           _categoryRow(
             size,
             '${assetprefix}behaviorconsultant.svg',
             language[defaultLang]['behaviorconsultant'],
             () {
-              _navigateWithCategory(language['en']['behaviorconsultant']);
+              _navigateWithCategory(language['en']['behaviorconsultant'],
+                  language[defaultLang]['behaviorconsultant']);
             },
             '${assetprefix}psychologicalconsultant.svg',
             language[defaultLang]['psychologicalconsultant'],
             () {
-              _navigateWithCategory(language['en']['psychologicalconsultant']);
+              _navigateWithCategory(language['en']['psychologicalconsultant'],
+                  language[defaultLang]['psychologicalconsultant']);
             },
             '${assetprefix}humandevelopment.svg',
             language[defaultLang]['humandevelopment'],
             () {
-              _navigateWithCategory(language['en']['humandevelopment']);
+              _navigateWithCategory(language['en']['humandevelopment'],
+                  language[defaultLang]['humandevelopment']);
             },
           ),
         ],
@@ -477,12 +496,13 @@ class _homeScreenState extends State<homeScreen> {
     });
   }
 
-  _navigateWithCategory(String category) {
+  _navigateWithCategory(String category, String title) {
     Future.delayed(Duration.zero, () {
       PersistentNavBarNavigator.pushNewScreen(
         context,
         screen: categoryViewer(
           category: category,
+          title: title,
         ),
         withNavBar: true,
         pageTransitionAnimation: PageTransitionAnimation.cupertino,

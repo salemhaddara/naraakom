@@ -90,7 +90,7 @@ class _bookingScreenState extends State<bookingScreen> {
                     color: cyan,
                   ),
                   text400normal(
-                      text: 'Add New Payment Method',
+                      text: language[defaultLang]['addnewpaymentmethod'],
                       color: cyan,
                       fontsize: 16),
                 ]),
@@ -99,17 +99,17 @@ class _bookingScreenState extends State<bookingScreen> {
             height: 150,
           ),
           button(
-              text: "Complete Payment",
+              text: language[defaultLang]['completepayment'],
               width: size.width,
               onTap: () {
                 PersistentNavBarNavigator.pushNewScreen(
                   context,
                   screen: bookingSuccessful(
                     consultant: widget.consultantinfos,
-                    dateAndTime: '24/7/2023 | 5:00 PM',
+                    dateAndTime: language[defaultLang]['datetime'],
                     appointmentType: calltype ?? '',
                   ),
-                  withNavBar: true,
+                  withNavBar: false,
                   pageTransitionAnimation: PageTransitionAnimation.cupertino,
                 );
               })
@@ -148,7 +148,7 @@ class _bookingScreenState extends State<bookingScreen> {
               ),
             const Spacer(),
             text400normal(
-                text: 'Call Type',
+                text: language[defaultLang]['calltype'],
                 fontsize: 14,
                 color: index >= 0 ? cyan : grey)
           ],
@@ -181,7 +181,7 @@ class _bookingScreenState extends State<bookingScreen> {
               ),
             const Spacer(),
             text400normal(
-                text: 'Contact Info',
+                text: language[defaultLang]['contactinfo'],
                 fontsize: 14,
                 color: index >= 1 ? cyan : grey)
           ],
@@ -214,7 +214,7 @@ class _bookingScreenState extends State<bookingScreen> {
               ),
             const Spacer(),
             text400normal(
-              text: 'Case',
+              text: language[defaultLang]['case'],
               fontsize: 14,
               color: index >= 2 ? cyan : grey,
             )
@@ -248,7 +248,7 @@ class _bookingScreenState extends State<bookingScreen> {
               ),
             const Spacer(),
             text400normal(
-              text: 'Payment',
+              text: language[defaultLang]['payment'],
               fontsize: 14,
               color: index >= 3 ? cyan : grey,
             )
@@ -281,7 +281,9 @@ class _bookingScreenState extends State<bookingScreen> {
       width: size.width,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: text400normal(
-          text: 'Additional information (Optional)', color: grey, fontsize: 14),
+          text: language[defaultLang]['additionalinformation'],
+          color: grey,
+          fontsize: 14),
     );
   }
 
@@ -290,7 +292,7 @@ class _bookingScreenState extends State<bookingScreen> {
       width: size.width,
       margin: const EdgeInsets.only(top: 10, bottom: 10),
       child: text400normal(
-        text: language[defaultLang]['age'] ?? 'Age',
+        text: language[defaultLang]['age'],
         color: lightblack,
         fontsize: 14,
       ),
@@ -318,7 +320,7 @@ class _bookingScreenState extends State<bookingScreen> {
       width: size.width,
       margin: const EdgeInsets.only(top: 10, bottom: 10),
       child: text400normal(
-        text: language[defaultLang]['case'] ?? 'Case',
+        text: language[defaultLang]['case'],
         color: lightblack,
         fontsize: 14,
       ),
@@ -346,10 +348,11 @@ class _bookingScreenState extends State<bookingScreen> {
     return Container(
         margin: const EdgeInsets.only(top: 25, bottom: 16),
         child: button(
-            text: 'Proceed to Payment',
+            text: language[defaultLang]['proceedtopayment'],
             width: size.width,
             onTap: () {
               shemaIndex = 3;
+              setState(() {});
             }));
   }
 
@@ -357,10 +360,14 @@ class _bookingScreenState extends State<bookingScreen> {
     return GestureDetector(
       onTap: () {
         shemaIndex = 1;
+        setState(() {});
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16),
-          child: text600normal(text: 'Cancel', color: cyan, fontsize: 16)),
+          child: text600normal(
+              text: language[defaultLang]['cancel'],
+              color: cyan,
+              fontsize: 16)),
     );
   }
 
@@ -416,10 +423,11 @@ class _bookingScreenState extends State<bookingScreen> {
     return Container(
         margin: const EdgeInsets.only(top: 25, bottom: 16),
         child: button(
-            text: 'Continue',
+            text: language[defaultLang]['continue'],
             width: size.width,
             onTap: () {
               shemaIndex = 2;
+              setState(() {});
             }));
   }
 
@@ -427,10 +435,14 @@ class _bookingScreenState extends State<bookingScreen> {
     return GestureDetector(
       onTap: () {
         shemaIndex = 0;
+        setState(() {});
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16),
-          child: text600normal(text: 'Cancel', color: cyan, fontsize: 16)),
+          child: text600normal(
+              text: language[defaultLang]['cancel'],
+              color: cyan,
+              fontsize: 16)),
     );
   }
 
@@ -477,7 +489,7 @@ class _bookingScreenState extends State<bookingScreen> {
 
         return null;
       },
-      initialState: true,
+      initialState: false,
       onChanged: (text) {},
     );
   }
@@ -500,26 +512,29 @@ class _bookingScreenState extends State<bookingScreen> {
       margin: const EdgeInsets.all(16),
       child: Row(
         children: [
-          _callTypeStepCallItem(size, 'Video Call', 'videocall', () {
+          _callTypeStepCallItem(
+              size, language[defaultLang]['videocall'], 'videocall', () {
             calltype = 'videocall';
-            // send to bloc the index for changing this page state
             shemaIndex = 1;
+            setState(() {});
           }),
           const SizedBox(
             width: 10,
           ),
-          _callTypeStepCallItem(size, 'Voice Call', 'voicecall', () {
+          _callTypeStepCallItem(
+              size, language[defaultLang]['voicecall'], 'voicecall', () {
             calltype = 'voicecall';
-            //send to bloc the index for changing this page state
             shemaIndex = 1;
+            setState(() {});
           }),
           const SizedBox(
             width: 10,
           ),
-          _callTypeStepCallItem(size, 'Chat', 'chatcall', () {
+          _callTypeStepCallItem(size, language[defaultLang]['chat'], 'chatcall',
+              () {
             calltype = 'chatcall';
-            //send to bloc the index for changing this page state
             shemaIndex = 1;
+            setState(() {});
           }),
         ],
       ),
@@ -534,7 +549,7 @@ class _bookingScreenState extends State<bookingScreen> {
       child: Container(
         margin: const EdgeInsets.all(16),
         child: text400normal(
-          text: 'Pick Another Time',
+          text: language[defaultLang]['pickanothertime'],
           color: lightblack,
           fontsize: 16,
           decoration: TextDecoration.underline,
@@ -547,8 +562,7 @@ class _bookingScreenState extends State<bookingScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       child: text400normal(
-          text:
-              'All video calls and voice calls will be made through the Zoom app. and messages will be made through Naraakom',
+          text: language[defaultLang]['allvideocalls'],
           color: grey,
           fontsize: 13),
     );
@@ -592,7 +606,7 @@ class _bookingScreenState extends State<bookingScreen> {
       width: size.width,
       margin: const EdgeInsets.all(16),
       child: text600normal(
-          text: 'How would you like to speak to consultant?',
+          text: language[defaultLang]['howwouldyouliketospeak'],
           fontsize: 16,
           color: darkblack),
     );
@@ -634,7 +648,7 @@ class _bookingScreenState extends State<bookingScreen> {
               width: 30,
             ),
             text400normal(
-              text: 'Consultation Price',
+              text: language[defaultLang]['datetime'],
               color: grey,
               fontsize: 16,
             )
@@ -667,7 +681,7 @@ class _bookingScreenState extends State<bookingScreen> {
               width: 30,
             ),
             text400normal(
-              text: 'Consultation Price',
+              text: language[defaultLang]['consultationprice'],
               color: grey,
               fontsize: 16,
             )
@@ -703,7 +717,7 @@ class _bookingScreenState extends State<bookingScreen> {
               width: 5,
             ),
             text400normal(
-              text: 'Specialization',
+              text: language[defaultLang]['specialization'],
               color: grey,
               fontsize: 16,
             )
@@ -740,8 +754,7 @@ class _bookingScreenState extends State<bookingScreen> {
               Container(
                 margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                 child: text600normal(
-                  text: language[defaultLang]['confirmbooking'] ??
-                      'Confirm Booking /',
+                  text: '${language[defaultLang]['confirmbooking']}/',
                   fontsize: 20,
                   color: lightblack,
                 ),

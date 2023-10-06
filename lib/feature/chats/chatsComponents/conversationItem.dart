@@ -13,7 +13,7 @@ class ConversationItem extends StatelessWidget {
   Conversation conversationInfo;
   ConversationItem(
       {super.key, required this.onClick, required this.conversationInfo});
-  int messagesNotreaded = 5;
+  int messagesNotreaded = 1;
   @override
   Widget build(BuildContext context) {
     return Material(

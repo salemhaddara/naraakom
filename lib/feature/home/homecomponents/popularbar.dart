@@ -31,7 +31,8 @@ class popularbar extends StatelessWidget {
               PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: categoryViewer(
-                  category: 'Family Consultant',
+                  category: language['en']['familyconsultant'],
+                  title: language[defaultLang]['familyconsultant'],
                 ),
                 withNavBar: true,
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,

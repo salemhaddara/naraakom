@@ -1,8 +1,13 @@
+// ignore_for_file: camel_case_types, must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naraakom/authrepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
-import 'package:naraakom/core/widgets/Snackbar.dart';
+import 'package:naraakom/feature/resetpassword/otpstates/otpbloc.dart';
+import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
+import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
+import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/button.dart';
@@ -11,7 +16,8 @@ import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
 
 class setnewpass extends StatefulWidget {
-  const setnewpass({super.key});
+  otpbloc mybloc;
+  setnewpass({super.key, required this.mybloc});
 
   @override
   State<setnewpass> createState() => _setnewpassState();
@@ -21,22 +27,31 @@ class _setnewpassState extends State<setnewpass> {
   String passwordcheck = '';
   String passwordconfirmation = '';
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  late otpbloc mybloc;
+  //Get This from otp Verification
+  String UserId = 'userid';
+
+  bool isNavigated = false;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    mybloc = widget.mybloc;
     return Scaffold(
       backgroundColor: white,
       body: SafeArea(
           child: Directionality(
         textDirection:
             defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-                children: [_topbar(size), _setpassImage(size), _form(size)]),
+        child: BlocProvider.value(
+          value: mybloc..add(userIdChanged(userId: UserId)),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                  children: [_topbar(size), _setpassImage(size), _form(size)]),
+            ),
           ),
         ),
       )),
@@ -45,21 +60,32 @@ class _setnewpassState extends State<setnewpass> {
   }
 
   Widget _submitnewpassButton(Size size, BuildContext context) {
-    return button(
-      text: language[defaultLang]['confirmpass'],
-      onTap: () async {
-        if (formkey.currentState!.validate() && passwordcheck.isNotEmpty) {
-          bool check = await authrepository.setNewPass('password');
-          if (check) {
-            Navigator.pushReplacementNamed(context, homePageRoute);
-          } else {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(showSnackbar('failed', size));
-          }
-        }
-      },
-      width: size.width,
-    );
+    return BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
+      if (state.formstatus is settingNewPasswordSUCCESS && !isNavigated) {
+        isNavigated = true;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, homePageRoute);
+        });
+        return Container();
+      }
+      if (state.formstatus is settingNewPasswordINPROGRESS) {
+        return CircularProgressIndicator(
+          strokeWidth: 6,
+          color: cyan,
+        );
+      } else {
+        return button(
+          text: language[defaultLang]['confirmpass'],
+          onTap: () async {
+            if (formkey.currentState!.validate() && passwordcheck.isNotEmpty) {
+              context.read<otpbloc>().add(newPassSubmitted());
+            }
+          },
+          width: size.width,
+        );
+      }
+    });
   }
 
   _form(Size size) {
@@ -113,20 +139,23 @@ class _setnewpassState extends State<setnewpass> {
   }
 
   Widget _passwordField(Size size) {
-    return InputField(
-      hint: language[defaultLang]['enternewpass'],
-      isPassword: true,
-      validator: (password) {
-        if (passwordcheck.isNotEmpty && passwordcheck.length < 8) {
-          return language[defaultLang]['passerror'];
-        }
-        return null;
-      },
-      initialState: true,
-      onChanged: (text) {
-        passwordcheck = text!;
-      },
-    );
+    return BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
+      return InputField(
+        hint: language[defaultLang]['enternewpass'],
+        isPassword: true,
+        validator: (password) {
+          if (passwordcheck.isNotEmpty && passwordcheck.length < 8) {
+            return language[defaultLang]['passerror'];
+          }
+          return null;
+        },
+        initialState: true,
+        onChanged: (text) {
+          passwordcheck = text!;
+          context.read<otpbloc>().add(newPassChanged(newPass: text));
+        },
+      );
+    });
   }
 
   Widget _newpass(Size size) {

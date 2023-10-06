@@ -41,14 +41,14 @@ class _conversationsScreenState extends State<conversationsScreen> {
                           //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
                           ListView.builder(
                               physics: const BouncingScrollPhysics(),
-                              itemCount: 13,
+                              itemCount: 1,
                               padding: const EdgeInsets.only(top: 0),
                               itemBuilder: (context, index) {
                                 return ConversationItem(
                                   onClick: () {},
                                   conversationInfo: Conversation(
                                       last_message:
-                                          'Hello M.Salem Haddara HRY ,how i can help you with your work ',
+                                          'Embrace the journey, and let the adventure begin',
                                       consultant: ConsultantModel(
                                           name: 'Salem Haddara',
                                           category: 'Family Consulting',
@@ -60,7 +60,7 @@ class _conversationsScreenState extends State<conversationsScreen> {
                                           visitors: 1000,
                                           biography: 'later',
                                           specializations: [],
-                                          bookings: []),
+                                          bookedTimes: []),
                                       UserId: 'UserId',
                                       lastUse: DateTime.now(),
                                       messages: [
@@ -70,7 +70,7 @@ class _conversationsScreenState extends State<conversationsScreen> {
                                             messagereceiverId:
                                                 'messagereceiverId',
                                             messageTime: DateTime.now(),
-                                            isReaded: false)
+                                            isReaded: true)
                                       ]),
                                 );
                               }))
@@ -101,21 +101,21 @@ _topbar(Size size, BuildContext context) {
           ),
         ),
         const Spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          child: Container(
-            width: 32,
-            height: 32,
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: SvgPicture.asset(
-              'assets/images/iconsearch.svg',
-            ),
-          ),
-        ),
+        // InkWell(
+        //   onTap: () {
+        //     Navigator.of(context).pop();
+        //   },
+        //   borderRadius: const BorderRadius.all(Radius.circular(8)),
+        //   child: Container(
+        //     width: 32,
+        //     height: 32,
+        //     decoration: const BoxDecoration(
+        //         borderRadius: BorderRadius.all(Radius.circular(8))),
+        //     child: SvgPicture.asset(
+        //       'assets/images/iconsearch.svg',
+        //     ),
+        //   ),
+        // ),
       ]),
     ),
   );

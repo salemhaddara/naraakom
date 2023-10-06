@@ -1,6 +1,15 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/mainbloc/contentbloc.dart';
+import 'package:naraakom/feature/mainbloc/contentevent.dart';
+import 'package:naraakom/feature/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
+import 'package:naraakom/feature/search/searchComponents/CategoriesList.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/localisation/translation.dart';
@@ -21,7 +30,15 @@ class searchScreen extends StatefulWidget {
 }
 
 class _searchScreenState extends State<searchScreen> {
-  String? selectedFilter; // Store the selected value here
+  String? selectedFilter;
+  String selectedCategory = 'all';
+  List<ConsultantModel>? filteredList;
+  List<ConsultantModel> helper = List.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +49,20 @@ class _searchScreenState extends State<searchScreen> {
       body: Directionality(
         textDirection:
             defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        child: Column(
-          children: [
-            _buildHomeTopBar(size),
-            _searchWidget(size),
-            _categorieslist(size),
-            _searchConsultantsquantity(size),
-            _consultantsList(),
-          ],
+        child: BlocProvider<contentbloc>(
+          create: (context) {
+            return contentbloc(context.read<Repository>())
+              ..add(ConsultantsRequested());
+          },
+          child: Column(
+            children: [
+              _buildHomeTopBar(size),
+              _searchWidget(size),
+              _categorieslist(size),
+              _searchConsultantsquantity(size),
+              _consultantsList(),
+            ],
+          ),
         ),
       ),
     );
@@ -50,33 +73,22 @@ class _searchScreenState extends State<searchScreen> {
       width: size.width,
       margin: const EdgeInsets.all(16),
       child: text700normal(
-          text: '200+ Consultants', fontsize: 20, color: darkblack),
+          text: language[defaultLang]['consultants'],
+          fontsize: 20,
+          color: darkblack),
     );
   }
 
-  Widget _categorieslist(Size size) {
-    return Container(
-        margin: const EdgeInsetsDirectional.only(start: 8),
-        height: 70,
-        width: size.width,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            _categoryItem('All', 'categoryall.svg', true),
-            _categoryItem(language[defaultLang]['familyconsultant'],
-                'familyconsultingicon.svg', false),
-            _categoryItem(language[defaultLang]['educationnalconsultant'],
-                'educationnalconsultanticon.svg', false),
-            _categoryItem(language[defaultLang]['psychologicalconsultant'],
-                'psychologicalconsultanticon.svg', false),
-            _categoryItem(language[defaultLang]['professionalconsultant'],
-                'professionalconsultanticon.svg', false),
-            _categoryItem(language[defaultLang]['humandevelopment'],
-                'humandevelopmenticon.svg', false),
-            _categoryItem(language[defaultLang]['behaviorconsultant'],
-                'behaviorconsultanticon.svg', false),
-          ],
-        ));
+  Widget _categorieslist(
+    Size size,
+  ) {
+    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+      return CategoriesList(
+        onCategorySelected: (category) {
+          context.read<contentbloc>().add(SelectCategoryEvent(category));
+        },
+      );
+    });
   }
 
   Widget _categoryItem(String categoryName, String image, bool isSelected) {
@@ -103,42 +115,39 @@ class _searchScreenState extends State<searchScreen> {
   }
 
   Widget _consultantsList() {
+    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+      if (state.requeststate is consultantsrequest_SUCCESS) {
+        context.read<contentbloc>().add(SelectCategoryEvent(selectedCategory));
+      }
+      if (state.requeststate is CategorySelectedState) {
+        filteredList =
+            ((state.requeststate) as CategorySelectedState).filteredList;
+        return _returnListView(filteredList!);
+      }
+      if (state.requeststate is SearchState) {
+        filteredList =
+            ((state.requeststate) as SearchState).searchedconsultants;
+        return _returnListView(filteredList!);
+      }
+      return Container();
+    });
+  }
+
+  Widget _returnListView(List<ConsultantModel> consutants) {
     return Expanded(
         child: ListView.builder(
-            itemCount: 2,
+            itemCount: consutants.length,
             padding: const EdgeInsets.all(0),
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return responiveconsultant(
                 islarge: true,
-                consultant: ConsultantModel(
-                    name: 'Salem Haddara',
-                    category: 'Family Consulting',
-                    availability: '8 AM to 10 PM',
-                    rating: 5,
-                    id: 'id4',
-                    consultation_rate: 250,
-                    visitors: 1000,
-                    experience: 7,
-                    biography: 'later',
-                    specializations: [],
-                    bookings: []),
+                consultant: consutants[index],
                 onClick: () {
                   PersistentNavBarNavigator.pushNewScreen(
                     context,
                     screen: consultantinfo(
-                      consultant: ConsultantModel(
-                          name: 'Salem Haddara',
-                          category: 'Family Consulting',
-                          availability: '8 AM to 10 PM',
-                          rating: 5,
-                          id: 'id4',
-                          experience: 2,
-                          consultation_rate: 250,
-                          visitors: 1000,
-                          biography: 'later',
-                          specializations: [],
-                          bookings: []),
+                      consultant: consutants[index],
                     ),
                     withNavBar: false,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -149,23 +158,37 @@ class _searchScreenState extends State<searchScreen> {
   }
 
   Widget _searchWidget(Size size) {
-    return Row(children: [
-      searchbar(hint: 'Search by consultant name', onChanged: (onChanged) {}),
-      Container(
-        height: 34,
-        width: 34,
-        padding: const EdgeInsets.all(5),
-        margin: const EdgeInsetsDirectional.only(end: 20),
-        child: GestureDetector(
-          onTap: () {
-            _showSorting(size);
-          },
-          child: SvgPicture.asset(
-            'assets/images/iconfilter.svg',
-          ),
-        ),
-      )
-    ]);
+    return BlocBuilder<contentbloc, contentstate>(
+      builder: (context, state) {
+        if (state.requeststate is SearchState) {
+          filteredList =
+              ((state.requeststate) as SearchState).searchedconsultants;
+        }
+        return Row(children: [
+          searchbar(
+              hint: language[defaultLang]['searchbyconsultantname'],
+              onChanged: (onChanged) {
+                context
+                    .read<contentbloc>()
+                    .add(SearchtextChangedEvent(onChanged, selectedCategory));
+              }),
+          Container(
+            height: 34,
+            width: 34,
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsetsDirectional.only(end: 20),
+            child: GestureDetector(
+              onTap: () {
+                _showSorting(size);
+              },
+              child: SvgPicture.asset(
+                'assets/images/iconfilter.svg',
+              ),
+            ),
+          )
+        ]);
+      },
+    );
   }
 
   Widget _buildHomeTopBar(Size size) {
@@ -195,7 +218,9 @@ class _searchScreenState extends State<searchScreen> {
               margin:
                   EdgeInsets.only(top: size.height * 0.08, left: 16, right: 16),
               child: text700normal(
-                  text: 'Desired Consultation', fontsize: 22, color: white),
+                  text: language[defaultLang]['desiredconsultation'],
+                  fontsize: 22,
+                  color: white),
             )
           ],
         ),
@@ -228,7 +253,7 @@ class _searchScreenState extends State<searchScreen> {
               child: Row(children: [
                 Expanded(
                   child: text400normal(
-                    text: 'Filter by',
+                    text: language[defaultLang]['filterby'],
                     color: white,
                     fontsize: 14,
                   ),
@@ -239,7 +264,7 @@ class _searchScreenState extends State<searchScreen> {
                     Navigator.pop(context);
                   },
                   child: text600normal(
-                    text: 'Clear',
+                    text: language[defaultLang]['clear'],
                     color: white,
                     fontsize: 14,
                   ),
@@ -248,7 +273,7 @@ class _searchScreenState extends State<searchScreen> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Highest Rating',
+                text: language[defaultLang]['highestrating'],
                 color: darkblack,
                 fontsize: 14,
               ),
@@ -265,7 +290,7 @@ class _searchScreenState extends State<searchScreen> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Lowest Price',
+                text: language[defaultLang]['lowestprice'],
                 color: darkblack,
                 fontsize: 14,
               ),
@@ -282,7 +307,7 @@ class _searchScreenState extends State<searchScreen> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Highest Price',
+                text: language[defaultLang]['highestprice'],
                 color: darkblack,
                 fontsize: 14,
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
@@ -8,6 +10,7 @@ import 'package:naraakom/core/widgets/text600normal.dart';
 
 class ChatScreen extends StatefulWidget {
   Conversation conversation;
+
   ChatScreen({super.key, required this.conversation});
 
   @override
@@ -17,14 +20,16 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messages = List.empty(growable: true);
   final TextEditingController _textController = TextEditingController();
+  late Size size;
   @override
   void initState() {
     super.initState();
     _messages.add(ChatMessage(
-        text:
-            'hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello',
-        isMyMessage: false,
-        time: ' ${fromdatetoString(DateTime.now())}'));
+      text:
+          'Embrace the journey, and let the adventure begin.Embrace the journey, and let the adventure begin Embrace the journey, and let the adventure begin',
+      isMyMessage: false,
+      time: ' ${fromdatetoString(DateTime.now())}',
+    ));
   }
 
   void _handleSubmitted(String text) {
@@ -56,6 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildTextComposer() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -166,33 +172,54 @@ class ChatMessage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
       alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Row(
+      child: Column(
+        crossAxisAlignment:
+            isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Column(
+          Row(
             crossAxisAlignment:
-                isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: <Widget>[
+                CrossAxisAlignment.start, // Align children at the top
+            mainAxisAlignment:
+                isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              if (!isMyMessage)
+                Container(
+                  height: 40,
+                  width: 40,
+                  margin: const EdgeInsets.all(5),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.amber,
+                  ),
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      child: Image.asset(
+                        'assets/images/sample.jpg',
+                        fit: BoxFit.cover,
+                      )),
+                ),
               Container(
                 padding: const EdgeInsets.all(12.0),
-                constraints: const BoxConstraints(maxWidth: 350),
+                constraints: const BoxConstraints(maxWidth: 290),
                 decoration: BoxDecoration(
                   color: isMyMessage ? cyan : lightcyan,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: text400normal(
-                    text: text,
-                    color: isMyMessage ? white : lightblack,
-                    fontsize: 16),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: text400normal(
-                  text: time,
-                  color: grey,
-                  fontsize: 12,
+                  text: text,
+                  color: isMyMessage ? white : lightblack,
+                  fontsize: 16,
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: text400normal(
+              text: time,
+              color: grey,
+              fontsize: 12,
+            ),
           ),
         ],
       ),

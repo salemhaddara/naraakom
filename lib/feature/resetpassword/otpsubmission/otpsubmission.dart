@@ -31,3 +31,12 @@ class otpverifiyingfailed extends otpsubmissionstatus {
   final Exception exception;
   const otpverifiyingfailed(this.exception);
 }
+
+class settingNewPasswordINPROGRESS extends otpsubmissionstatus {}
+
+class settingNewPasswordSUCCESS extends otpsubmissionstatus {}
+
+class settingNewPasswordFAILED extends otpsubmissionstatus {
+  Exception exception;
+  settingNewPasswordFAILED({required this.exception});
+}

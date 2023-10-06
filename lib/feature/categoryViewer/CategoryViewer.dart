@@ -2,14 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/searchbar.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
+import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/mainbloc/contentbloc.dart';
+import 'package:naraakom/feature/mainbloc/contentevent.dart';
+import 'package:naraakom/feature/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/utils/Models/ConsultantModel.dart';
@@ -17,7 +22,8 @@ import '../../core/widgets/text700normal.dart';
 
 class categoryViewer extends StatefulWidget {
   String category;
-  categoryViewer({super.key, required this.category});
+  String title;
+  categoryViewer({super.key, required this.category, required this.title});
 
   @override
   State<categoryViewer> createState() => _categoryViewerState();
@@ -25,6 +31,7 @@ class categoryViewer extends StatefulWidget {
 
 class _categoryViewerState extends State<categoryViewer> {
   String? selectedFilter; // Store the selected value here
+  List<ConsultantModel>? filteredList;
 
   @override
   Widget build(BuildContext context) {
@@ -32,114 +39,105 @@ class _categoryViewerState extends State<categoryViewer> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Scaffold(
       backgroundColor: homebackgrey,
-      body: Directionality(
-        textDirection:
-            defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                pinned: true,
-                backgroundColor: cyan,
-                expandedHeight: size.height * 0.08,
-                centerTitle: false,
-                title: text700normal(
-                  text: widget.category,
-                  color: white,
-                  fontsize: 22,
-                ),
-                bottom: const PreferredSize(
-                  preferredSize: Size.fromHeight(0),
-                  child: SizedBox(),
-                ),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+      body: BlocProvider<contentbloc>(
+        create: (context) {
+          return contentbloc(context.read<Repository>())
+            ..add(ConsultantsRequested())
+            ..add(SelectCategoryEvent(widget.category));
+        },
+        child: Directionality(
+          textDirection:
+              defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  backgroundColor: cyan,
+                  expandedHeight: size.height * 0.08,
+                  centerTitle: false,
+                  title: text700normal(
+                    text: widget.title,
+                    color: white,
+                    fontsize: 22,
+                  ),
+                  bottom: const PreferredSize(
+                    preferredSize: Size.fromHeight(0),
+                    child: SizedBox(),
+                  ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: _buildHomeTopBar(size),
                   ),
                 ),
-                flexibleSpace: FlexibleSpaceBar(
-                  background: _buildHomeTopBar(size),
-                ),
-              ),
-            ];
-          },
-          body: Column(
-            children: [_searchWidget(size), _consultantsList()],
+              ];
+            },
+            body: Column(
+              children: [_searchWidget(size), _consultantsList()],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _consultantsList() {
-    return Expanded(
-        child: ListView.builder(
-            itemCount: 2,
-            padding: const EdgeInsets.all(0),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return responiveconsultant(
-                islarge: true,
-                consultant: ConsultantModel(
-                    name: 'Salem Haddara',
-                    category: 'Family Consulting',
-                    availability: '8 AM to 10 PM',
-                    rating: 5,
-                    id: 'id4',
-                    experience: 2,
-                    consultation_rate: 250,
-                    visitors: 1000,
-                    biography: 'later',
-                    specializations: [],
-                    bookings: []),
-                onClick: () {
-                  PersistentNavBarNavigator.pushNewScreen(
-                    context,
-                    screen: consultantinfo(
-                      consultant: ConsultantModel(
-                          name: 'Salem Haddara',
-                          category: 'Family Consulting',
-                          availability: '8 AM to 10 PM',
-                          rating: 5,
-                          id: 'id4',
-                          experience: 2,
-                          consultation_rate: 250,
-                          visitors: 1000,
-                          biography: 'later',
-                          specializations: [
-                            'Family Consultant',
-                            'Human Development',
-                            'Behavior Modification'
-                          ],
-                          bookings: []),
-                    ),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                  );
-                },
-              );
-            }));
+  Widget _searchWidget(Size size) {
+    return BlocBuilder<contentbloc, contentstate>(
+      builder: (context, state) {
+        if (state.requeststate is SearchState) {
+          filteredList =
+              ((state.requeststate) as SearchState).searchedconsultants;
+        }
+        return Row(children: [
+          searchbar(
+              hint: language[defaultLang]['searchbyconsultantname'],
+              onChanged: (onChanged) {
+                context
+                    .read<contentbloc>()
+                    .add(SearchtextChangedEvent(onChanged, widget.category));
+              }),
+          Container(
+            height: 34,
+            width: 34,
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsetsDirectional.only(end: 20),
+            child: GestureDetector(
+              onTap: () {
+                _showSorting(size);
+              },
+              child: SvgPicture.asset(
+                'assets/images/iconfilter.svg',
+              ),
+            ),
+          )
+        ]);
+      },
+    );
   }
 
-  Widget _searchWidget(Size size) {
-    return Row(children: [
-      searchbar(hint: 'Search by consultant name', onChanged: (onChanged) {}),
-      Container(
-        height: 34,
-        width: 34,
-        padding: const EdgeInsets.all(5),
-        margin: const EdgeInsetsDirectional.only(end: 20),
-        child: GestureDetector(
-          onTap: () {
-            _showSorting(size);
-          },
-          child: SvgPicture.asset(
-            'assets/images/iconfilter.svg',
-          ),
-        ),
-      )
-    ]);
+  Widget _consultantsList() {
+    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+      if (state.requeststate is consultantsrequest_SUCCESS) {
+        context.read<contentbloc>().add(SelectCategoryEvent(widget.category));
+      }
+      if (state.requeststate is CategorySelectedState) {
+        filteredList =
+            ((state.requeststate) as CategorySelectedState).filteredList;
+        return _returnListView(filteredList!);
+      }
+      if (state.requeststate is SearchState) {
+        filteredList =
+            ((state.requeststate) as SearchState).searchedconsultants;
+        return _returnListView(filteredList!);
+      }
+      return Container();
+    });
   }
 
   Widget _buildHomeTopBar(Size size) {
@@ -196,7 +194,7 @@ class _categoryViewerState extends State<categoryViewer> {
               child: Row(children: [
                 Expanded(
                   child: text400normal(
-                    text: 'Filter by',
+                    text: language[defaultLang]['filterby'],
                     color: white,
                     fontsize: 14,
                   ),
@@ -207,7 +205,7 @@ class _categoryViewerState extends State<categoryViewer> {
                     Navigator.pop(context);
                   },
                   child: text600normal(
-                    text: 'Clear',
+                    text: language[defaultLang]['clear'],
                     color: white,
                     fontsize: 14,
                   ),
@@ -216,7 +214,7 @@ class _categoryViewerState extends State<categoryViewer> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Highest Rating',
+                text: language[defaultLang]['highestrating'],
                 color: darkblack,
                 fontsize: 14,
               ),
@@ -233,7 +231,7 @@ class _categoryViewerState extends State<categoryViewer> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Lowest Price',
+                text: language[defaultLang]['lowestprice'],
                 color: darkblack,
                 fontsize: 14,
               ),
@@ -250,7 +248,7 @@ class _categoryViewerState extends State<categoryViewer> {
             ),
             ListTile(
               title: text400normal(
-                text: 'Highest Price',
+                text: language[defaultLang]['highestprice'],
                 color: darkblack,
                 fontsize: 14,
               ),
@@ -272,5 +270,29 @@ class _categoryViewerState extends State<categoryViewer> {
         );
       },
     );
+  }
+
+  Widget _returnListView(List<ConsultantModel> consutants) {
+    return Expanded(
+        child: ListView.builder(
+            itemCount: consutants.length,
+            padding: const EdgeInsets.all(0),
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return responiveconsultant(
+                islarge: true,
+                consultant: consutants[index],
+                onClick: () {
+                  PersistentNavBarNavigator.pushNewScreen(
+                    context,
+                    screen: consultantinfo(
+                      consultant: consutants[index],
+                    ),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                },
+              );
+            }));
   }
 }

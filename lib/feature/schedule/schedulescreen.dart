@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/Schedule.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/schedule/scheduleComponents/appointmentContainer.dart';
 import 'package:naraakom/feature/schedule/scheduleComponents/choiceContainer.dart';
+import 'package:naraakom/feature/schedulebloc/scheduleEvent.dart';
+import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
+import 'package:naraakom/feature/schedulebloc/scheduleState.dart';
+import 'package:naraakom/feature/schedulebloc/schedulebloc.dart';
 
 class schedulescreen extends StatefulWidget {
   const schedulescreen({super.key});
@@ -20,46 +26,54 @@ class _schedulescreenState extends State<schedulescreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-    return Scaffold(
-      backgroundColor: white,
-      body: Directionality(
-        textDirection:
-            defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        child: Column(
-          children: [
-            _buildHomeTopBar(size),
-            _choiceContainer(),
-            _SchedulelistView(size)
-          ],
-        ),
-      ),
+    return BlocProvider<schedulebloc>(
+        create: (context) => schedulebloc(context.read<scheduleRepo>())
+          ..add(UpComingSchedulesRequested()),
+        child: Scaffold(
+          backgroundColor: white,
+          body: Directionality(
+            textDirection:
+                defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+            child: Column(
+              children: [
+                _buildHomeTopBar(size),
+                _choiceContainer(size),
+                _SetListofSchedule(size)
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget _SetListofSchedule(Size size) {
+    return BlocBuilder<schedulebloc, scheduleState>(
+      builder: (context, state) {
+        if (state.CurrentScheduleState is UpComingSchedulesRequested &&
+            state.confirmedSchedules != null) {
+          return _SchedulelistView(size, state.confirmedSchedules!);
+        }
+        if (state.CurrentScheduleState is CanceledSchedulesRequested &&
+            state.canceledSchedules != null) {
+          return _SchedulelistView(size, state.canceledSchedules!);
+        }
+        if (state.CurrentScheduleState is CompletedSchedulesRequested &&
+            state.completedSchedules != null) {
+          return _SchedulelistView(size, state.completedSchedules!);
+        }
+
+        return Container();
+      },
     );
   }
 
-  Widget _SchedulelistView(Size size) {
+  Widget _SchedulelistView(Size size, List<Schedule> schedules) {
     return Expanded(
         child: ListView.builder(
             padding: const EdgeInsets.all(0),
-            itemCount: 3,
+            itemCount: schedules.length,
             itemBuilder: (context, index) {
               return appointmentContainer(
-                schedule: Schedule(
-                  consultant: ConsultantModel(
-                      name: 'Salem Haddara',
-                      category: 'Family Consulting',
-                      availability: '8 AM to 10 PM',
-                      rating: 5,
-                      id: 'id4',
-                      consultation_rate: 250,
-                      visitors: 1000,
-                      biography: 'later',
-                      experience: 5,
-                      specializations: [],
-                      bookings: []),
-                  status: 'confirmed',
-                  scheduleConsultingType: '',
-                  scheduleTime: DateTime.now(),
-                ),
+                schedule: schedules[index],
                 onJoinClicked: () {},
                 onCancelClicked: () {},
                 size: size,
@@ -67,8 +81,29 @@ class _schedulescreenState extends State<schedulescreen> {
             }));
   }
 
-  Widget _choiceContainer() {
-    return ChoiceContainer(onChoiceSelected: (choice) {});
+  Widget _choiceContainer(Size size) {
+    return BlocBuilder<schedulebloc, scheduleState>(builder: (context, state) {
+      return ChoiceContainer(onChoiceSelected: (choice) {
+        print(choice);
+
+        switch (choice) {
+          case 'Upcoming':
+            return context
+                .read<schedulebloc>()
+                .add(UpComingSchedulesRequested());
+
+          case 'Completed':
+            return context
+                .read<schedulebloc>()
+                .add(CompletedSchedulesRequested());
+
+          case 'Canceled':
+            return context
+                .read<schedulebloc>()
+                .add(CanceledSchedulesRequested());
+        }
+      });
+    });
   }
 
   Widget _buildHomeTopBar(Size size) {
@@ -98,7 +133,9 @@ class _schedulescreenState extends State<schedulescreen> {
               margin:
                   EdgeInsets.only(top: size.height * 0.08, left: 16, right: 16),
               child: text700normal(
-                  text: 'My Schedule', fontsize: 22, color: white),
+                  text: language[defaultLang]['myschedule'],
+                  fontsize: 22,
+                  color: white),
             )
           ],
         ),

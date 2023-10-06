@@ -13,11 +13,13 @@ class responiveconsultant extends StatefulWidget {
   bool islarge = false;
   ConsultantModel consultant;
   Function onClick;
+  Function? onclicknotlarge;
   responiveconsultant(
       {super.key,
       required this.islarge,
       required this.consultant,
-      required this.onClick});
+      required this.onClick,
+      this.onclicknotlarge});
 
   @override
   State<responiveconsultant> createState() => _responiveconsultantState();
@@ -37,78 +39,88 @@ class _responiveconsultantState extends State<responiveconsultant> {
         child: SizedBox(
           height: widget.islarge ? 322 : 100,
           child: Column(children: [
-            SizedBox(
-              height: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 72,
-                      width: 67,
-                      decoration: BoxDecoration(
-                          color: lightcyan,
+            GestureDetector(
+              onTap: widget.onclicknotlarge == null
+                  ? () {}
+                  : () {
+                      widget.onclicknotlarge!();
+                    },
+              child: SizedBox(
+                height: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 72,
+                        width: 67,
+                        decoration: BoxDecoration(
+                            color: lightcyan,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(8))),
+                        child: ClipRRect(
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(8))),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
-                        child: Image.asset(
-                          'assets/images/sample.jpg',
-                          fit: BoxFit.cover,
+                              const BorderRadius.all(Radius.circular(8)),
+                          child: Image.asset(
+                            'assets/images/sample.jpg',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                        child: Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            alignment: AlignmentDirectional.centerStart,
-                            child: text600normal(
-                                align: TextAlign.start,
-                                text: widget.consultant.name,
-                                fontsize: 16,
-                                color: darkblack),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            alignment: AlignmentDirectional.centerStart,
-                            child: text400normal(
-                                align: TextAlign.start,
-                                text: widget.consultant.category,
-                                fontsize: 14,
-                                color: darkblack),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Row(
-                              children: [
-                                SvgPicture.asset('assets/images/rating.svg'),
-                                text600normal(
-                                    align: TextAlign.start,
-                                    text: ' ${widget.consultant.rating} ',
-                                    fontsize: 12,
-                                    color: darkblack),
-                                text400normal(
-                                    align: TextAlign.start,
-                                    text:
-                                        '(${widget.consultant.visitors} Visitors)',
-                                    fontsize: 12,
-                                    color: darkblack),
-                              ],
+                      Expanded(
+                          child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              alignment: AlignmentDirectional.centerStart,
+                              child: text600normal(
+                                  align: TextAlign.start,
+                                  text: widget.consultant.name,
+                                  fontsize: 16,
+                                  color: darkblack),
                             ),
                           ),
-                        )
-                      ],
-                    ))
-                  ],
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              alignment: AlignmentDirectional.centerStart,
+                              child: text400normal(
+                                  align: TextAlign.start,
+                                  text: widget.consultant.category,
+                                  fontsize: 14,
+                                  color: darkblack),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset('assets/images/rating.svg'),
+                                  text600normal(
+                                      align: TextAlign.start,
+                                      text: ' ${widget.consultant.rating} ',
+                                      fontsize: 12,
+                                      color: darkblack),
+                                  text400normal(
+                                      align: TextAlign.start,
+                                      text:
+                                          '(${widget.consultant.visitors} Visitors)',
+                                      fontsize: 12,
+                                      color: darkblack),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ))
+                    ],
+                  ),
                 ),
               ),
             ),

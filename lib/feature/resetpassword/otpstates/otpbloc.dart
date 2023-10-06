@@ -4,6 +4,8 @@ import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
 
+import '../../../core/utils/Models/User.dart';
+
 class otpbloc extends Bloc<otpevent, otpstate> {
   final authrepository repo;
   otpbloc(this.repo) : super(otpstate()) {
@@ -38,5 +40,19 @@ class otpbloc extends Bloc<otpevent, otpstate> {
         emit(state.copyWith(formstatus: otpverifiyingfailed(e as Exception)));
       }
     });
+    on<newPassSubmitted>(
+      (event, emit) async {
+        emit(state.copyWith(formstatus: settingNewPasswordINPROGRESS()));
+        User user = await repo.setNewPass(state.newPassword, state.UserId);
+        emit(state.copyWith(
+          formstatus: settingNewPasswordSUCCESS(),
+          userId: user.id,
+        ));
+      },
+    );
+    on<newPassChanged>(
+        (event, emit) => emit(state.copyWith(newPassword: event.newPass)));
+    on<userIdChanged>(
+        (event, emit) => emit(state.copyWith(userId: event.userId)));
   }
 }

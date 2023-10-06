@@ -9,6 +9,7 @@ import 'package:naraakom/feature/resetpassword/otpComponents/otpinputField.dart'
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
+import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import '../../authrepository.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
@@ -28,6 +29,7 @@ class _otpverificationState extends State<otpverification> {
   bool resendauthorized = true;
   String codeProvided = '';
   bool isError = false;
+  bool isNavigated = false;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -62,7 +64,7 @@ class _otpverificationState extends State<otpverification> {
                     _sendedMessage(size, phonenumber),
                     _otpLottie(size),
                     _otpFields(size),
-                    _submitButton(size, context),
+                    _submitButton(size, context, BlocProvider.of(context)),
                     _sendagain(size, context),
                     _changePhoneNumber(size, context),
                   ]),
@@ -114,12 +116,17 @@ class _otpverificationState extends State<otpverification> {
     );
   }
 
-  Widget _submitButton(Size size, BuildContext contextScaffold) {
+  Widget _submitButton(
+      Size size, BuildContext contextScaffold, otpbloc mybloc) {
     return BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
-      if (state.formstatus is otpverifiyingsuccess) {
-        Future.delayed(Duration.zero, () {
-          Navigator.pushReplacementNamed(context, setnewpassRoute);
+      if (state.formstatus is otpverifiyingsuccess && !isNavigated) {
+        isNavigated = true;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (_) => setnewpass(mybloc: mybloc)));
         });
+        return Container();
       }
       if (state.formstatus is otpverifiyingfailed) {
         //show error in the fields

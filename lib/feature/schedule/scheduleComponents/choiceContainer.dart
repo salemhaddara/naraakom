@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 
@@ -33,17 +34,17 @@ class _ChoiceContainerState extends State<ChoiceContainer> {
       child: Row(
         children: [
           ChoiceItem(
-            choice: 'Upcoming',
+            choice: language[defaultLang]['upcoming'],
             isSelected: selectedChoice == 'Upcoming',
             onSelect: () => selectChoice('Upcoming'),
           ),
           ChoiceItem(
-            choice: 'Completed',
+            choice: language[defaultLang]['completed'],
             isSelected: selectedChoice == 'Completed',
             onSelect: () => selectChoice('Completed'),
           ),
           ChoiceItem(
-            choice: 'Canceled',
+            choice: language[defaultLang]['canceled'],
             isSelected: selectedChoice == 'Canceled',
             onSelect: () => selectChoice('Canceled'),
           ),

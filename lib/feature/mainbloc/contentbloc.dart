@@ -41,5 +41,38 @@ class contentbloc extends Bloc<contentevent, contentstate> {
             requeststate: userDataRequest_FAILED(exception: e as Exception)));
       }
     });
+    on<SelectCategoryEvent>((event, emit) {
+      List<ConsultantModel> list =
+          state.consultants ?? List.empty(growable: true);
+      final filteredList = list.where((item) {
+        return item.category == event.selectedCategory;
+      }).toList();
+      if (event.selectedCategory == 'all') {
+        filteredList.clear();
+        filteredList.addAll(list);
+      }
+
+      emit(state.copyWith(
+          requeststate:
+              CategorySelectedState(event.selectedCategory, filteredList)));
+    });
+    on<SearchtextChangedEvent>((event, emit) {
+      List<ConsultantModel> list =
+          state.consultants ?? List.empty(growable: true);
+      List<ConsultantModel> filteredList = list.where((item) {
+        return item.category == event.selectedCategory;
+      }).toList();
+      if (event.selectedCategory == 'all') {
+        filteredList.clear();
+        filteredList.addAll(list);
+      }
+      if (event.text != null && event.text!.isNotEmpty) {
+        filteredList = filteredList.where((element) {
+          return (element.name.toLowerCase()).contains((event.text!));
+        }).toList();
+      }
+      emit(state.copyWith(
+          requeststate: SearchState(event.selectedCategory, filteredList)));
+    });
   }
 }

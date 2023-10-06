@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naraakom/core/utils/Models/BookingTime.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/booking/bookingScreen.dart';
@@ -28,8 +29,38 @@ class consultantinfo extends StatefulWidget {
   State<consultantinfo> createState() => _consultantinfoState();
 }
 
+DateTime? selectedDate;
+List<BookingTIme> timeSlots = [
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 6, 9, 0),
+    isBooked: false,
+  ), // Available
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 6, 9, 30),
+    isBooked: true,
+  ), // Booked
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 7, 10, 0),
+    isBooked: false,
+  ),
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 6, 9, 0),
+    isBooked: false,
+  ), // Available
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 6, 9, 30),
+    isBooked: true,
+  ), // Booked
+  BookingTIme(
+    bookingtime: DateTime(2023, 10, 7, 10, 0),
+    isBooked: false,
+  ), // Available
+  // Add more time slots here...
+];
+
 class _consultantinfoState extends State<consultantinfo> {
   List notifications = List.empty(growable: true);
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -156,25 +187,39 @@ class _consultantinfoState extends State<consultantinfo> {
   }
 
   _timepicker() {
-    return const Expanded(
-      child: TimePicker(strings: [
-        '10:00 AM',
-        '10:35 AM',
-        '11:35 AM',
-        '12:00 PM',
-        '01:35 PM',
-        '02:35 PM',
-        '01:35 PM',
-        '02:35 PM',
-      ]),
+    return TimePicker(
+      strings: timeSlots,
+      onTimeSelected: (selectedTime) {
+        // Find the corresponding BookingTime object in the list
+        final selectedBookingTime = timeSlots.firstWhere(
+          (bookingTime) => bookingTime.bookingtime == selectedTime,
+          orElse: () => BookingTIme(bookingtime: selectedTime, isBooked: true),
+        );
+
+        if (!selectedBookingTime.isBooked) {
+          // The selected time is available, you can store it or perform actions.
+          print('Selected time: $selectedTime');
+        } else {
+          // The selected time is already booked, display a message or handle as needed.
+          print('Selected time is already booked');
+        }
+      },
     );
   }
 
   _datepicker() {
     return Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        child:
-            DatePickerList(itemCount: 30, onDateSelected: (onDateSelected) {}));
+      margin: const EdgeInsets.only(bottom: 16),
+      child: DatePickerList(
+        itemCount: 30,
+        onDateSelected: (DateTime date) {
+          setState(() {
+            selectedDate = date; // Update the selected date
+          });
+        },
+        selectedDate: selectedDate, // Pass the selected date to highlight it
+      ),
+    );
   }
 
   _biographyparagraph(Size size) {
@@ -280,12 +325,14 @@ class _consultantinfoState extends State<consultantinfo> {
                   Expanded(
                       child: text700normal(
                           text:
-                              '${widget.consultant.experience} ${language[defaultLang]['years']}',
+                              '${widget.consultant.experience.floor()} ${language[defaultLang]['years']}',
                           fontsize: 18,
                           color: darkblack)),
                   Expanded(
                       child: text400normal(
-                          text: 'Experience', fontsize: 14, color: darkblack)),
+                          text: language[defaultLang]['experience'],
+                          fontsize: 14,
+                          color: darkblack)),
                 ],
               )
             ],
