@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/widgets/button.dart';
@@ -33,7 +34,13 @@ class _otpverificationState extends State<otpverification> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     String phonenumber = ModalRoute.of(context)!.settings.arguments as String;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(

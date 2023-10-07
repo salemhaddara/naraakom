@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/theme/routes.dart';
@@ -37,6 +38,11 @@ class _setnewpassState extends State<setnewpass> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     mybloc = widget.mybloc;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: white,
       body: SafeArea(

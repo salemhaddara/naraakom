@@ -3,13 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
+import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
 
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
@@ -52,6 +55,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
           textDirection:
               defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Container(
               padding: EdgeInsets.only(
                 top: size.height * .05,
@@ -102,7 +106,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
             text: language[defaultLang]['myschedule'],
             width: size.width,
             onTap: () {
-              Navigator.pushReplacementNamed(context, homePageRoute);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => MyNavigationBar(index: 2))));
             }));
   }
 
@@ -162,7 +169,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                       const Spacer(),
                       Row(children: [
                         text600normal(
-                            text: '150 QAR', fontsize: 16, color: cyan),
+                            text:
+                                '${widget.consultant.consultation_rate.floor()}',
+                            fontsize: 16,
+                            color: cyan),
                         const Spacer()
                       ]),
                     ],
@@ -207,7 +217,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                           Row(
                             children: [
                               text400normal(
-                                  text: 'Monday, 20 Agu 2023, 08:00 PM',
+                                  text: formatDateTime(SelectedTime!),
                                   fontsize: 12,
                                   color: darkblack),
                               const Spacer()
@@ -276,5 +286,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
         ),
       ]),
     );
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    final intl.DateFormat formatter = intl.DateFormat('EEEE, d MMM y, hh:mm a');
+    return formatter.format(dateTime);
   }
 }

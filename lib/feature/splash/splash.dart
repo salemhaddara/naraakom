@@ -43,7 +43,8 @@ class _splashState extends State<splash> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: cyan, systemNavigationBarColor: cyan));
     return Scaffold(
         body: Container(
       child: Stack(
@@ -94,13 +95,10 @@ class _MyAnimatedContainerState extends State<MyAnimatedContainer> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Hero(
-            tag: 'logo',
-            child: SvgPicture.asset(
-              'assets/images/logowhite.svg',
-              height: 80,
-              width: 300,
-            ),
+          SvgPicture.asset(
+            'assets/images/logowhite.svg',
+            height: 80,
+            width: 300,
           ),
           const SizedBox(
             height: 20,

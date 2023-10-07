@@ -34,10 +34,10 @@ class _signupState extends State<signup> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: white,
-        systemNavigationBarIconBrightness: Brightness.light));
+        systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: white,
@@ -123,13 +123,13 @@ class _signupState extends State<signup> {
     return InputField(
       hint: '',
       isPassword: false,
-      color: homebackgrey,
+      color: lightcyan,
       validator: (name) {
         if (name!.isEmpty) {
           return null;
         }
         if (name.length < 3) {
-          return 'The Name Must be > 3 characters ';
+          return language[defaultLang]['namerror'];
         }
         return null;
       },
@@ -155,14 +155,14 @@ class _signupState extends State<signup> {
   Widget _emailInputField(Size size) {
     return InputField(
       hint: '',
-      color: homebackgrey,
+      color: lightcyan,
       isPassword: false,
       validator: (email) {
         if (email!.isEmpty) {
           return null;
         }
         if (!isValidEmail(email)) {
-          return 'Enter A Valid Email Address';
+          return language[defaultLang]['enteravalidemail'];
         }
         return null;
       },
@@ -233,7 +233,7 @@ class _signupState extends State<signup> {
               return null;
             }
             if (!state.isValidPassword) {
-              return 'Password Must be >8 characters';
+              return language[defaultLang]['passerror'];
             }
             return null;
           },

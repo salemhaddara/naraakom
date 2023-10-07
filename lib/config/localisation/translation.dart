@@ -115,7 +115,20 @@ Map<String, dynamic> language = {
     'cardnumber': 'Card Number',
     'cardholdername': 'Card Holder Name',
     'paypalaccountemail': 'Paypal Account Email',
-    'paywithpaypal': 'Pay With PayPal '
+    'paywithpaypal': 'Pay With PayPal ',
+    'confirmbooking': 'Confirm Booking',
+    'join': 'Join',
+    'bookagain': 'Book Again',
+    'explorenow': 'Explore Now',
+    'overallrating': 'Overall Rating',
+    'consultantrating': 'Consultant Rating',
+    'basedon': 'Based On',
+    'numbertooshort': 'Number too Short',
+    'numbertoolong': 'Number too Long',
+    'enteravalidphone': 'Enter A Valid Phone Number',
+    'enteravalidemail': 'Enter A Valid Email',
+    'namerror': 'The Name Must be > 3 characters',
+    'selectdatebefore': 'Please Select Date Before'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -231,6 +244,19 @@ Map<String, dynamic> language = {
     'cardnumber': 'رقم البطاقة',
     'cardholdername': 'اسم صاحب البطاقة',
     'paypalaccountemail': 'البريد الإلكتروني لحساب PayPal',
-    'paywithpaypal': 'الدفع باستخدام PayPal'
+    'paywithpaypal': 'الدفع باستخدام PayPal',
+    'confirmbooking': 'تأكيد الحجز',
+    'join': 'الانضمام',
+    'bookagain': 'احجز مرة أخرى',
+    'explorenow': 'استكشف الآن',
+    'overallrating': 'التقييم العام',
+    'consultantrating': 'قييم المستشار',
+    'basedon': 'بناءًا على',
+    'numbertooshort': 'الرقم قصير جداً',
+    'numbertoolong': 'الرقم طويل جداً',
+    'enteravalidphone': 'الرجاء إدخال رقم هاتف صالح',
+    "enteravalidemail": "أدخل بريدًا إلكترونيًا صالحًا",
+    "namerror": "يجب أن يتكون الاسم من أكثر من 3 أحرف",
+    'selectdatebefore': ' يرجى تحديد التاريخ قبل'
   }
 };

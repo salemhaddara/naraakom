@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/BookingTime.dart';
 
-class TimePicker extends StatelessWidget {
+class TimePicker extends StatefulWidget {
   final List<BookingTIme> strings;
   final Function(DateTime) onTimeSelected;
 
   const TimePicker(
-      {super.key, required this.strings, required this.onTimeSelected});
+      {Key? key, required this.strings, required this.onTimeSelected})
+      : super(key: key);
+
+  @override
+  _TimePickerState createState() => _TimePickerState();
+}
+
+class _TimePickerState extends State<TimePicker> {
+  DateTime? selectedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -18,23 +27,27 @@ class TimePicker extends StatelessWidget {
         spacing: 16.0,
         runSpacing: 16.0,
         alignment: WrapAlignment.start,
-        children: strings.map((string) {
+        children: widget.strings.map((string) {
           final time = string.bookingtime;
-          final isSelected = string.isBooked;
+          final isSelected = selectedTime == time;
 
           return GestureDetector(
             onTap: () {
-              if (!isSelected) {
-                onTimeSelected(time);
+              if (!string.isBooked) {
+                setState(() {
+                  selectedTime = time;
+                });
+                widget.onTimeSelected(time);
               }
             },
             child: Container(
-              width: 120.0,
+              width: 100.0,
               height: 40,
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
+                color: isSelected ? lightcyan : Colors.transparent,
                 border: Border.all(
-                  color: isSelected
+                  color: string.isBooked
                       ? Colors.grey
                       : Colors.blue, // Highlight available times
                   width: 1,
@@ -47,7 +60,9 @@ class TimePicker extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: isSelected ? Colors.grey : Colors.black,
+                    color: isSelected
+                        ? Colors.black
+                        : (string.isBooked ? Colors.grey : Colors.black),
                   ),
                 ),
               ),

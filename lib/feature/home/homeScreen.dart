@@ -35,17 +35,16 @@ class homeScreen extends StatefulWidget {
 // ignore: camel_case_types
 class _homeScreenState extends State<homeScreen> {
   int yourActiveIndex = 0;
-  String name = 'Nada';
+  String name = '';
   User? userdata;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    name = 'Nada';
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: white,
-      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ));
     return Scaffold(
       body: BlocProvider<contentbloc>(
@@ -199,7 +198,7 @@ class _homeScreenState extends State<homeScreen> {
                       child: Container(
                         alignment: AlignmentDirectional.topStart,
                         height: constraints.maxHeight / 2,
-                        width: constraints.maxWidth / 2,
+                        width: constraints.maxWidth / 1.2,
                         child: Column(
                           children: [
                             Row(
@@ -363,6 +362,7 @@ class _homeScreenState extends State<homeScreen> {
     return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
       if (state.requeststate is userDataRequest_SUCCESS) {
         userdata = ((state.requeststate as userDataRequest_SUCCESS).userdata);
+        name = (userdata?.username) ?? '';
       }
       return Container(
         decoration: const BoxDecoration(
@@ -435,7 +435,7 @@ class _homeScreenState extends State<homeScreen> {
                                     text:
                                         '${language[defaultLang]['haveaniceday']} $name',
                                     color: white,
-                                    fontsize: 13,
+                                    fontsize: 14,
                                   ),
                                 )
                               ],

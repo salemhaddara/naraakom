@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/core/utils/Models/Schedule.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
@@ -125,7 +127,10 @@ class _appointmentContainerState extends State<appointmentContainer> {
                 const SizedBox(
                   width: 5,
                 ),
-                text400normal(text: 'Book Again', color: white, fontsize: 14)
+                text400normal(
+                    text: language[defaultLang]['bookagain'],
+                    color: white,
+                    fontsize: 14)
               ],
             ),
           )),
@@ -155,7 +160,10 @@ class _appointmentContainerState extends State<appointmentContainer> {
                 const SizedBox(
                   width: 5,
                 ),
-                text400normal(text: 'Join', color: white, fontsize: 14)
+                text400normal(
+                    text: language[defaultLang]['join'],
+                    color: white,
+                    fontsize: 14)
               ],
             ),
           )),
@@ -174,7 +182,10 @@ class _appointmentContainerState extends State<appointmentContainer> {
                 const SizedBox(
                   width: 5,
                 ),
-                text400normal(text: 'Cancel', color: cyan, fontsize: 14)
+                text400normal(
+                    text: language[defaultLang]['cancel'],
+                    color: cyan,
+                    fontsize: 14)
               ],
             ),
           )),
@@ -200,7 +211,10 @@ class _appointmentContainerState extends State<appointmentContainer> {
               const SizedBox(
                 width: 5,
               ),
-              text400normal(text: '27/07/2023', color: lightblack, fontsize: 14)
+              text400normal(
+                  text: formatDate(widget.schedule.scheduleTime),
+                  color: lightblack,
+                  fontsize: 14)
             ],
           ),
         ),
@@ -215,7 +229,10 @@ class _appointmentContainerState extends State<appointmentContainer> {
               const SizedBox(
                 width: 5,
               ),
-              text400normal(text: '10:30 PM', color: lightblack, fontsize: 14)
+              text400normal(
+                  text: formatTime(widget.schedule.scheduleTime),
+                  color: lightblack,
+                  fontsize: 14)
             ],
           ),
         ),
@@ -249,5 +266,15 @@ class _appointmentContainerState extends State<appointmentContainer> {
       width: size.width,
       margin: const EdgeInsets.symmetric(horizontal: 16),
     );
+  }
+
+  String formatTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('hh:mm a');
+    return formatter.format(dateTime);
+  }
+
+  String formatDate(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd/MM/yyyy');
+    return formatter.format(dateTime);
   }
 }

@@ -29,8 +29,12 @@ class categoryViewer extends StatefulWidget {
   State<categoryViewer> createState() => _categoryViewerState();
 }
 
+int HIGHEST_PRICE = 1;
+int HIGHEST_RATE = 2;
+int LOWEST_PRICE = 3;
+
 class _categoryViewerState extends State<categoryViewer> {
-  String? selectedFilter; // Store the selected value here
+  int selectedFilter = 0;
   List<ConsultantModel>? filteredList;
 
   @override
@@ -108,8 +112,11 @@ class _categoryViewerState extends State<categoryViewer> {
             padding: const EdgeInsets.all(5),
             margin: const EdgeInsetsDirectional.only(end: 20),
             child: GestureDetector(
-              onTap: () {
-                _showSorting(size);
+              onTap: () async {
+                await _showSorting(size);
+                context.read<contentbloc>()
+                  ..add(ConsultantsRequested())
+                  ..add(SelectCategoryEvent(widget.category));
               },
               child: SvgPicture.asset(
                 'assets/images/iconfilter.svg',
@@ -121,19 +128,40 @@ class _categoryViewerState extends State<categoryViewer> {
     );
   }
 
+  // Widget _consultantsList() {
+  //   return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+  //     if (state.requeststate is consultantsrequest_SUCCESS) {
+  //       context.read<contentbloc>().add(SelectCategoryEvent(widget.category));
+  //     }
+  //     if (state.requeststate is CategorySelectedState) {
+  //       filteredList =
+  //           ((state.requeststate) as CategorySelectedState).filteredList;
+  //       return _returnListView(filteredList!);
+  //     }
+  //     if (state.requeststate is SearchState) {
+  //       filteredList =
+  //           ((state.requeststate) as SearchState).searchedconsultants;
+  //       return _returnListView(filteredList!);
+  //     }
+  //     return Container();
+  //   });
+  // }
   Widget _consultantsList() {
     return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
       if (state.requeststate is consultantsrequest_SUCCESS) {
         context.read<contentbloc>().add(SelectCategoryEvent(widget.category));
       }
       if (state.requeststate is CategorySelectedState) {
-        filteredList =
-            ((state.requeststate) as CategorySelectedState).filteredList;
+        filteredList = sortConsultants(
+            ((state.requeststate) as CategorySelectedState).filteredList,
+            selectedFilter);
+
         return _returnListView(filteredList!);
       }
       if (state.requeststate is SearchState) {
-        filteredList =
-            ((state.requeststate) as SearchState).searchedconsultants;
+        filteredList = sortConsultants(
+            ((state.requeststate) as SearchState).searchedconsultants,
+            selectedFilter);
         return _returnListView(filteredList!);
       }
       return Container();
@@ -169,8 +197,8 @@ class _categoryViewerState extends State<categoryViewer> {
     );
   }
 
-  _showSorting(Size size) {
-    showModalBottomSheet(
+  _showSorting(Size size) async {
+    return await showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -179,94 +207,96 @@ class _categoryViewerState extends State<categoryViewer> {
         ),
       ),
       builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                  color: cyan,
-                  borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(14),
-                      topLeft: Radius.circular(14))),
-              child: Row(children: [
-                Expanded(
-                  child: text400normal(
-                    text: language[defaultLang]['filterby'],
-                    color: white,
-                    fontsize: 14,
+        return Directionality(
+          textDirection:
+              defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: size.width,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                    color: cyan,
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(14),
+                        topLeft: Radius.circular(14))),
+                child: Row(children: [
+                  Expanded(
+                    child: text400normal(
+                      text: language[defaultLang]['filterby'],
+                      color: white,
+                      fontsize: 14,
+                    ),
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      selectedFilter = 0;
+                      Navigator.pop(context);
+                    },
+                    child: text600normal(
+                      text: language[defaultLang]['clear'],
+                      color: white,
+                      fontsize: 14,
+                    ),
+                  ),
+                ]),
+              ),
+              ListTile(
+                title: text400normal(
+                  text: language[defaultLang]['highestrating'],
+                  color: darkblack,
+                  fontsize: 14,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    selectedFilter = '';
+                leading: Radio(
+                  value: HIGHEST_RATE,
+                  groupValue: selectedFilter,
+                  activeColor: cyan,
+                  onChanged: (value) {
+                    selectedFilter = HIGHEST_RATE;
                     Navigator.pop(context);
                   },
-                  child: text600normal(
-                    text: language[defaultLang]['clear'],
-                    color: white,
-                    fontsize: 14,
-                  ),
                 ),
-              ]),
-            ),
-            ListTile(
-              title: text400normal(
-                text: language[defaultLang]['highestrating'],
-                color: darkblack,
-                fontsize: 14,
               ),
-              leading: Radio(
-                value: 'Highest Rating',
-                groupValue: selectedFilter,
-                activeColor: cyan,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value;
-                  });
-                },
+              ListTile(
+                title: text400normal(
+                  text: language[defaultLang]['lowestprice'],
+                  color: darkblack,
+                  fontsize: 14,
+                ),
+                leading: Radio(
+                  value: LOWEST_PRICE,
+                  groupValue: selectedFilter,
+                  activeColor: cyan,
+                  onChanged: (value) {
+                    selectedFilter = LOWEST_PRICE;
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-            ),
-            ListTile(
-              title: text400normal(
-                text: language[defaultLang]['lowestprice'],
-                color: darkblack,
-                fontsize: 14,
+              ListTile(
+                title: text400normal(
+                  text: language[defaultLang]['highestprice'],
+                  color: darkblack,
+                  fontsize: 14,
+                ),
+                leading: Radio(
+                  value: HIGHEST_PRICE,
+                  groupValue: selectedFilter,
+                  activeColor: cyan,
+                  onChanged: (value) {
+                    selectedFilter = HIGHEST_PRICE;
+                    Navigator.pop(context);
+                  },
+                ),
               ),
-              leading: Radio(
-                value: 'Lowest Price',
-                groupValue: selectedFilter,
-                activeColor: cyan,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value;
-                  });
-                },
-              ),
-            ),
-            ListTile(
-              title: text400normal(
-                text: language[defaultLang]['highestprice'],
-                color: darkblack,
-                fontsize: 14,
-              ),
-              leading: Radio(
-                value: 'Highest Price',
-                groupValue: selectedFilter,
-                activeColor: cyan,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFilter = value;
-                  });
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            )
-          ],
+              const SizedBox(
+                height: 10,
+              )
+            ],
+          ),
         );
       },
     );
@@ -294,5 +324,24 @@ class _categoryViewerState extends State<categoryViewer> {
                 },
               );
             }));
+  }
+
+  List<ConsultantModel> sortConsultants(
+    List<ConsultantModel> consultants,
+    int filter,
+  ) {
+    switch (filter) {
+      case 2:
+        consultants.sort((a, b) => b.rating.compareTo(a.rating));
+        break;
+      case 3:
+        consultants
+            .sort((a, b) => a.consultation_rate.compareTo(b.consultation_rate));
+      case 1:
+        consultants
+            .sort((a, b) => b.consultation_rate.compareTo(a.consultation_rate));
+        break;
+    }
+    return consultants;
   }
 }

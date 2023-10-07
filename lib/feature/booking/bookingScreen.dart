@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
+import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/localisation/translation.dart';
@@ -27,10 +29,16 @@ class bookingScreen extends StatefulWidget {
 class _bookingScreenState extends State<bookingScreen> {
   String? calltype;
   int shemaIndex = 0;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String emailcheck = '', namecheck = '';
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: white,
       body: Directionality(
@@ -46,14 +54,23 @@ class _bookingScreenState extends State<bookingScreen> {
               _spacer(5, size),
               _schema(shemaIndex, size),
               _spacer(2, size),
-              if (shemaIndex == 0)
-                _schemaCallType(size)
-              else if (shemaIndex == 1)
-                _schemacontactInfo(size)
-              else if (shemaIndex == 2)
-                _schemaCase(size)
-              else if (shemaIndex == 3)
-                _schemapaymentInfo(size)
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      if (shemaIndex == 0)
+                        _schemaCallType(size)
+                      else if (shemaIndex == 1)
+                        _schemacontactInfo(size)
+                      else if (shemaIndex == 2)
+                        _schemaCase(size)
+                      else if (shemaIndex == 3)
+                        _schemapaymentInfo(size)
+                    ],
+                  ),
+                ),
+              )
             ]),
           )),
     );
@@ -181,9 +198,11 @@ class _bookingScreenState extends State<bookingScreen> {
               ),
             const Spacer(),
             text400normal(
-                text: language[defaultLang]['contactinfo'],
-                fontsize: 14,
-                color: index >= 1 ? cyan : grey)
+              text: language[defaultLang]['contactinfo'],
+              fontsize: 13,
+              color: index >= 1 ? cyan : grey,
+              align: TextAlign.center,
+            ),
           ],
         )),
         Container(
@@ -375,18 +394,19 @@ class _bookingScreenState extends State<bookingScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       child: Form(
+          key: formKey,
           child: Column(
-        children: [
-          _schemacontactInfonameTitle(size),
-          _schemacontactInfonameField(size),
-          _schemacontactInfoemailTitle(size),
-          _schemacontactInfoemailInputField(size),
-          _schemacontactInfophoneNumberTitle(size),
-          _schemacontactInfophoneInputField(size),
-          __schemacontactInfoContinueButton(size),
-          __schemacontactInfoCancelButton(size)
-        ],
-      )),
+            children: [
+              _schemacontactInfonameTitle(size),
+              _schemacontactInfonameField(size),
+              _schemacontactInfoemailTitle(size),
+              _schemacontactInfoemailInputField(size),
+              _schemacontactInfophoneNumberTitle(size),
+              _schemacontactInfophoneInputField(size),
+              __schemacontactInfoContinueButton(size),
+              __schemacontactInfoCancelButton(size)
+            ],
+          )),
     );
   }
 
@@ -405,18 +425,28 @@ class _bookingScreenState extends State<bookingScreen> {
   Widget _schemacontactInfoemailInputField(Size size) {
     return InputField(
       hint: '',
-      isPassword: false,
       color: homebackgrey,
+      isPassword: false,
       validator: (email) {
         if (email!.isEmpty) {
           return null;
         }
-
+        if (!isValidEmail(email)) {
+          return language[defaultLang]['enteravalidemail'];
+        }
         return null;
       },
       initialState: false,
-      onChanged: (text) {},
+      onChanged: (text) {
+        emailcheck = '$text';
+      },
     );
+  }
+
+  bool isValidEmail(String email) {
+    RegExp emailRegExp =
+        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return emailRegExp.hasMatch(email);
   }
 
   Widget __schemacontactInfoContinueButton(Size size) {
@@ -426,7 +456,11 @@ class _bookingScreenState extends State<bookingScreen> {
             text: language[defaultLang]['continue'],
             width: size.width,
             onTap: () {
-              shemaIndex = 2;
+              if (formKey.currentState!.validate() &&
+                  emailcheck.isNotEmpty &&
+                  namecheck.isNotEmpty) {
+                shemaIndex = 2;
+              }
               setState(() {});
             }));
   }
@@ -482,15 +516,19 @@ class _bookingScreenState extends State<bookingScreen> {
       hint: '',
       isPassword: false,
       color: homebackgrey,
-      validator: (text) {
-        if (text!.isEmpty) {
+      validator: (name) {
+        if (name!.isEmpty) {
           return null;
         }
-
+        if (name.length < 3) {
+          return language[defaultLang]['namerror'];
+        }
         return null;
       },
       initialState: false,
-      onChanged: (text) {},
+      onChanged: (text) {
+        namecheck = '$text';
+      },
     );
   }
 
@@ -658,7 +696,7 @@ class _bookingScreenState extends State<bookingScreen> {
             child: Row(
           children: [
             text600normal(
-              text: '24/7/2023 | 5:00 PM',
+              text: formatDateTime(SelectedTime!),
               color: grey,
               fontsize: 16,
             )
@@ -666,6 +704,11 @@ class _bookingScreenState extends State<bookingScreen> {
         )),
       ],
     ));
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    final intl.DateFormat formatter = intl.DateFormat('dd/MM/yyyy | hh:mm a');
+    return formatter.format(dateTime);
   }
 
   _bookinginforowconsultationPrice() {

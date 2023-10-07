@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 
 // ignore: camel_case_types
 class text700normal extends StatelessWidget {
@@ -20,11 +21,17 @@ class text700normal extends StatelessWidget {
     return Text(
       text ?? '',
       textAlign: align ?? TextAlign.start,
-      style: GoogleFonts.nunitoSans(
-          fontSize: fontsize,
-          fontWeight: FontWeight.w700,
-          fontStyle: FontStyle.normal,
-          color: color),
+      style: defaultLang == 'en'
+          ? GoogleFonts.nunitoSans(
+              fontSize: fontsize,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.normal,
+              color: color)
+          : GoogleFonts.tajawal(
+              fontSize: fontsize,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.normal,
+              color: color),
     );
   }
 }

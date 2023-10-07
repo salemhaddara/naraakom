@@ -1,12 +1,11 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/Conversation.dart';
-import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
+import 'package:naraakom/feature/chats/chatsComponents/ChatMessage.dart';
 
 class ChatScreen extends StatefulWidget {
   Conversation conversation;
@@ -32,76 +31,31 @@ class _ChatScreenState extends State<ChatScreen> {
     ));
   }
 
-  void _handleSubmitted(String text) {
-    _textController.clear();
-
-    ChatMessage message = ChatMessage(
-      text: text,
-      isMyMessage: true, // My message
-      time: fromdatetoString(DateTime.now()),
-    );
-    if (message.text.isNotEmpty) {
-      setState(() {
-        _messages.insert(0, message);
-      });
-    }
-  }
-
-  String fromdatetoString(DateTime time) {
-    DateTime now = time;
-    String formattedTime = now.hour > 12
-        ? '${now.hour - 12}:${now.minute} PM'
-        : '${now.hour}:${now.minute} AM';
-    String formattedDate = now.day == DateTime.now().day
-        ? 'Today'
-        : '${now.day}/${now.month}/${now.year}';
-    return '$formattedDate $formattedTime';
-  }
-
-  Widget _buildTextComposer() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Send a message',
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            _topbar(size, context, widget.conversation.consultant.name),
-            Expanded(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _messages[index];
-                },
+      body: Directionality(
+        textDirection:
+            defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              _topbar(size, context, widget.conversation.consultant.name),
+              Expanded(
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  reverse: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    return _messages[index];
+                  },
+                ),
               ),
-            ),
-            const Divider(height: 1.0),
-            _buildTextComposer(),
-          ],
+              const Divider(height: 1.0),
+              _buildTextComposer(),
+            ],
+          ),
         ),
       ),
     );
@@ -152,77 +106,54 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
 
-class ChatMessage extends StatelessWidget {
-  final String text;
-  final bool isMyMessage;
-  final String time;
+  String fromdatetoString(DateTime time) {
+    DateTime now = time;
+    String formattedTime = now.hour > 12
+        ? '${now.hour - 12}:${now.minute} PM'
+        : '${now.hour}:${now.minute} AM';
+    String formattedDate = now.day == DateTime.now().day
+        ? 'Today'
+        : '${now.day}/${now.month}/${now.year}';
+    return '$formattedDate $formattedTime';
+  }
 
-  const ChatMessage({
-    super.key,
-    required this.text,
-    required this.isMyMessage,
-    required this.time,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+  Widget _buildTextComposer() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
-      alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment:
-            isMyMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Align children at the top
-            mainAxisAlignment:
-                isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-            children: [
-              if (!isMyMessage)
-                Container(
-                  height: 40,
-                  width: 40,
-                  margin: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.amber,
-                  ),
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: Image.asset(
-                        'assets/images/sample.jpg',
-                        fit: BoxFit.cover,
-                      )),
-                ),
-              Container(
-                padding: const EdgeInsets.all(12.0),
-                constraints: const BoxConstraints(maxWidth: 290),
-                decoration: BoxDecoration(
-                  color: isMyMessage ? cyan : lightcyan,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: text400normal(
-                  text: text,
-                  color: isMyMessage ? white : lightblack,
-                  fontsize: 16,
-                ),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: _textController,
+              onSubmitted: _handleSubmitted,
+              decoration: const InputDecoration.collapsed(
+                hintText: 'Send a message',
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: text400normal(
-              text: time,
-              color: grey,
-              fontsize: 12,
             ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () => _handleSubmitted(_textController.text),
           ),
         ],
       ),
     );
+  }
+
+  void _handleSubmitted(String text) {
+    _textController.clear();
+
+    ChatMessage message = ChatMessage(
+      text: text,
+      isMyMessage: true, // My message
+      time: fromdatetoString(DateTime.now()),
+    );
+    if (message.text.isNotEmpty) {
+      setState(() {
+        _messages.insert(0, message);
+      });
+    }
   }
 }

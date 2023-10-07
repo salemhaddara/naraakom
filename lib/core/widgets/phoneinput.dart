@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 
 import 'inputFormater.dart';
@@ -19,6 +20,7 @@ class phoneinput extends StatefulWidget {
 }
 
 class _phoneinputState extends State<phoneinput> {
+  bool isEnabled = false;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -33,8 +35,13 @@ class _phoneinputState extends State<phoneinput> {
           keyboardType: TextInputType.number,
           inputFormatters: [NumericTextInputFormatter()],
           onChanged: (text) {
+            setState(() {
+              if (!isEnabled) isEnabled = true;
+            });
+
             widget.onChanged(text);
           },
+          languageCode: defaultLang,
           pickerDialogStyle: PickerDialogStyle(
               countryCodeStyle: GoogleFonts.nunitoSans(
                   color: darkblack, fontWeight: FontWeight.w500),
@@ -57,7 +64,9 @@ class _phoneinputState extends State<phoneinput> {
           initialCountryCode: 'QA',
           disableLengthCheck: true,
           cursorColor: cyan,
-          autovalidateMode: AutovalidateMode.always,
+          autovalidateMode: isEnabled
+              ? AutovalidateMode.always
+              : AutovalidateMode.onUserInteraction,
           style: GoogleFonts.nunitoSans(
               fontWeight: FontWeight.w400, fontSize: 14, color: lightblack),
           validator: (text) {
@@ -69,12 +78,12 @@ class _phoneinputState extends State<phoneinput> {
                 if (text!.number.isEmpty) {
                   return '';
                 } else {
-                  return 'Number too Short ';
+                  return language[defaultLang]['numbertooshort'];
                 }
               } else if (e is NumberTooLongException) {
-                return 'Number too long';
+                return language[defaultLang]['numbertoolong'];
               } else {
-                return 'Enter A Valid Phone Number ';
+                return language[defaultLang]['enteravalidphone'];
               }
             }
           },

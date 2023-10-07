@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
@@ -22,6 +23,11 @@ class _chooseLangScreenState extends State<chooseLangScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: white,
       body: SizedBox(
@@ -59,9 +65,7 @@ class _chooseLangScreenState extends State<chooseLangScreen> {
                     child: SingleChildScrollView(
                         child: Column(
                       children: [
-                        Hero(
-                            tag: 'logo',
-                            child: SvgPicture.asset('assets/images/logo.svg')),
+                        SvgPicture.asset('assets/images/logo.svg'),
                         const SizedBox(
                           height: 20,
                         ),

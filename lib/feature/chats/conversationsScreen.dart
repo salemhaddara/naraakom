@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
@@ -95,7 +94,7 @@ _topbar(Size size, BuildContext context) {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),
           child: text600normal(
-            text: language[defaultLang]['chats'] ?? 'Chats',
+            text: language[defaultLang]['Chats'],
             fontsize: 20,
             color: lightblack,
           ),

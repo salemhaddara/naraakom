@@ -136,13 +136,13 @@ class _responiveconsultantState extends State<responiveconsultant> {
                     ),
                     _row(
                         'specialist.svg',
-                        'A consultant specializing in family counseling and improve relationships',
+                        '${widget.consultant.biography.substring(0, 45)}...',
                         false),
                     _row(
                         'money.svg',
                         'A consultant specializing in family counseling and improve relationships',
                         true),
-                    _row('time.svg', 'Available From 10 AM to 3 PM', false),
+                    _row('time.svg', widget.consultant.availability, false),
                     _button()
                   ],
                 ),
@@ -203,8 +203,9 @@ class _responiveconsultantState extends State<responiveconsultant> {
             ),
             Expanded(
                 child: signinrichtext(
-              startText: 'Consultation Price : ',
-              clickableText: '150 QAR',
+              startText: '${language[defaultLang]['consultationprice']} :',
+              clickableText:
+                  '${widget.consultant.consultation_rate.floor()} QAR',
               onClick: () {},
               fontsize: 14,
             ))

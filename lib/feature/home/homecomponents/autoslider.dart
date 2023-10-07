@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/home/homecomponents/sliderbutton.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -70,7 +71,7 @@ class _AutoSliderState extends State<AutoSlider> {
                               child: SizedBox(
                                 width: 200,
                                 child: text700normal(
-                                  text: 'The Best Consultant for your Life',
+                                  text: image.text,
                                   fontsize: 18,
                                   color: white,
                                 ),
@@ -78,7 +79,9 @@ class _AutoSliderState extends State<AutoSlider> {
                             ),
 
                             Positioned(
-                                bottom: 20, left: 20, child: sliderbutton()),
+                                bottom: 20,
+                                left: 20,
+                                child: sliderbutton(text: image.buttontext)),
 
                             Align(
                               alignment: Alignment.bottomCenter,
@@ -113,20 +116,20 @@ class _AutoSliderState extends State<AutoSlider> {
     images.add(ImageAd(
       'assets/images/sliderback.png',
       'assets/images/sliderback.png',
-      'The Best Consultant for your Life',
-      'Explore Now',
+      language[defaultLang]['thebestConsultant'],
+      language[defaultLang]['explorenow'],
     ));
     images.add(ImageAd(
       'assets/images/sliderback.png',
       'assets/images/sliderback.png',
-      'The Best Consultant for your Life',
-      'Explore Now',
+      language[defaultLang]['thebestConsultant'],
+      language[defaultLang]['explorenow'],
     ));
     images.add(ImageAd(
       'assets/images/sliderback.png',
       'assets/images/sliderback.png',
-      'The Best Consultant for your Life',
-      'Explore Now',
+      language[defaultLang]['thebestConsultant'],
+      language[defaultLang]['explorenow'],
     ));
   }
 }

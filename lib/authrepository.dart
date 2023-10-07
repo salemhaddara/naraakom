@@ -1,3 +1,4 @@
+import 'package:naraakom/core/utils/Models/BookingTime.dart';
 import 'package:naraakom/core/utils/Models/Schedule.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
 

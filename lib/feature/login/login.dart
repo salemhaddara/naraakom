@@ -31,7 +31,11 @@ class _loginState extends State<login> {
   String phoneNumbercheck = '', passwordcheck = '', fullphoneNumber = '';
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: white,

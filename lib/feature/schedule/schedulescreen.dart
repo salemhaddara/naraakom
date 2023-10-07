@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
-import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/Schedule.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/schedule/scheduleComponents/appointmentContainer.dart';
 import 'package:naraakom/feature/schedule/scheduleComponents/choiceContainer.dart';
 import 'package:naraakom/feature/schedulebloc/scheduleEvent.dart';
@@ -25,7 +23,11 @@ class _schedulescreenState extends State<schedulescreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return BlocProvider<schedulebloc>(
         create: (context) => schedulebloc(context.read<scheduleRepo>())
           ..add(UpComingSchedulesRequested()),
@@ -69,6 +71,7 @@ class _schedulescreenState extends State<schedulescreen> {
   Widget _SchedulelistView(Size size, List<Schedule> schedules) {
     return Expanded(
         child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.all(0),
             itemCount: schedules.length,
             itemBuilder: (context, index) {

@@ -22,7 +22,11 @@ class _profileScreenState extends State<profileScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: homebackgrey,
       body: Directionality(
@@ -87,23 +91,16 @@ class _profileScreenState extends State<profileScreen> {
                       false,
                       () {},
                     ),
-                    _chatTile(
-                      size,
-                      'chats.svg',
-                      language[defaultLang]['Chats'],
-                      false,
-                      true,
-                      () {
-                        PersistentNavBarNavigator.pushNewScreen(
-                          context,
-                          screen: const conversationsScreen(),
-                          withNavBar: false,
-                          pageTransitionAnimation:
-                              PageTransitionAnimation.cupertino,
-                        );
-                      },
-                      true,
-                    ),
+                    _chatTile(size, 'chats.svg', language[defaultLang]['Chats'],
+                        false, true, () {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const conversationsScreen(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
+                    }, false),
                     _accountTitle(language[defaultLang]['About']),
                     _accountTile(
                         size,
@@ -200,6 +197,17 @@ class _profileScreenState extends State<profileScreen> {
                 decoration: const BoxDecoration(
                     shape: BoxShape.circle, color: Colors.red),
                 child: text400normal(text: '4', color: white, fontsize: 12)),
+          if (!withNotification)
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: Transform.rotate(
+                angle: defaultLang == 'en' ? 3.14159265 : 0,
+                child: SvgPicture.asset(
+                  'assets/images/back.svg',
+                ),
+              ),
+            ),
         ]),
       ),
     );
