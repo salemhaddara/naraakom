@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/home/homeScreen.dart';
-import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/profile/profileScreen.dart';
 import 'package:naraakom/feature/search/searchScreen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';

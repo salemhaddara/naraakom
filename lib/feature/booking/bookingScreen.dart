@@ -2,15 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
+import 'package:naraakom/feature/booking/Repository/bookingappointmentRepo.dart';
+import 'package:naraakom/feature/booking/bloc/bookingbloc.dart';
+import 'package:naraakom/feature/booking/bloc/bookingevent.dart';
+import 'package:naraakom/feature/booking/bloc/bookingstate.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
 import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/inputfield.dart';
@@ -41,42 +45,52 @@ class _bookingScreenState extends State<bookingScreen> {
         systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor: white,
-      body: Directionality(
-          textDirection:
-              defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-          child: Container(
-            padding: EdgeInsets.only(
-              top: size.height * .05,
-            ),
-            child: Column(children: [
-              _topbar(size),
-              _bookingInfo(size),
-              _spacer(5, size),
-              _schema(shemaIndex, size),
-              _spacer(2, size),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      if (shemaIndex == 0)
-                        _schemaCallType(size)
-                      else if (shemaIndex == 1)
-                        _schemacontactInfo(size)
-                      else if (shemaIndex == 2)
-                        _schemaCase(size)
-                      else if (shemaIndex == 3)
-                        _schemapaymentInfo(size)
-                    ],
-                  ),
+      body: BlocProvider(
+          create: (context) =>
+              bookingAppointmentbloc(context.read<bookingappointmentRepo>()),
+          child: Directionality(
+              textDirection:
+                  defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: size.height * .05,
                 ),
-              )
-            ]),
-          )),
+                child: Column(children: [
+                  _topbar(size),
+                  _bookingInfo(size),
+                  _spacer(5, size),
+                  BlocBuilder<bookingAppointmentbloc, bookingAppointmentstate>(
+                      builder: (context, state) {
+                    return _schema(state.index, size);
+                  }),
+                  _spacer(2, size),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: BlocBuilder<bookingAppointmentbloc,
+                          bookingAppointmentstate>(builder: (context, state) {
+                        print('${state.index} aand this ');
+                        return Column(
+                          children: [
+                            if (state.index == 0)
+                              _schemaCallType(size, context)
+                            else if (state.index == 1)
+                              _schemacontactInfo(size, context)
+                            else if (state.index == 2)
+                              _schemaCase(size, context)
+                            else if (state.index == 3)
+                              _schemapaymentInfo(size, context)
+                          ],
+                        );
+                      }),
+                    ),
+                  )
+                ]),
+              ))),
     );
   }
 
-  _schemapaymentInfo(Size size) {
+  _schemapaymentInfo(Size size, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
       child: Column(
@@ -277,7 +291,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  _schemaCase(Size size) {
+  _schemaCase(Size size, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
       child: Form(
@@ -288,8 +302,8 @@ class _bookingScreenState extends State<bookingScreen> {
           _schemaCaseAgeInputField(size),
           _schemaCaseDescriptionTitle(size),
           _schemaCaseInputField(size),
-          _schemaCaseContinueButton(size),
-          _schemaCaseCancelButton(size)
+          _schemaCaseContinueButton(size, context),
+          _schemaCaseCancelButton(size, context)
         ],
       )),
     );
@@ -363,23 +377,25 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemaCaseContinueButton(Size size) {
+  Widget _schemaCaseContinueButton(Size size, BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 25, bottom: 16),
         child: button(
             text: language[defaultLang]['proceedtopayment'],
             width: size.width,
             onTap: () {
-              shemaIndex = 3;
-              setState(() {});
+              context
+                  .read<bookingAppointmentbloc>()
+                  .add(bookingSchemaIndexChanged());
             }));
   }
 
-  Widget _schemaCaseCancelButton(Size size) {
+  Widget _schemaCaseCancelButton(Size size, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        shemaIndex = 1;
-        setState(() {});
+        context
+            .read<bookingAppointmentbloc>()
+            .add(bookingSchemaCancelInvoked());
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16),
@@ -390,7 +406,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  _schemacontactInfo(Size size) {
+  _schemacontactInfo(Size size, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
       child: Form(
@@ -403,8 +419,8 @@ class _bookingScreenState extends State<bookingScreen> {
               _schemacontactInfoemailInputField(size),
               _schemacontactInfophoneNumberTitle(size),
               _schemacontactInfophoneInputField(size),
-              __schemacontactInfoContinueButton(size),
-              __schemacontactInfoCancelButton(size)
+              __schemacontactInfoContinueButton(size, context),
+              __schemacontactInfoCancelButton(size, context)
             ],
           )),
     );
@@ -449,7 +465,7 @@ class _bookingScreenState extends State<bookingScreen> {
     return emailRegExp.hasMatch(email);
   }
 
-  Widget __schemacontactInfoContinueButton(Size size) {
+  Widget __schemacontactInfoContinueButton(Size size, BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 25, bottom: 16),
         child: button(
@@ -459,17 +475,19 @@ class _bookingScreenState extends State<bookingScreen> {
               if (formKey.currentState!.validate() &&
                   emailcheck.isNotEmpty &&
                   namecheck.isNotEmpty) {
-                shemaIndex = 2;
+                context
+                    .read<bookingAppointmentbloc>()
+                    .add(bookingSchemaIndexChanged());
               }
-              setState(() {});
             }));
   }
 
-  Widget __schemacontactInfoCancelButton(Size size) {
+  Widget __schemacontactInfoCancelButton(Size size, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        shemaIndex = 0;
-        setState(() {});
+        context
+            .read<bookingAppointmentbloc>()
+            .add(bookingSchemaCancelInvoked());
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16),
@@ -532,18 +550,18 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  _schemaCallType(Size size) {
+  _schemaCallType(Size size, BuildContext context) {
     return Column(
       children: [
         _callTypeStepTitle(size),
-        _callTypeStepCallsType(size),
+        _callTypeStepCallsType(size, context),
         _callTypeStepCallsNotice(size),
         _callTypeStepCallsPickanotherTime()
       ],
     );
   }
 
-  _callTypeStepCallsType(Size size) {
+  _callTypeStepCallsType(Size size, BuildContext context) {
     return Container(
       width: size.width,
       height: 120,
@@ -553,8 +571,9 @@ class _bookingScreenState extends State<bookingScreen> {
           _callTypeStepCallItem(
               size, language[defaultLang]['videocall'], 'videocall', () {
             calltype = 'videocall';
-            shemaIndex = 1;
-            setState(() {});
+            context
+                .read<bookingAppointmentbloc>()
+                .add(bookingSchemaIndexChanged());
           }),
           const SizedBox(
             width: 10,
@@ -562,8 +581,9 @@ class _bookingScreenState extends State<bookingScreen> {
           _callTypeStepCallItem(
               size, language[defaultLang]['voicecall'], 'voicecall', () {
             calltype = 'voicecall';
-            shemaIndex = 1;
-            setState(() {});
+            context
+                .read<bookingAppointmentbloc>()
+                .add(bookingSchemaIndexChanged());
           }),
           const SizedBox(
             width: 10,
@@ -571,8 +591,9 @@ class _bookingScreenState extends State<bookingScreen> {
           _callTypeStepCallItem(size, language[defaultLang]['chat'], 'chatcall',
               () {
             calltype = 'chatcall';
-            shemaIndex = 1;
-            setState(() {});
+            context
+                .read<bookingAppointmentbloc>()
+                .add(bookingSchemaIndexChanged());
           }),
         ],
       ),

@@ -6,9 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
-import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
-import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
@@ -34,8 +32,9 @@ class bookingSuccessful extends StatefulWidget {
 class _bookingSuccessfulState extends State<bookingSuccessful> {
   String image = '';
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     if (widget.appointmentType == 'videocall') {
       image = 'videocall.svg';
     } else if (widget.appointmentType == 'voicecall') {
@@ -43,12 +42,6 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
     } else {
       image = 'chatcall.svg';
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return Scaffold(
       backgroundColor: white,
       body: Directionality(
@@ -106,10 +99,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
             text: language[defaultLang]['myschedule'],
             width: size.width,
             onTap: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: ((context) => MyNavigationBar(index: 2))));
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: ((context) => MyNavigationBar(index: 2))));
             }));
   }
 
@@ -170,7 +163,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                       Row(children: [
                         text600normal(
                             text:
-                                '${widget.consultant.consultation_rate.floor()}',
+                                '${widget.consultant.consultation_rate.floor()} QAR',
                             fontsize: 16,
                             color: cyan),
                         const Spacer()

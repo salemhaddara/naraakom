@@ -87,7 +87,8 @@ Map<String, dynamic> language = {
     'voicecall': 'Voice Call',
     'chat': 'Chat',
     'pickanothertime': 'Pick Another Time',
-    'allvideocalls': 'All Video Calls',
+    'allvideocalls':
+        'All video calls and voice calls will be made through the Zoom app. and messages will be made through Naraakom',
     'howwouldyouliketospeak': 'How would you like to speak?',
     'specialization': 'Specialization',
     'age': 'Age',
@@ -216,7 +217,8 @@ Map<String, dynamic> language = {
     'voicecall': 'مكالمة صوتية',
     'chat': 'محادثة',
     'pickanothertime': 'اختيار وقت آخر',
-    'allvideocalls': 'جميع مكالمات الفيديو',
+    'allvideocalls':
+        'جميع المكالمات الصوتية والمكالمات الفيديو ستتم عبر تطبيق زووم، وسيتم إجراء الرسائل عبر نرعاكم.',
     'howwouldyouliketospeak': 'كيف تود التحدث؟',
     'specialization': 'التخصص',
     'age': 'العمر',

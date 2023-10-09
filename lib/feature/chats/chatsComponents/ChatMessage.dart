@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 
@@ -17,7 +16,6 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
       alignment: isMyMessage ? Alignment.centerRight : Alignment.centerLeft,
