@@ -7,6 +7,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
+import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
@@ -99,10 +100,10 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
             text: language[defaultLang]['myschedule'],
             width: size.width,
             onTap: () {
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: ((context) => MyNavigationBar(index: 2))));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => MyNavigationBar(index: 2))));
             }));
   }
 
