@@ -129,7 +129,9 @@ Map<String, dynamic> language = {
     'enteravalidphone': 'Enter A Valid Phone Number',
     'enteravalidemail': 'Enter A Valid Email',
     'namerror': 'The Name Must be > 3 characters',
-    'selectdatebefore': 'Please Select Date Before'
+    'selectdatebefore': 'Please Select Date Before',
+    'totalbalance': 'Total Balance',
+    'paymentmethods': 'Payment Methods'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -259,6 +261,8 @@ Map<String, dynamic> language = {
     'enteravalidphone': 'الرجاء إدخال رقم هاتف صالح',
     "enteravalidemail": "أدخل بريدًا إلكترونيًا صالحًا",
     "namerror": "يجب أن يتكون الاسم من أكثر من 3 أحرف",
-    'selectdatebefore': ' يرجى تحديد التاريخ قبل'
+    'selectdatebefore': ' يرجى تحديد التاريخ قبل',
+    'totalbalance': 'الرصيد الإجمالي',
+    'paymentmethods': 'وسائل الدفع',
   }
 };

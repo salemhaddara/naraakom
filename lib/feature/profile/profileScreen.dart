@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/Wallet/WalletScreen.dart';
 import 'package:naraakom/feature/chats/conversationsScreen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -89,7 +90,15 @@ class _profileScreenState extends State<profileScreen> {
                       language[defaultLang]['Wallet'],
                       false,
                       false,
-                      () {},
+                      () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: const WalletScreen(),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
                     ),
                     _chatTile(size, 'chats.svg', language[defaultLang]['Chats'],
                         false, true, () {

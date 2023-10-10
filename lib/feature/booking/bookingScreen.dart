@@ -69,7 +69,6 @@ class _bookingScreenState extends State<bookingScreen> {
                       physics: const BouncingScrollPhysics(),
                       child: BlocBuilder<bookingAppointmentbloc,
                           bookingAppointmentstate>(builder: (context, state) {
-                        print('${state.index} aand this ');
                         return Column(
                           children: [
                             if (state.index == 0)
