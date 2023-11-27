@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
-import 'package:naraakom/core/utils/Models/User.dart';
+import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/mainbloc/contentevent.dart';
 import 'package:naraakom/feature/mainbloc/contentstate.dart';
@@ -14,6 +14,7 @@ class contentbloc extends Bloc<contentevent, contentstate> {
     on<ConsultantsRequested>(
       (event, emit) async {
         try {
+          emit(state.copyWith(userName: await Preferences.getUserName()));
           //fetch data here
           emit(state.copyWith(requeststate: consultantsrequest_IN_PROGRESS()));
           List<ConsultantModel> consultants = await repo.fetchConsultants();
@@ -31,11 +32,11 @@ class contentbloc extends Bloc<contentevent, contentstate> {
     //GET USER DATA
     on<UserDataRequested>((event, emit) async {
       try {
-        emit(state.copyWith(requeststate: userDataRequest_IN_PROGRESS()));
-        User user = await repo.getUserWithId('id');
-        emit(state.copyWith(
-            userdata: user,
-            requeststate: userDataRequest_SUCCESS(userdata: user)));
+        // emit(state.copyWith(requeststate: userDataRequest_IN_PROGRESS()));
+        // User user = await repo.getUserWithId('id');
+        // emit(state.copyWith(
+        //     userdata: user,
+        //     requeststate: userDataRequest_SUCCESS(userdata: user)));
       } catch (e) {
         emit(state.copyWith(
             requeststate: userDataRequest_FAILED(exception: e as Exception)));

@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 abstract class signupsubmissionstatus {
   const signupsubmissionstatus();
 }
@@ -11,6 +13,6 @@ class signupformsubmitting extends signupsubmissionstatus {}
 class signupsubmissionsuccess extends signupsubmissionstatus {}
 
 class signupsubmissionfailed extends signupsubmissionstatus {
-  final Exception exception;
+  final String exception;
   const signupsubmissionfailed(this.exception);
 }

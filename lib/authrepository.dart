@@ -1,20 +1,39 @@
-import 'package:naraakom/core/utils/Models/BookingTime.dart';
-import 'package:naraakom/core/utils/Models/Schedule.dart';
+// ignore_for_file: camel_case_types
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:naraakom/core/utils/Constants/Backend.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
 
-class authrepository {
-  Future<String> login() async {
-    print('attempt login');
-    await Future.delayed(const Duration(seconds: 3));
-    print('login Succeful');
-    String UserId = 'id3';
-    return UserId;
+class authRepository {
+  Future<Map<String, dynamic>> login(String mobile, password) async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiSigninUrl),
+        body: json.encode({
+          'mobile': mobile,
+          'password': password,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
+      return json.decode(response.body);
+    } catch (e) {
+      return {'status': 'error', 'message': 'Check You Internet Connection'};
+    }
   }
 
-  Future<void> signUp() async {
-    print('attempt Sign Up');
-    await Future.delayed(const Duration(seconds: 3));
-    print('Sign Up Successful');
+  Future<Map<String, dynamic>> signUp(User user) async {
+    try {
+      final response = await http.post(
+        Uri.parse(apiSigupUrl),
+        body: json.encode(user.toJson()),
+        headers: {'Content-Type': 'application/json'},
+      );
+      return json.decode(response.body);
+    } catch (e) {
+      return {'status': 'error', 'message': 'Check You Internet Connection'};
+    }
   }
 
   Future<String> sendVerificationCode(String phoneNumber) async {
@@ -30,10 +49,20 @@ class authrepository {
     await Future.delayed(const Duration(seconds: 4));
     print('pass setting Successful');
     return User(
-        username: 'username',
-        id: 'id',
+        name: 'username',
+        user_type: 1,
         email: 'email',
         password: 'password',
-        notifications: []);
+        mobile: 'mobile');
+  }
+
+  User getUserFromJson(Map<String, dynamic> json) {
+    print(json);
+    return User(
+        email: json['email'],
+        password: 'NotReturned',
+        name: json['name'],
+        user_type: 1,
+        mobile: json['mobile']);
   }
 }

@@ -1,11 +1,13 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:naraakom/authrepository.dart';
+import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
 import 'package:naraakom/feature/signup/signupsubmission/signupsubmissionevent.dart';
 
 class signupbloc extends Bloc<signupevent, signupstate> {
-  final authrepository repo;
+  final authRepository repo;
   signupbloc(this.repo) : super(signupstate()) {
     on<signupPhoneNumberChanged>(
         (event, emit) => emit(state.copyWith(phonenumber: event.phoneNumnber)));
@@ -18,11 +20,15 @@ class signupbloc extends Bloc<signupevent, signupstate> {
     on<signupSubmitted>((event, emit) async {
       emit(state.copyWith(formstatus: signupformsubmitting()));
       try {
-        await repo.signUp();
-        emit(state.copyWith(formstatus: signupsubmissionsuccess()));
+        var response = await repo.signUp(event.user);
+        if (response['status'] == 'success') {
+          emit(state.copyWith(formstatus: signupsubmissionsuccess()));
+        } else {
+          emit(state.copyWith(
+              formstatus: signupsubmissionfailed(response['message'])));
+        }
       } catch (e) {
-        emit(
-            state.copyWith(formstatus: signupsubmissionfailed(e as Exception)));
+        emit(state.copyWith(formstatus: signupsubmissionfailed(e.toString())));
       }
     });
   }

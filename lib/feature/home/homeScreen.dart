@@ -3,12 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
-import 'package:naraakom/core/utils/Models/NotificationModel.dart';
-import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
 import 'package:naraakom/feature/home/homecomponents/autoslider.dart';
 import 'package:naraakom/feature/home/homecomponents/popularbar.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
@@ -126,40 +123,40 @@ class _homeScreenState extends State<homeScreen> {
       }
       if (state.requeststate is consultantsrequest_SUCCESS) {
         consultants.addAll(state.consultants!.toList());
-        return Column(
+        return const Column(
           children: [
-            responiveconsultant(
-              islarge: false,
-              consultant: consultants[0],
-              onClick: () {},
-              onclicknotlarge: () {
-                Future.delayed(Duration.zero, () {
-                  PersistentNavBarNavigator.pushNewScreen(
-                    context,
-                    screen: consultantinfo(
-                      consultant: consultants[0],
-                    ),
-                    withNavBar: false,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                  );
-                });
-              },
-            ),
-            responiveconsultant(
-              islarge: false,
-              consultant: consultants[1],
-              onClick: () {},
-              onclicknotlarge: () {
-                PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: consultantinfo(
-                    consultant: consultants[1],
-                  ),
-                  withNavBar: false,
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                );
-              },
-            ),
+            // responiveconsultant(
+            //   islarge: false,
+            //   consultant: consultants[0],
+            //   onClick: () {},
+            //   onclicknotlarge: () {
+            //     Future.delayed(Duration.zero, () {
+            //       PersistentNavBarNavigator.pushNewScreen(
+            //         context,
+            //         screen: consultantinfo(
+            //           consultant: consultants[0],
+            //         ),
+            //         withNavBar: false,
+            //         pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            //       );
+            //     });
+            //   },
+            // ),
+            // responiveconsultant(
+            //   islarge: false,
+            //   consultant: consultants[1],
+            //   onClick: () {},
+            //   onclicknotlarge: () {
+            //     PersistentNavBarNavigator.pushNewScreen(
+            //       context,
+            //       screen: consultantinfo(
+            //         consultant: consultants[1],
+            //       ),
+            //       withNavBar: false,
+            //       pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            //     );
+            //   },
+            // ),
           ],
         );
       }
@@ -360,10 +357,6 @@ class _homeScreenState extends State<homeScreen> {
 
   Widget _buildHomeTopBar(Size size, BuildContext bloccontext) {
     return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
-      if (state.requeststate is userDataRequest_SUCCESS) {
-        userdata = ((state.requeststate as userDataRequest_SUCCESS).userdata);
-        name = (userdata?.username) ?? '';
-      }
       return Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -414,9 +407,8 @@ class _homeScreenState extends State<homeScreen> {
                                   child: Row(
                                     children: [
                                       text600normal(
-                                        text: userdata != null
-                                            ? '${language[defaultLang]['hello']} $name '
-                                            : '${language[defaultLang]['home']}',
+                                        text:
+                                            '${language[defaultLang]['hello']}${state.userName} ',
                                         fontsize: 20,
                                         color: white,
                                         align: TextAlign.start,
@@ -429,14 +421,11 @@ class _homeScreenState extends State<homeScreen> {
                                     ],
                                   ),
                                 ),
-                                Visibility(
-                                  visible: userdata != null,
-                                  child: text400normal(
-                                    text:
-                                        '${language[defaultLang]['haveaniceday']} $name',
-                                    color: white,
-                                    fontsize: 14,
-                                  ),
+                                text400normal(
+                                  text:
+                                      '${language[defaultLang]['haveaniceday']}✋',
+                                  color: white,
+                                  fontsize: 14,
                                 )
                               ],
                             ),
@@ -465,21 +454,21 @@ class _homeScreenState extends State<homeScreen> {
                                     alignment: Alignment.center,
                                     child: SvgPicture.asset(
                                         'assets/images/notification.svg')),
-                                Visibility(
-                                  visible: userdata != null
-                                      ? NotificationModel.hasUnreadNotification(
-                                          userdata!.notifications)
-                                      : false,
-                                  child: Container(
-                                    height: 8,
-                                    width: 8,
-                                    margin: const EdgeInsets.all(7),
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)),
-                                        color: Colors.red),
-                                  ),
-                                )
+                                // Visibility(
+                                //   visible: userdata != null
+                                //       ? NotificationModel.hasUnreadNotification(
+                                //           userdata!.notifications)
+                                //       : false,
+                                //   child: Container(
+                                //     height: 8,
+                                //     width: 8,
+                                //     margin: const EdgeInsets.all(7),
+                                //     decoration: const BoxDecoration(
+                                //         borderRadius: BorderRadius.all(
+                                //             Radius.circular(4)),
+                                //         color: Colors.red),
+                                //   ),
+                                // )
                               ]),
                             ),
                           )

@@ -87,8 +87,6 @@ class _schedulescreenState extends State<schedulescreen> {
   Widget _choiceContainer(Size size) {
     return BlocBuilder<schedulebloc, scheduleState>(builder: (context, state) {
       return ChoiceContainer(onChoiceSelected: (choice) {
-        print(choice);
-
         switch (choice) {
           case 'Upcoming':
             return context

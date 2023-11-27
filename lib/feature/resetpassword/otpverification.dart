@@ -11,7 +11,7 @@ import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
 import 'package:naraakom/feature/resetpassword/setnewpass.dart';
-import '../../authrepository.dart';
+import '../../authRepository.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/text400normal.dart';
@@ -44,7 +44,7 @@ class _otpverificationState extends State<otpverification> {
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(
-        create: (context) => otpbloc(context.read<authrepository>())
+        create: (context) => otpbloc(context.read<authRepository>())
           ..add(otpPhoneNumberChanged(phoneNumber: phonenumber))
           ..add(otpSubmitted()),
         child: BlocBuilder<otpbloc, otpstate>(builder: (context, state) {

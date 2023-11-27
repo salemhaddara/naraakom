@@ -1,8 +1,10 @@
+// ignore_for_file: non_constant_identifier_names, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naraakom/authrepository.dart';
+import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';
@@ -28,6 +30,8 @@ class login extends StatefulWidget {
 
 class _loginState extends State<login> {
   final formKey = GlobalKey<FormState>();
+  bool Navigated = false;
+  bool showedError = false;
   String phoneNumbercheck = '', passwordcheck = '', fullphoneNumber = '';
   @override
   Widget build(BuildContext context) {
@@ -37,10 +41,11 @@ class _loginState extends State<login> {
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(
-        create: (context) => loginbloc(context.read<authrepository>()),
+        create: (context) => loginbloc(context.read<authRepository>()),
         child: SafeArea(
             child: Directionality(
           textDirection:
@@ -114,13 +119,17 @@ class _loginState extends State<login> {
   }
 
   Widget _phoneInputField(Size size) {
-    return phoneinput(
-      onChanged: (text) {
-        phoneNumbercheck = text.number;
-        fullphoneNumber = text.completeNumber;
-        print(phoneNumbercheck);
-      },
-    );
+    return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
+      return phoneinput(
+        onChanged: (text) {
+          phoneNumbercheck = text.number;
+          fullphoneNumber = text.completeNumber;
+          context
+              .read<loginbloc>()
+              .add(loginPhoneNumberChanged(phoneNumnber: text.completeNumber));
+        },
+      );
+    });
   }
 
   Widget _passwordTitle(Size size) {
@@ -187,7 +196,6 @@ class _loginState extends State<login> {
   }
 
   Widget _signinButton(Size size, BuildContext pagecontext) {
-    bool Navigated = false;
     return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
       if (state.formstatus is submissionsuccess && !Navigated) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -195,6 +203,10 @@ class _loginState extends State<login> {
         });
         Navigated = true;
         return Container();
+      }
+      if (state.formstatus is submissionfailed && !showedError) {
+        print((state.formstatus as submissionfailed).exception);
+        showedError = true;
       }
       return state.formstatus is formsubmitting
           ? CircularProgressIndicator(
@@ -209,6 +221,7 @@ class _loginState extends State<login> {
                     context.read<loginbloc>().add((loginSubmitted()));
                   }
                 }
+                showedError = false;
               },
               width: size.width,
             );

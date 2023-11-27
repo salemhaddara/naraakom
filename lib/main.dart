@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:naraakom/authrepository.dart';
+import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/feature/booking/Repository/bookingappointmentRepo.dart';
@@ -17,7 +17,7 @@ void main() {
       providers: [
         RepositoryProvider(create: (context) => Repository()),
         RepositoryProvider(create: (context) => scheduleRepo()),
-        RepositoryProvider(create: (context) => authrepository()),
+        RepositoryProvider(create: (context) => authRepository()),
         RepositoryProvider(create: (context) => bookingappointmentRepo()),
       ],
       child: MaterialApp(

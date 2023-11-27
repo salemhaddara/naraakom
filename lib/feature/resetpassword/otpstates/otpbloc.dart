@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:naraakom/authrepository.dart';
+import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
@@ -7,7 +7,7 @@ import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart'
 import '../../../core/utils/Models/User.dart';
 
 class otpbloc extends Bloc<otpevent, otpstate> {
-  final authrepository repo;
+  final authRepository repo;
   otpbloc(this.repo) : super(otpstate()) {
     on<otpPhoneNumberChanged>(
         (event, emit) => emit(state.copyWith(phonenumber: event.phoneNumber)));
@@ -46,7 +46,7 @@ class otpbloc extends Bloc<otpevent, otpstate> {
         User user = await repo.setNewPass(state.newPassword, state.UserId);
         emit(state.copyWith(
           formstatus: settingNewPasswordSUCCESS(),
-          userId: user.id,
+          userId: user.mobile,
         ));
       },
     );

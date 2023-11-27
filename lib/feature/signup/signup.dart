@@ -1,12 +1,16 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/core/utils/Models/User.dart';
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/feature/signup/signupcomponents/acceptterms.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
 import 'package:naraakom/feature/signup/signupsubmission/signupsubmissionevent.dart';
-import '../../authrepository.dart';
+import '../../authRepository.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/button.dart';
@@ -30,7 +34,10 @@ class _signupState extends State<signup> {
   String phoneNumbercheck = '',
       namecheck = '',
       emailcheck = '',
-      passwordcheck = '';
+      passwordcheck = '',
+      fullPhoneNumber = '';
+  bool Navigated = false;
+  bool showedException = false;
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -42,7 +49,7 @@ class _signupState extends State<signup> {
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(
-        create: (context) => signupbloc(context.read<authrepository>()),
+        create: (context) => signupbloc(context.read<authRepository>()),
         child: SafeArea(
             child: Directionality(
           textDirection:
@@ -65,7 +72,6 @@ class _signupState extends State<signup> {
     );
   }
 
-  // ignore: non_constant_identifier_names
   Widget _SignUpForm(Size size) {
     return Form(
         key: formKey,
@@ -181,7 +187,6 @@ class _signupState extends State<signup> {
   }
 
   Widget _signUpButton(Size size, BuildContext pagecontext) {
-    bool Navigated = false;
     return BlocBuilder<signupbloc, signupstate>(builder: (context, state) {
       if (state.formstatus is signupsubmissionsuccess && !Navigated) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -190,6 +195,15 @@ class _signupState extends State<signup> {
         Navigated = true;
         return Container();
       }
+      if (state.formstatus is signupsubmissionfailed && !showedException) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+              (state.formstatus as signupsubmissionfailed).exception, size));
+        });
+        showedException = true;
+        return Container();
+      }
+
       return state.formstatus is signupformsubmitting
           ? CircularProgressIndicator(
               strokeWidth: 6,
@@ -204,7 +218,13 @@ class _signupState extends State<signup> {
                       emailcheck.isNotEmpty &&
                       phoneNumbercheck.isNotEmpty &&
                       passwordcheck.isNotEmpty) {
-                    context.read<signupbloc>().add((signupSubmitted()));
+                    showedException = false;
+                    context.read<signupbloc>().add((signupSubmitted(User(
+                        email: emailcheck,
+                        password: passwordcheck,
+                        name: namecheck,
+                        user_type: 1,
+                        mobile: fullPhoneNumber))));
                   }
                 }
               },
@@ -262,6 +282,7 @@ class _signupState extends State<signup> {
     return phoneinput(
       onChanged: (text) {
         phoneNumbercheck = text.number;
+        fullPhoneNumber = text.completeNumber;
       },
     );
   }

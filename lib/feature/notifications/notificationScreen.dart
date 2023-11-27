@@ -48,7 +48,6 @@ class _notificationScreenState extends State<notificationScreen> {
                   Expanded(
                     child: BlocBuilder<contentbloc, contentstate>(
                         builder: ((context, state) {
-                      notifications.addAll(state.userdata!.notifications);
                       //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
                       return ListView.builder(
                           physics: const BouncingScrollPhysics(),

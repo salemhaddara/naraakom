@@ -32,7 +32,7 @@ class reviewItem extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 constraints: const BoxConstraints(maxWidth: 350),
                 child: text400normal(
-                  text: reviewModel.user.username,
+                  text: reviewModel.user.name,
                   color: darkblack,
                   fontsize: 16,
                 ),
