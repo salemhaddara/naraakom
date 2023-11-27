@@ -15,6 +15,7 @@ import 'package:naraakom/feature/consultantinfo.dart/specializationsView.dart';
 import 'package:naraakom/feature/consultantinfo.dart/timePicker.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/reviews/reviewsScreen.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';

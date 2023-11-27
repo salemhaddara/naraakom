@@ -1,5 +1,8 @@
+// ignore_for_file: library_prefixes, camel_case_types
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authRepository.dart';
+
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
@@ -15,15 +18,28 @@ class otpbloc extends Bloc<otpevent, otpstate> {
     on<otpcodeprovidedChanged>((event, emit) =>
         emit(state.copyWith(codeprovided: event.codeprovided)));
 
-    on<otpSubmitted>((event, emit) async {
+    on<otpRequested>((event, emit) async {
       emit(state.copyWith(formstatus: otpformsubmitting()));
       try {
-        String code = await repo.sendVerificationCode(state.phonenumber);
-        emit(state.copyWith(formstatus: otpsubmissionsuccess(), code: code));
+        await repo.sendVerificationCode(state.phonenumber,
+            onverificationcompleted: (auth, credential) async {
+          await auth.signInWithCredential(credential).then((value) {
+            emit(state.copyWith(
+                formstatus: otpvalidationsuccess('Validation Success')));
+          });
+        }, onverificationfailed: (auth, message) {
+          emit(state.copyWith(formstatus: otpsendingfailed(message)));
+        }, oncodeSent: (auth, resendToken, verificationId) {
+          emit(state.copyWith(
+              formstatus: otpsendingsuccess(),
+              resendtoken: resendToken,
+              verificationId: verificationId));
+        });
       } catch (e) {
-        emit(state.copyWith(formstatus: otpsubmissionfailed(e as Exception)));
+        emit(state.copyWith(formstatus: otpsendingfailed(e.toString())));
       }
     });
+
     on<otpVerifyClicked>((event, emit) async {
       emit(state.copyWith(formstatus: otpverifying(), isError: false));
       await Future.delayed(const Duration(seconds: 3));
@@ -40,6 +56,7 @@ class otpbloc extends Bloc<otpevent, otpstate> {
         emit(state.copyWith(formstatus: otpverifiyingfailed(e as Exception)));
       }
     });
+
     on<newPassSubmitted>(
       (event, emit) async {
         emit(state.copyWith(formstatus: settingNewPasswordINPROGRESS()));

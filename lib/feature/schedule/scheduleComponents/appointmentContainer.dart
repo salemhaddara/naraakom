@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/core/utils/Models/Schedule.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';

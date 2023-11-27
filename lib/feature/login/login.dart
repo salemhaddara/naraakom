@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/widgets/button.dart';

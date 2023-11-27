@@ -2,6 +2,8 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authRepository.dart';
+import 'package:naraakom/core/utils/Models/User.dart';
+import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
 import 'package:naraakom/feature/signup/signupsubmission/signupsubmissionevent.dart';
@@ -20,9 +22,19 @@ class signupbloc extends Bloc<signupevent, signupstate> {
     on<signupSubmitted>((event, emit) async {
       emit(state.copyWith(formstatus: signupformsubmitting()));
       try {
+        //Sign Up User
         var response = await repo.signUp(event.user);
-        if (response['status'] == 'success') {
-          emit(state.copyWith(formstatus: signupsubmissionsuccess()));
+        //SIGN IN THE USER FOR GETTING ID REQUIRED FOR OTP
+        var response2 =
+            await repo.login(event.user.mobile, event.user.password);
+        //SAVING DATA IN THE PREFERENCES
+        User user = repo.getUserFromJson(response2['user']);
+        await Preferences.saveUserId(response2['user']['id']);
+        await Preferences.saveUserName(user.name);
+        await Preferences.saveAccessToken(response2['access_token']);
+        //HANDLING ERROR AND SUCCESS
+        if (response2['status'] == 'success') {
+          emit(state.copyWith(formstatus: requiredverification()));
         } else {
           emit(state.copyWith(
               formstatus: signupsubmissionfailed(response['message'])));

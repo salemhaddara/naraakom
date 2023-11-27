@@ -9,6 +9,7 @@ import 'package:naraakom/feature/resetpassword/otpstates/otpbloc.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/widgets/button.dart';

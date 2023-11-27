@@ -14,6 +14,7 @@ import 'package:naraakom/feature/booking/bloc/bookingevent.dart';
 import 'package:naraakom/feature/booking/bloc/bookingstate.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
 import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';

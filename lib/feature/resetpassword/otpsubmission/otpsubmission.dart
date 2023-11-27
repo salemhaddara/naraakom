@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 abstract class otpsubmissionstatus {
   const otpsubmissionstatus();
 }
@@ -8,11 +10,16 @@ class initialotpformstatus extends otpsubmissionstatus {
 
 class otpformsubmitting extends otpsubmissionstatus {}
 
-class otpsubmissionsuccess extends otpsubmissionstatus {}
+class otpsendingsuccess extends otpsubmissionstatus {}
 
-class otpsubmissionfailed extends otpsubmissionstatus {
-  final Exception exception;
-  const otpsubmissionfailed(this.exception);
+class otpvalidationsuccess extends otpsubmissionstatus {
+  String message;
+  otpvalidationsuccess(this.message);
+}
+
+class otpsendingfailed extends otpsubmissionstatus {
+  final String exception;
+  const otpsendingfailed(this.exception);
 }
 
 abstract class otpverificationstatus {

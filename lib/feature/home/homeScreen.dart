@@ -13,6 +13,7 @@ import 'package:naraakom/feature/mainbloc/contentbloc.dart';
 import 'package:naraakom/feature/mainbloc/contentstate.dart';
 import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
 import 'package:naraakom/feature/notifications/notificationScreen.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';

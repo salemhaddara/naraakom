@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 abstract class otpevent {}
 
 class otpPhoneNumberChanged extends otpevent {
@@ -15,7 +17,7 @@ class otpcodeprovidedChanged extends otpevent {
   otpcodeprovidedChanged({required this.codeprovided});
 }
 
-class otpSubmitted extends otpevent {}
+class otpRequested extends otpevent {}
 
 class otpVerifyClicked extends otpevent {}
 

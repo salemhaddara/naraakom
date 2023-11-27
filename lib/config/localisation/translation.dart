@@ -1,4 +1,3 @@
-String defaultLang = 'en';
 Map<String, dynamic> language = {
   'en': {
     'signin': 'Sign In',

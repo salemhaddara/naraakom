@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
 import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/feature/signup/signupcomponents/acceptterms.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
 import 'package:naraakom/feature/signup/signupsubmission/signupsubmissionevent.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import '../../authRepository.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
@@ -188,9 +190,10 @@ class _signupState extends State<signup> {
 
   Widget _signUpButton(Size size, BuildContext pagecontext) {
     return BlocBuilder<signupbloc, signupstate>(builder: (context, state) {
-      if (state.formstatus is signupsubmissionsuccess && !Navigated) {
+      if (state.formstatus is requiredverification && !Navigated) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(pagecontext).pop();
+          Navigator.of(pagecontext).pushReplacementNamed(otpverificationRoute,
+              arguments: fullPhoneNumber);
         });
         Navigated = true;
         return Container();

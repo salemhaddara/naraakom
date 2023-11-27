@@ -12,6 +12,8 @@ class signupformsubmitting extends signupsubmissionstatus {}
 
 class signupsubmissionsuccess extends signupsubmissionstatus {}
 
+class requiredverification extends signupsubmissionstatus {}
+
 class signupsubmissionfailed extends signupsubmissionstatus {
   final String exception;
   const signupsubmissionfailed(this.exception);

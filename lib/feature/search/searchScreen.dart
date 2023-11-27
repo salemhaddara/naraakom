@@ -10,6 +10,7 @@ import 'package:naraakom/feature/mainbloc/contentevent.dart';
 import 'package:naraakom/feature/mainbloc/contentstate.dart';
 import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
 import 'package:naraakom/feature/search/searchComponents/CategoriesList.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/localisation/translation.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/feature/home/homeScreen.dart';
 import 'package:naraakom/feature/profile/profileScreen.dart';
 import 'package:naraakom/feature/search/searchScreen.dart';

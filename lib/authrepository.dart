@@ -1,10 +1,12 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, body_might_complete_normally_catch_error, library_prefixes
 
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart' as authFirebase;
 import 'package:http/http.dart' as http;
 import 'package:naraakom/core/utils/Constants/Backend.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
+import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 
 class authRepository {
   Future<Map<String, dynamic>> login(String mobile, password) async {
@@ -23,6 +25,18 @@ class authRepository {
     }
   }
 
+  Future<Map<String, dynamic>> saveOtpConfirmation() async {
+    final response = await http.post(
+      Uri.parse(apiOtpVerifiedUrl),
+      body: json.encode({
+        'otp_confirmed': true,
+        'user_id': await Preferences.getUserId(),
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+    return {};
+  }
+
   Future<Map<String, dynamic>> signUp(User user) async {
     try {
       final response = await http.post(
@@ -36,15 +50,38 @@ class authRepository {
     }
   }
 
-  Future<String> sendVerificationCode(String phoneNumber) async {
-    print('Sending Verification code');
-    await Future.delayed(const Duration(seconds: 4));
-    print('Sending Successful');
-    return '2345';
+  Future<void> sendVerificationCode(
+    String phoneNumber, {
+    required Function(
+            authFirebase.FirebaseAuth, authFirebase.PhoneAuthCredential)
+        onverificationcompleted,
+    required Function(authFirebase.FirebaseAuth, String) onverificationfailed,
+    required Function(
+            authFirebase.FirebaseAuth, int? resendToken, String verificationId)
+        oncodeSent,
+  }) async {
+    authFirebase.FirebaseAuth auth = authFirebase.FirebaseAuth.instance;
+    await authFirebase.FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted:
+          (authFirebase.PhoneAuthCredential credential) async {
+        onverificationcompleted(auth, credential);
+      },
+      verificationFailed: (authFirebase.FirebaseAuthException e) {
+        if (e.code == 'invalid-phone-number') {
+          onverificationfailed(auth, 'The provided phone number is not valid.');
+        }
+        onverificationfailed(auth, e.message ?? 'Unknown Error');
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        oncodeSent(auth, resendToken, verificationId);
+        // authFirebase.PhoneAuthCredential credential = authFirebase.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
   }
 
   Future<User> setNewPass(String pass, String userId) async {
-    //THE user id is getten from the otp verification so we can modify the user from it
     print('Setting pass');
     await Future.delayed(const Duration(seconds: 4));
     print('pass setting Successful');
@@ -57,7 +94,6 @@ class authRepository {
   }
 
   User getUserFromJson(Map<String, dynamic> json) {
-    print(json);
     return User(
         email: json['email'],
         password: 'NotReturned',

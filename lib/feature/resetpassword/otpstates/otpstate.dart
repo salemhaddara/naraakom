@@ -2,7 +2,8 @@ import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart'
 
 class otpstate {
   final String phonenumber;
-
+  final String verificationId;
+  final int resendtoken;
   final String code;
   final String codeprovided;
   final bool isError;
@@ -11,6 +12,8 @@ class otpstate {
   final String UserId;
   otpstate({
     this.phonenumber = '',
+    this.verificationId = '',
+    this.resendtoken = 0,
     this.code = '',
     this.codeprovided = '',
     this.isError = false,
@@ -21,6 +24,8 @@ class otpstate {
 
   otpstate copyWith({
     String? phonenumber,
+    String? verificationId = '',
+    int? resendtoken,
     String? code,
     String? codeprovided,
     bool? isError,
@@ -30,6 +35,8 @@ class otpstate {
   }) {
     return otpstate(
       phonenumber: phonenumber ?? this.phonenumber,
+      verificationId: verificationId ?? this.verificationId,
+      resendtoken: resendtoken ?? this.resendtoken,
       code: code ?? this.code,
       codeprovided: codeprovided ?? this.codeprovided,
       isError: isError ?? this.isError,

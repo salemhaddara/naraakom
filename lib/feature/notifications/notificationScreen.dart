@@ -10,6 +10,7 @@ import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/feature/mainbloc/contentbloc.dart';
 import 'package:naraakom/feature/mainbloc/contentstate.dart';
 import 'package:naraakom/feature/notifications/notificationComponents/notificationContainer.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';

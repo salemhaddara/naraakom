@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
 import 'package:naraakom/feature/resetpassword/setnewpass.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 import '../../authRepository.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
@@ -46,18 +49,18 @@ class _otpverificationState extends State<otpverification> {
       body: BlocProvider(
         create: (context) => otpbloc(context.read<authRepository>())
           ..add(otpPhoneNumberChanged(phoneNumber: phonenumber))
-          ..add(otpSubmitted()),
+          ..add(otpRequested()),
         child: BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
           if (state.formstatus is otpformsubmitting) {
             return Align(
               child: CircularProgressIndicator(color: cyan),
             );
-          } else if (state.formstatus is otpsubmissionfailed) {
+          } else if (state.formstatus is otpsendingfailed) {
             return const Align(
               alignment: Alignment.center,
               child: Text('failed '),
             );
-          } else {
+          } else if (state.formstatus is otpsendingsuccess) {
             return SafeArea(
                 child: Directionality(
               textDirection:
@@ -78,6 +81,8 @@ class _otpverificationState extends State<otpverification> {
                 ),
               ),
             ));
+          } else {
+            return Container();
           }
         }),
       ),
@@ -106,7 +111,7 @@ class _otpverificationState extends State<otpverification> {
       visible: resendauthorized,
       child: GestureDetector(
         onTap: () {
-          context.read<otpbloc>().add(otpSubmitted());
+          context.read<otpbloc>().add(otpRequested());
           resendauthorized = false;
         },
         child: Container(

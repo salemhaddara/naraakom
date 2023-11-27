@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "723713344703",
+    "project_id": "naraakom-basirah-app-71123",
+    "storage_bucket": "naraakom-basirah-app-71123.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723713344703:android:5fdd786c96a2f5b8e6320a",
+        "android_client_info": {
+          "package_name": "com.example.naraakom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP54uGFjEE2T7Cap9fewjK-O82GnEgz1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

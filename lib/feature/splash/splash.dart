@@ -1,13 +1,16 @@
+// ignore_for_file: library_private_types_in_public_api, camel_case_types, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 
 import '../../core/widgets/text400normal.dart';
+
+String defaultLang = 'en';
 
 class splash extends StatefulWidget {
   const splash({super.key});
@@ -28,6 +31,7 @@ class _splashState extends State<splash> {
   void initializePage() async {
     if (await Preferences.langexist()) {
       defaultLang = (await Preferences.getlang())!;
+      Navigator.pushReplacementNamed(context, loginRoute);
     }
 
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -46,26 +50,24 @@ class _splashState extends State<splash> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: cyan, systemNavigationBarColor: cyan));
     return Scaffold(
-        body: Container(
-      child: Stack(
-        children: [
-          SvgPicture.asset(
-            'assets/images/splashback.svg',
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-          ),
-          const Align(
+        body: Stack(
+      children: [
+        SvgPicture.asset(
+          'assets/images/splashback.svg',
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
+        const Align(
+          alignment: Alignment.center,
+          child: Stack(
             alignment: Alignment.center,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(alignment: Alignment.center, child: MyAnimatedContainer())
-              ],
-            ),
-          )
-        ],
-      ),
+            children: [
+              Align(alignment: Alignment.center, child: MyAnimatedContainer())
+            ],
+          ),
+        )
+      ],
     ));
   }
 }
