@@ -18,13 +18,13 @@ class OtpInputFields extends StatefulWidget {
 }
 
 class _OtpInputFieldsState extends State<OtpInputFields> {
-  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   final List<TextEditingController> _controllers =
-      List.generate(4, (_) => TextEditingController());
+      List.generate(6, (_) => TextEditingController());
 
   @override
   void dispose() {
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 6; i++) {
       _focusNodes[i].dispose();
       _controllers[i].dispose();
     }
@@ -33,7 +33,7 @@ class _OtpInputFieldsState extends State<OtpInputFields> {
 
   void _checkOtpComplete() {
     final otp = _controllers.map((controller) => controller.text).join();
-    if (otp.length == 4) {
+    if (otp.length == 6) {
       widget.onOtpComplete(otp);
     }
   }
@@ -42,10 +42,10 @@ class _OtpInputFieldsState extends State<OtpInputFields> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(4, (index) {
+      children: List.generate(6, (index) {
         return Container(
-          width: 66,
-          height: 67,
+          width: 46,
+          height: 47,
           margin: const EdgeInsets.symmetric(vertical: 30),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),

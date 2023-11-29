@@ -7,11 +7,6 @@ class otpPhoneNumberChanged extends otpevent {
   otpPhoneNumberChanged({required this.phoneNumber});
 }
 
-class otpcodeChanged extends otpevent {
-  final String? code;
-  otpcodeChanged({required this.code});
-}
-
 class otpcodeprovidedChanged extends otpevent {
   final String? codeprovided;
   otpcodeprovidedChanged({required this.codeprovided});

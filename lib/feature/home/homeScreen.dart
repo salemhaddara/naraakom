@@ -409,7 +409,7 @@ class _homeScreenState extends State<homeScreen> {
                                     children: [
                                       text600normal(
                                         text:
-                                            '${language[defaultLang]['hello']}${state.userName} ',
+                                            '${language[defaultLang]['hello']}${state.userName ?? ''} ',
                                         fontsize: 20,
                                         color: white,
                                         align: TextAlign.start,

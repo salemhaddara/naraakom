@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:naraakom/feature/login/submission/submissionevent.dart';
 
 class loginstate {

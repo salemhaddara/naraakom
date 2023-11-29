@@ -15,6 +15,11 @@ class submissionsuccess extends submissionstatus {
   submissionsuccess(this.message);
 }
 
+class requiredValidation extends submissionstatus {
+  String phoneNumber;
+  requiredValidation(this.phoneNumber);
+}
+
 class submissionfailed extends submissionstatus {
   final String exception;
   const submissionfailed(this.exception);

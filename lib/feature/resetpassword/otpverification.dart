@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/theme/routes.dart';
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
@@ -12,7 +13,6 @@ import 'package:naraakom/feature/resetpassword/otpComponents/otpinputField.dart'
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
-import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import '../../authRepository.dart';
 import '../../config/localisation/translation.dart';
@@ -32,7 +32,7 @@ class otpverification extends StatefulWidget {
 class _otpverificationState extends State<otpverification> {
   bool resendauthorized = true;
   String codeProvided = '';
-  bool isError = false;
+  bool showedError = false;
   bool isNavigated = false;
   @override
   Widget build(BuildContext context) {
@@ -51,16 +51,18 @@ class _otpverificationState extends State<otpverification> {
           ..add(otpPhoneNumberChanged(phoneNumber: phonenumber))
           ..add(otpRequested()),
         child: BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
+          print(state.formstatus);
+
           if (state.formstatus is otpformsubmitting) {
             return Align(
               child: CircularProgressIndicator(color: cyan),
             );
           } else if (state.formstatus is otpsendingfailed) {
-            return const Align(
+            return Align(
               alignment: Alignment.center,
-              child: Text('failed '),
+              child: Text((state.formstatus as otpsendingfailed).exception),
             );
-          } else if (state.formstatus is otpsendingsuccess) {
+          } else {
             return SafeArea(
                 child: Directionality(
               textDirection:
@@ -81,8 +83,6 @@ class _otpverificationState extends State<otpverification> {
                 ),
               ),
             ));
-          } else {
-            return Container();
           }
         }),
       ),
@@ -131,19 +131,6 @@ class _otpverificationState extends State<otpverification> {
   Widget _submitButton(
       Size size, BuildContext contextScaffold, otpbloc mybloc) {
     return BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
-      if (state.formstatus is otpverifiyingsuccess && !isNavigated) {
-        isNavigated = true;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => setnewpass(mybloc: mybloc)));
-        });
-        return Container();
-      }
-      if (state.formstatus is otpverifiyingfailed) {
-        //show error in the fields
-        isError = true;
-      }
       return state.formstatus is otpverifying
           ? CircularProgressIndicator(
               color: cyan,
@@ -153,7 +140,7 @@ class _otpverificationState extends State<otpverification> {
               width: size.width,
               onTap: () {
                 //take the priovided code and send it here
-                if (codeProvided.length == 4) {
+                if (codeProvided.length == 6) {
                   context
                       .read<otpbloc>()
                       .add(otpcodeprovidedChanged(codeprovided: codeProvided));
@@ -166,9 +153,26 @@ class _otpverificationState extends State<otpverification> {
 
   Widget _otpFields(Size size) {
     return BlocBuilder<otpbloc, otpstate>(builder: (context, state) {
+      if ((state.formstatus is otpvalidationfailed && !showedError)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+              (state.formstatus as otpvalidationfailed).message, size));
+        });
+        showedError = true;
+        return Container();
+      }
+      if ((state.formstatus is otpvalidationfailed)) {
+        print((state.formstatus as otpvalidationfailed).message);
+      }
+      if ((state.formstatus is otpvalidationsuccess && !isNavigated)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacementNamed(context, homePageRoute);
+        });
+        return Container();
+      }
       return OtpInputFields(
           onChange: (text) {},
-          isError: state.isError,
+          isError: (state.formstatus is otpvalidationfailed),
           onOtpComplete: (text) {
             codeProvided = text;
           });

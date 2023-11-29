@@ -17,9 +17,14 @@ class otpvalidationsuccess extends otpsubmissionstatus {
   otpvalidationsuccess(this.message);
 }
 
+class otpvalidationfailed extends otpsubmissionstatus {
+  String message;
+  otpvalidationfailed(this.message);
+}
+
 class otpsendingfailed extends otpsubmissionstatus {
-  final String exception;
-  const otpsendingfailed(this.exception);
+  String exception;
+  otpsendingfailed(this.exception);
 }
 
 abstract class otpverificationstatus {
@@ -33,11 +38,6 @@ class initialotpverifyButton extends otpverificationstatus {
 class otpverifying extends otpsubmissionstatus {}
 
 class otpverifiyingsuccess extends otpsubmissionstatus {}
-
-class otpverifiyingfailed extends otpsubmissionstatus {
-  final Exception exception;
-  const otpverifiyingfailed(this.exception);
-}
 
 class settingNewPasswordINPROGRESS extends otpsubmissionstatus {}
 

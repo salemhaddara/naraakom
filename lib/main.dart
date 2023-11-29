@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authRepository.dart';
@@ -11,8 +12,11 @@ import 'package:naraakom/feature/resetpassword/otpverification.dart';
 import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
 import 'package:naraakom/feature/signup/signup.dart';
 import 'package:naraakom/feature/splash/splash.dart';
+import 'package:naraakom/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (context) => Repository()),
@@ -33,4 +37,7 @@ void main() {
               ),
         },
       )));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }

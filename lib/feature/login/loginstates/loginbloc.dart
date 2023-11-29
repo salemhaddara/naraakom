@@ -19,17 +19,18 @@ class loginbloc extends Bloc<loginevent, loginstate> {
       emit(state.copyWith(formstatus: formsubmitting()));
       try {
         var response = await repo.login(state.phonenumber, state.password);
-        print('object');
-        if (response['status'] == null) {
-          print('fuck');
-        }
+
         if (response['status'] == 'success') {
           User user = repo.getUserFromJson(response['user']);
           await Preferences.saveUserId(response['user']['id']);
           await Preferences.saveUserName(user.name);
           await Preferences.saveAccessToken(response['access_token']);
-          emit(state.copyWith(
-              formstatus: submissionsuccess(response['message'])));
+          if (response['user']['otp_confirmed'] == 0) {
+            emit(state.copyWith(formstatus: requiredValidation(user.mobile)));
+          } else {
+            emit(state.copyWith(
+                formstatus: submissionsuccess(response['message'])));
+          }
         } else {
           emit(state.copyWith(
               formstatus: submissionfailed(response['message'])));

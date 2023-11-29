@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -206,7 +206,6 @@ class _signupState extends State<signup> {
         showedException = true;
         return Container();
       }
-
       return state.formstatus is signupformsubmitting
           ? CircularProgressIndicator(
               strokeWidth: 6,

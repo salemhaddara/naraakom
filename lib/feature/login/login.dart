@@ -203,10 +203,20 @@ class _loginState extends State<login> {
           Navigator.of(pagecontext).pushReplacementNamed(homePageRoute);
         });
         Navigated = true;
-        return Container();
+      }
+      if (state.formstatus is requiredValidation && !Navigated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(pagecontext).pushReplacementNamed(otpverificationRoute,
+              arguments: (state.formstatus as requiredValidation).phoneNumber);
+        });
+        Navigated = true;
       }
       if (state.formstatus is submissionfailed && !showedError) {
-        print((state.formstatus as submissionfailed).exception);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+              (state.formstatus as submissionfailed).exception, size));
+        });
+
         showedError = true;
       }
       return state.formstatus is formsubmitting

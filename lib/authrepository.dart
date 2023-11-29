@@ -9,6 +9,7 @@ import 'package:naraakom/core/utils/Models/User.dart';
 import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 
 class authRepository {
+  //Function Done and Tested
   Future<Map<String, dynamic>> login(String mobile, password) async {
     try {
       final response = await http.post(
@@ -19,24 +20,39 @@ class authRepository {
         }),
         headers: {'Content-Type': 'application/json'},
       );
-      return json.decode(response.body);
+      var result = json.decode(response.body);
+      if (result['status'] == 'success') {
+        await Preferences.saveUserId(result['user']['id']);
+        await Preferences.saveUserName(result['user']['name']);
+        await Preferences.saveAccessToken(result['access_token']);
+      }
+      return result;
     } catch (e) {
       return {'status': 'error', 'message': 'Check You Internet Connection'};
     }
   }
 
-  Future<Map<String, dynamic>> saveOtpConfirmation() async {
+//Function Done and Tested
+  Future<bool> saveOtpConfirmation() async {
     final response = await http.post(
       Uri.parse(apiOtpVerifiedUrl),
       body: json.encode({
         'otp_confirmed': true,
-        'user_id': await Preferences.getUserId(),
+        'user_id': '${await Preferences.getUserId()}',
       }),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${await Preferences.getAccessToken()}',
+      },
     );
-    return {};
+    if ((json.decode(response.body))['status'] == 'success') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
+//Function Done and Tested
   Future<Map<String, dynamic>> signUp(User user) async {
     try {
       final response = await http.post(
@@ -50,6 +66,7 @@ class authRepository {
     }
   }
 
+//Function Done and Tested
   Future<void> sendVerificationCode(
     String phoneNumber, {
     required Function(
@@ -65,20 +82,37 @@ class authRepository {
       phoneNumber: phoneNumber,
       verificationCompleted:
           (authFirebase.PhoneAuthCredential credential) async {
-        onverificationcompleted(auth, credential);
+        await onverificationcompleted(auth, credential);
       },
-      verificationFailed: (authFirebase.FirebaseAuthException e) {
+      verificationFailed: (authFirebase.FirebaseAuthException e) async {
         if (e.code == 'invalid-phone-number') {
-          onverificationfailed(auth, 'The provided phone number is not valid.');
+          await onverificationfailed(
+              auth, 'The provided phone number is not valid.');
         }
-        onverificationfailed(auth, e.message ?? 'Unknown Error');
+        await onverificationfailed(
+            auth, e.message ?? 'The Message Is Not Sended');
       },
       codeSent: (String verificationId, int? resendToken) async {
-        oncodeSent(auth, resendToken, verificationId);
-        // authFirebase.PhoneAuthCredential credential = authFirebase.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+        await oncodeSent(auth, resendToken, verificationId);
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
     );
+  }
+
+  Future<Map<String, dynamic>> logout() async {
+    try {
+      var response = await http.post(
+        Uri.parse(apilogout),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${await Preferences.getAccessToken()}',
+        },
+      );
+      print(response.body);
+      return json.decode(response.body);
+    } catch (e) {
+      return {'status': 'error', 'message': e.toString()};
+    }
   }
 
   Future<User> setNewPass(String pass, String userId) async {
