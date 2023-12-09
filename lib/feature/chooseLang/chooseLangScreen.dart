@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/feature/login/submission/forgetpasswordstatus.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/config/theme/routes.dart';
@@ -29,10 +30,13 @@ class login extends StatefulWidget {
   State<login> createState() => _loginState();
 }
 
+bool isReset = false;
+
 class _loginState extends State<login> {
   final formKey = GlobalKey<FormState>();
   bool Navigated = false;
   bool showedError = false;
+
   String phoneNumbercheck = '', passwordcheck = '', fullphoneNumber = '';
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,6 @@ class _loginState extends State<login> {
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(
@@ -173,27 +176,45 @@ class _loginState extends State<login> {
   }
 
   Widget _forgetPassword(Size size, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (!formKey.currentState!.validate()) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              showSnackbar(language[defaultLang]['forgetpasserror'], size));
-        } else {
+    return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
+      if (state.forgetpasswordstatus is userexist && !Navigated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).pushReplacementNamed(otpverificationRoute,
               arguments: fullphoneNumber);
-        }
-      },
-      child: Container(
-        width: size.width,
-        margin: const EdgeInsets.only(top: 5, bottom: 25),
-        alignment: AlignmentDirectional.centerEnd,
-        child: text400normal(
-          text: language[defaultLang]['forgetpassword'],
-          color: cyan,
-          fontsize: 14,
+        });
+        Navigated = true;
+      }
+      if (state.forgetpasswordstatus is userdoesnotexist && !showedError) {
+        showedError = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              showSnackbar(language[defaultLang]['usernotexist'], size));
+        });
+      }
+      return GestureDetector(
+        onTap: () {
+          showedError = false;
+          if (!(formKey.currentState!.validate()) ||
+              (phoneNumbercheck.isEmpty)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                showSnackbar(language[defaultLang]['forgetpasserror'], size));
+            showedError = true;
+          } else {
+            context.read<loginbloc>().add(checkUserExistance(fullphoneNumber));
+          }
+        },
+        child: Container(
+          width: size.width,
+          margin: const EdgeInsets.only(top: 5, bottom: 25),
+          alignment: AlignmentDirectional.centerEnd,
+          child: text400normal(
+            text: language[defaultLang]['forgetpassword'],
+            color: cyan,
+            fontsize: 14,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _signinButton(Size size, BuildContext pagecontext) {
@@ -230,9 +251,9 @@ class _loginState extends State<login> {
                 if (phoneNumbercheck.isNotEmpty && passwordcheck.isNotEmpty) {
                   if (formKey.currentState!.validate()) {
                     context.read<loginbloc>().add((loginSubmitted()));
+                    showedError = false;
                   }
                 }
-                showedError = false;
               },
               width: size.width,
             );

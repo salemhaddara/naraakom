@@ -78,24 +78,40 @@ class otpbloc extends Bloc<otpevent, otpstate> {
             emit(state.copyWith(
                 formstatus: otpvalidationsuccess('Validation Success')));
           } else {
+            print('failing inelse');
+
             emit(state.copyWith(
                 formstatus: otpvalidationfailed('Please Try Again Later')));
           }
         }).catchError((onError) {
+          print('failing incatchError $onError');
+
           emit(state.copyWith(
               formstatus: otpvalidationfailed(onError.toString())));
         });
       } catch (e) {
+        print('failing incatch $e');
+
         emit(state.copyWith(formstatus: otpvalidationfailed(e.toString())));
       }
     });
-
+    on<saveUserPhoneNumber>(
+        (event, emit) => emit(state.copyWith(phonenumber: event.phoneNumber)));
+    on<newPassChanged>(
+        (event, emit) => emit(state.copyWith(newPassword: event.newPass)));
     on<newPassSubmitted>(
       (event, emit) async {
         emit(state.copyWith(formstatus: settingNewPasswordINPROGRESS()));
+        var response =
+            await repo.updateUserPassword(state.phonenumber, state.newPassword);
+        if (response['status'] == 'success') {
+          emit(state.copyWith(formstatus: settingNewPasswordSUCCESS()));
+        } else {
+          emit(state.copyWith(
+              formstatus: settingNewPasswordFAILED(
+                  exception: 'failed try again later')));
+        }
       },
     );
-    on<newPassChanged>(
-        (event, emit) => emit(state.copyWith(newPassword: event.newPass)));
   }
 }

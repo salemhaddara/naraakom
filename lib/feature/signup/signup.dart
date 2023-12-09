@@ -20,6 +20,7 @@ import '../../core/widgets/inputfield.dart';
 import '../../core/widgets/phoneinput.dart';
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text700normal.dart';
+import '../login/login.dart';
 import 'signupcomponents/siginrichtext.dart';
 import 'signupstates/signupbloc.dart';
 
@@ -48,6 +49,8 @@ class _signupState extends State<signup> {
         systemNavigationBarColor: white,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
+    isReset = true;
+
     return Scaffold(
       backgroundColor: white,
       body: BlocProvider(
@@ -185,7 +188,9 @@ class _signupState extends State<signup> {
     return signinrichtext(
         startText: language[defaultLang]['haveaccount'],
         clickableText: language[defaultLang]['signin'],
-        onClick: () {});
+        onClick: () {
+          Navigator.pop(context);
+        });
   }
 
   Widget _signUpButton(Size size, BuildContext pagecontext) {
@@ -198,6 +203,7 @@ class _signupState extends State<signup> {
         Navigated = true;
         return Container();
       }
+
       if (state.formstatus is signupsubmissionfailed && !showedException) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ScaffoldMessenger.of(context).showSnackBar(showSnackbar(

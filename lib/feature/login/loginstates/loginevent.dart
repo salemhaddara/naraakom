@@ -13,3 +13,8 @@ class loginPasswordrChanged extends loginevent {
 }
 
 class loginSubmitted extends loginevent {}
+
+class checkUserExistance extends loginevent {
+  String phoneNumber;
+  checkUserExistance(this.phoneNumber);
+}

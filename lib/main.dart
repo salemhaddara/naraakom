@@ -9,6 +9,7 @@ import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/resetpassword/otpverification.dart';
+import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
 import 'package:naraakom/feature/signup/signup.dart';
 import 'package:naraakom/feature/splash/splash.dart';
@@ -35,6 +36,7 @@ void main() async {
           homePageRoute: (context) => MyNavigationBar(
                 index: 0,
               ),
+          setnewpassRoute: (context) => const setnewpass()
         },
       )));
   await Firebase.initializeApp(

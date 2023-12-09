@@ -29,19 +29,19 @@ class _splashState extends State<splash> {
   }
 
   void initializePage() async {
-    if (await Preferences.langexist()) {
-      defaultLang = (await Preferences.getlang())!;
-      Navigator.pushReplacementNamed(context, loginRoute);
-    }
-
     Future.delayed(const Duration(milliseconds: 1500), () {
       setState(() {
         animate = true;
       });
     });
 
-    Future.delayed(const Duration(milliseconds: 5000), () {
-      Navigator.pushReplacementNamed(context, chooselangRoute);
+    Future.delayed(const Duration(milliseconds: 5000), () async {
+      if (await Preferences.langexist()) {
+        defaultLang = (await Preferences.getlang())!;
+        Navigator.pushReplacementNamed(context, loginRoute);
+      } else {
+        Navigator.pushReplacementNamed(context, chooselangRoute);
+      }
     });
   }
 

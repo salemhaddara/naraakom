@@ -44,6 +44,6 @@ class settingNewPasswordINPROGRESS extends otpsubmissionstatus {}
 class settingNewPasswordSUCCESS extends otpsubmissionstatus {}
 
 class settingNewPasswordFAILED extends otpsubmissionstatus {
-  Exception exception;
+  String exception;
   settingNewPasswordFAILED({required this.exception});
 }

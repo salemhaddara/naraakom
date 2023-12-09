@@ -1,7 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
 

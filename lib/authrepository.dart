@@ -26,9 +26,14 @@ class authRepository {
         await Preferences.saveUserName(result['user']['name']);
         await Preferences.saveAccessToken(result['access_token']);
       }
+      print(result);
       return result;
     } catch (e) {
-      return {'status': 'error', 'message': 'Check You Internet Connection'};
+      return {
+        'status': 'error',
+        'message_${await Preferences.getlang()}':
+            'Check You Internet Connection'
+      };
     }
   }
 
@@ -62,7 +67,11 @@ class authRepository {
       );
       return json.decode(response.body);
     } catch (e) {
-      return {'status': 'error', 'message': 'Check You Internet Connection'};
+      return {
+        'status': 'error',
+        'message_${await Preferences.getlang()}':
+            'Check You Internet Connection'
+      };
     }
   }
 
@@ -115,18 +124,6 @@ class authRepository {
     }
   }
 
-  Future<User> setNewPass(String pass, String userId) async {
-    print('Setting pass');
-    await Future.delayed(const Duration(seconds: 4));
-    print('pass setting Successful');
-    return User(
-        name: 'username',
-        user_type: 1,
-        email: 'email',
-        password: 'password',
-        mobile: 'mobile');
-  }
-
   User getUserFromJson(Map<String, dynamic> json) {
     return User(
         email: json['email'],
@@ -134,5 +131,38 @@ class authRepository {
         name: json['name'],
         user_type: 1,
         mobile: json['mobile']);
+  }
+
+  Future<bool> checkUserexistance(String phoneNumber) async {
+    String number = phoneNumber.replaceAll('+', '00');
+    print(number);
+
+    var result = await http.get(
+        Uri.parse(
+          '$apicheckUserExistance?mobile=$number',
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+        });
+    var response = json.decode(result.body);
+    print(response);
+    if (response['checked'] == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> updateUserPassword(
+      String phoneNumber, String newPass) async {
+    String number = phoneNumber.replaceAll('+', '00');
+    print(Uri.parse('$apiupdatePassword?mobile=$number&password=$newPass'));
+    var response = await http.get(
+        Uri.parse('$apiupdatePassword?mobile=$number&password=$newPass'),
+        headers: {
+          'Content-Type': 'application/json',
+        });
+    print(json.decode(response.body));
+    return json.decode(response.body);
   }
 }

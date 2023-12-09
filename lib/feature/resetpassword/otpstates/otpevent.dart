@@ -18,9 +18,9 @@ class otpVerifyClicked extends otpevent {}
 
 class newPassSubmitted extends otpevent {}
 
-class userIdChanged extends otpevent {
-  final String? userId;
-  userIdChanged({required this.userId});
+class saveUserPhoneNumber extends otpevent {
+  final String? phoneNumber;
+  saveUserPhoneNumber({required this.phoneNumber});
 }
 
 class newPassChanged extends otpevent {

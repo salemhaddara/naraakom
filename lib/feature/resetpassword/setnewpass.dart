@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpbloc.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
@@ -18,8 +19,7 @@ import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
 
 class setnewpass extends StatefulWidget {
-  otpbloc mybloc;
-  setnewpass({super.key, required this.mybloc});
+  const setnewpass({super.key});
 
   @override
   State<setnewpass> createState() => _setnewpassState();
@@ -29,35 +29,38 @@ class _setnewpassState extends State<setnewpass> {
   String passwordcheck = '';
   String passwordconfirmation = '';
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-  late otpbloc mybloc;
-  //Get This from otp Verification
-  String UserId = 'userid';
+  String fullPhoneNumber = '';
 
   bool isNavigated = false;
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    mybloc = widget.mybloc;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: white,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
+    String phonenumber = ModalRoute.of(context)!.settings.arguments as String;
+
     return Scaffold(
       backgroundColor: white,
       body: SafeArea(
           child: Directionality(
         textDirection:
             defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-        child: BlocProvider.value(
-          value: mybloc..add(userIdChanged(userId: UserId)),
+        child: BlocProvider(
+          create: (context) => otpbloc(context.read<authRepository>())
+            ..add(saveUserPhoneNumber(phoneNumber: phonenumber)),
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Container(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                  children: [_topbar(size), _setpassImage(size), _form(size)]),
+              child: Column(children: [
+                _topbar(size),
+                _setpassImage(size),
+                _form(size),
+              ]),
             ),
           ),
         ),

@@ -18,8 +18,7 @@ Map<String, dynamic> language = {
     'verify': 'Verify',
     'sendagain': 'Send The Code Again',
     'changenumber': 'Change Phone Number',
-    'forgetpasserror':
-        'Please enter your phone number and the last password you remember',
+    'forgetpasserror': 'Please enter your phone number ',
     'passerror': 'Password Must be >8 characters',
     'resetpass': 'Reset Password',
     'newpass': 'New Password',
@@ -130,7 +129,8 @@ Map<String, dynamic> language = {
     'namerror': 'The Name Must be > 3 characters',
     'selectdatebefore': 'Please Select Date Before',
     'totalbalance': 'Total Balance',
-    'paymentmethods': 'Payment Methods'
+    'paymentmethods': 'Payment Methods',
+    'usernotexist': 'User Not Already Registered'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -151,7 +151,7 @@ Map<String, dynamic> language = {
     'verify': 'تحقق',
     'sendagain': 'أرسل الكود مرة أخرى',
     'changenumber': 'تغيير رقم الهاتف',
-    'forgetpasserror': 'من فضلك، أدخل رقم هاتفك وآخر كلمة مرور تتذكرها',
+    'forgetpasserror': 'من فضلك، أدخل رقم هاتفك',
     'passerror': 'يجب أن تكون كلمة المرور أكثر من 8 أحرف',
     'resetpass': 'إعادة تعيين كلمة المرور',
     'newpass': 'كلمة المرور الجديدة',
@@ -263,5 +263,6 @@ Map<String, dynamic> language = {
     'selectdatebefore': ' يرجى تحديد التاريخ قبل',
     'totalbalance': 'الرصيد الإجمالي',
     'paymentmethods': 'وسائل الدفع',
+    'usernotexist': 'المستخدم غير مسجل بالفعل',
   }
 };
