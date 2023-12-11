@@ -3,10 +3,13 @@
 import 'package:firebase_auth/firebase_auth.dart' as authFirebase;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authRepository.dart';
+import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/feature/login/login.dart';
 
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 class otpbloc extends Bloc<otpevent, otpstate> {
   final authRepository repo;
@@ -74,24 +77,24 @@ class otpbloc extends Bloc<otpevent, otpstate> {
                 smsCode: state.codeprovided);
 
         await auth.signInWithCredential(credential).then((value) async {
-          if (await repo.saveOtpConfirmation()) {
+          if (isResetfalse) {
+            if (await repo.saveOtpConfirmation()) {
+              emit(state.copyWith(
+                  formstatus: otpvalidationsuccess('Validation Success')));
+            } else {
+              emit(state.copyWith(
+                  formstatus: otpvalidationfailed('Please Try Again Later')));
+            }
+          } else {
             emit(state.copyWith(
                 formstatus: otpvalidationsuccess('Validation Success')));
-          } else {
-            print('failing inelse');
-
-            emit(state.copyWith(
-                formstatus: otpvalidationfailed('Please Try Again Later')));
           }
         }).catchError((onError) {
-          print('failing incatchError $onError');
-
           emit(state.copyWith(
-              formstatus: otpvalidationfailed(onError.toString())));
+              formstatus:
+                  otpvalidationfailed(language[defaultLang]['codenotvalid'])));
         });
       } catch (e) {
-        print('failing incatch $e');
-
         emit(state.copyWith(formstatus: otpvalidationfailed(e.toString())));
       }
     });
@@ -109,7 +112,7 @@ class otpbloc extends Bloc<otpevent, otpstate> {
         } else {
           emit(state.copyWith(
               formstatus: settingNewPasswordFAILED(
-                  exception: 'failed try again later')));
+                  exception: response['message_$defaultLang'])));
         }
       },
     );

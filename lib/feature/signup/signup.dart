@@ -49,7 +49,7 @@ class _signupState extends State<signup> {
         systemNavigationBarColor: white,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
-    isReset = true;
+    isResetfalse = true;
 
     return Scaffold(
       backgroundColor: white,

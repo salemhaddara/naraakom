@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpbloc.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
@@ -32,6 +33,7 @@ class _setnewpassState extends State<setnewpass> {
   String fullPhoneNumber = '';
 
   bool isNavigated = false;
+  bool showedError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +81,13 @@ class _setnewpassState extends State<setnewpass> {
         });
         return Container();
       }
+      if (state.formstatus is settingNewPasswordFAILED && !isNavigated) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+              (state.formstatus as settingNewPasswordFAILED).exception, size));
+        });
+        showedError = true;
+      }
       if (state.formstatus is settingNewPasswordINPROGRESS) {
         return CircularProgressIndicator(
           strokeWidth: 6,
@@ -89,6 +98,8 @@ class _setnewpassState extends State<setnewpass> {
           text: language[defaultLang]['confirmpass'],
           onTap: () async {
             if (formkey.currentState!.validate() && passwordcheck.isNotEmpty) {
+              showedError = false;
+
               context.read<otpbloc>().add(newPassSubmitted());
             }
           },

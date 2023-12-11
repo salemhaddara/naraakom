@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:naraakom/core/utils/Models/NotificationModel.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
-import 'package:naraakom/feature/mainbloc/contentbloc.dart';
-import 'package:naraakom/feature/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/notifications/Repo/notificationsRepo.dart';
 import 'package:naraakom/feature/notifications/notificationComponents/notificationContainer.dart';
+import 'package:naraakom/feature/notifications/notificationsStates/notification_bloc.dart';
+import 'package:naraakom/feature/notifications/notificationsStates/notification_event.dart';
+import 'package:naraakom/feature/notifications/notificationsStates/notification_state.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 
 import '../../config/localisation/translation.dart';
@@ -17,8 +18,7 @@ import '../../config/theme/colors.dart';
 
 // ignore: camel_case_types
 class notificationScreen extends StatefulWidget {
-  contentbloc mybloc;
-  notificationScreen({super.key, required this.mybloc});
+  const notificationScreen({super.key});
 
   @override
   State<notificationScreen> createState() => _notificationScreenState();
@@ -26,52 +26,55 @@ class notificationScreen extends StatefulWidget {
 
 // ignore: camel_case_types
 class _notificationScreenState extends State<notificationScreen> {
-  List<NotificationModel> notifications = List.empty(growable: true);
-  late contentbloc mybloc;
+  List<Widget> content = [];
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-    mybloc = widget.mybloc;
+
     return Scaffold(
-        backgroundColor: white,
-        body: Directionality(
-          textDirection:
-              defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-          child: BlocProvider.value(
-              value: mybloc,
-              child: Container(
-                padding: EdgeInsets.only(
-                  top: size.height * .05,
-                ),
-                child: Column(children: [
-                  _topbar(size),
-                  Expanded(
-                    child: BlocBuilder<contentbloc, contentstate>(
-                        builder: ((context, state) {
-                      //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
-                      return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(0),
-                          itemCount: notifications.length,
-                          itemBuilder: (context, index) {
-                            return notificationContainer(
-                              notification: NotificationModel(
-                                  senderName: notifications[index].senderName,
-                                  notificationtext:
-                                      notifications[index].notificationtext,
-                                  notificationtime:
-                                      notifications[index].notificationtime,
-                                  senderprofileURL:
-                                      notifications[index].senderprofileURL,
-                                  isRead: notifications[index].isRead),
-                            );
-                          });
-                    })),
-                  )
-                ]),
-              )),
-        ));
+      backgroundColor: white,
+      body: Directionality(
+        textDirection:
+            defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
+        child: BlocProvider(
+          create: (context) =>
+              notification_bloc(context.read<notificationsRepo>())
+                ..add(requestNotifications()),
+          child: Container(
+            padding: EdgeInsets.only(top: size.height * .05),
+            child: BlocBuilder<notification_bloc, notification_state>(
+              builder: (context, state) {
+                content = [_topbar(size)];
+
+                if (state.todaynotifications.isNotEmpty) {
+                  content.add(_todaybar(size));
+                  content.addAll(state.todaynotifications.map((notification) =>
+                      notificationContainer(notification: notification)));
+                }
+
+                if (state.earliernotifications.isNotEmpty) {
+                  content.add(_earlierbar(size));
+                  content.addAll(state.earliernotifications.map(
+                      (notification) =>
+                          notificationContainer(notification: notification)));
+                }
+
+                return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.all(0),
+                  itemCount: content.length,
+                  itemBuilder: (context, index) {
+                    return content[index];
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   _earlierbar(Size size) {

@@ -1,31 +1,26 @@
+import 'dart:io';
+
+import 'package:naraakom/config/httpRequests/httpHelper.dart';
+import 'package:naraakom/core/utils/Constants/Backend.dart';
 import 'package:naraakom/core/utils/Models/BookingTime.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
-
+import 'package:http/http.dart' as http;
 import 'dart:core';
 
 class Repository {
-  Future<List<ConsultantModel>> fetchConsultants() async {
+  Future<Map<String, dynamic>> fetchConsultants() async {
     List<ConsultantModel> consultants = [];
-    await Future.delayed(const Duration(milliseconds: 2000), () {});
-
-    return consultants;
+    try {
+      var response = await http.get(Uri.parse(apiDoctors),
+          headers: await httpHelper.getHeaderwithToken());
+      //parse response and after it add connsultants to list
+      return {'status': 'success', 'data': consultants};
+    } on SocketException {
+      return httpHelper.returnNetworkError();
+    } catch (e) {
+      return httpHelper.returnServerError();
+    }
   }
-
-  // Future<User> getUserWithId(String id) async {
-  //   return User(
-  //       username: 'Salem haddara',
-  //       id: 'id',
-  //       email: 'email',
-  //       password: 'password',
-  //       notifications: [
-  //         NotificationModel(
-  //             senderName: 'Salem Haddara',
-  //             notificationtext: 'accepted your appointment',
-  //             notificationtime: '10:00 AM',
-  //             senderprofileURL: '',
-  //             isRead: false)
-  //       ]);
-  // }
 
   List<BookingTIme> getbookingsTimes(DateTime date) {
     List<BookingTIme> bookedtimes = [

@@ -35,6 +35,7 @@ class _homeScreenState extends State<homeScreen> {
   int yourActiveIndex = 0;
   String name = '';
   User? userdata;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -48,8 +49,9 @@ class _homeScreenState extends State<homeScreen> {
       body: BlocProvider<contentbloc>(
         create: (context) {
           return contentbloc(context.read<Repository>())
-            ..add(ConsultantsRequested())
-            ..add(UserDataRequested());
+            ..add(ConsultantsRequested());
+          // ..add(UserDataRequested());
+          //let this to import notifications here if there unreaded one
         },
         child: Directionality(
           textDirection:
@@ -436,8 +438,7 @@ class _homeScreenState extends State<homeScreen> {
                             onTap: () {
                               PersistentNavBarNavigator.pushNewScreen(
                                 context,
-                                screen: notificationScreen(
-                                    mybloc: BlocProvider.of(bloccontext)),
+                                screen: const notificationScreen(),
                                 withNavBar: false,
                                 pageTransitionAnimation:
                                     PageTransitionAnimation.cupertino,

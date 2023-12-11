@@ -23,7 +23,7 @@ class _notificationContainerState extends State<notificationContainer> {
       child: Material(
         elevation: 1,
         shadowColor: lightcyan,
-        color: !widget.notification.isRead ? lightcyan : white,
+        color: widget.notification.read == 0 ? lightcyan : white,
         borderRadius: const BorderRadius.all(Radius.circular(13)),
         child: SizedBox(
           height: 100,
@@ -57,10 +57,8 @@ class _notificationContainerState extends State<notificationContainer> {
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             alignment: AlignmentDirectional.centerStart,
                             child: notificationrichtext(
-                              notificationsender:
-                                  widget.notification.senderName,
-                              notificationtext:
-                                  widget.notification.notificationtext,
+                              notificationsender: widget.notification.title,
+                              notificationtext: widget.notification.content,
                             )),
                       ),
                       Expanded(
@@ -73,8 +71,8 @@ class _notificationContainerState extends State<notificationContainer> {
                               SvgPicture.asset('assets/images/time.svg'),
                               text400normal(
                                   align: TextAlign.start,
-                                  text:
-                                      ' ${widget.notification.notificationtime}',
+                                  text: formatDateTime(
+                                      widget.notification.created),
                                   fontsize: 12,
                                   color: darkblack),
                             ],
@@ -90,5 +88,34 @@ class _notificationContainerState extends State<notificationContainer> {
         ),
       ),
     );
+  }
+
+  String formatDateTime(String dateTimeString) {
+    DateTime parsedDate = DateTime.parse(dateTimeString);
+    DateTime now = DateTime.now();
+
+    if (parsedDate.year == now.year &&
+        parsedDate.month == now.month &&
+        parsedDate.day == now.day) {
+      String period = parsedDate.hour >= 12 ? 'PM' : 'AM';
+      int hour = parsedDate.hour > 12 ? parsedDate.hour - 12 : parsedDate.hour;
+      if (hour == 0) {
+        hour = 12;
+      }
+      String formattedTime =
+          '$hour:${parsedDate.minute.toString().padLeft(2, '0')} $period';
+      return 'Today $formattedTime';
+    } else {
+      String formattedDate =
+          '${parsedDate.year}-${parsedDate.month}-${parsedDate.day}';
+      String period = parsedDate.hour >= 12 ? 'PM' : 'AM';
+      int hour = parsedDate.hour > 12 ? parsedDate.hour - 12 : parsedDate.hour;
+      if (hour == 0) {
+        hour = 12;
+      }
+      String formattedTime =
+          '$hour:${parsedDate.minute.toString().padLeft(2, '0')} $period';
+      return '$formattedDate $formattedTime';
+    }
   }
 }

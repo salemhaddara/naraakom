@@ -8,6 +8,7 @@ import 'package:naraakom/feature/login/loginstates/loginevent.dart';
 import 'package:naraakom/feature/login/loginstates/loginstate.dart';
 import 'package:naraakom/feature/login/submission/forgetpasswordstatus.dart';
 import 'package:naraakom/feature/login/submission/submissionevent.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 class loginbloc extends Bloc<loginevent, loginstate> {
   authRepository repo;
@@ -16,12 +17,12 @@ class loginbloc extends Bloc<loginevent, loginstate> {
         (event, emit) => emit(state.copyWith(phonenumber: event.phoneNumnber)));
     on<loginPasswordrChanged>(
         (event, emit) => emit(state.copyWith(password: event.password)));
+
     on<loginSubmitted>((event, emit) async {
       emit(state.copyWith(formstatus: formsubmitting()));
       String lang = await Preferences.getlang() ?? 'en';
       try {
         var response = await repo.login(state.phonenumber, state.password);
-        print(response);
         if (response['status'] == 'success') {
           User user = repo.getUserFromJson(response['user']);
           await Preferences.saveUserId(response['user']['id']);
@@ -41,14 +42,17 @@ class loginbloc extends Bloc<loginevent, loginstate> {
         emit(state.copyWith(formstatus: submissionfailed(e.toString())));
       }
     });
+
     on<checkUserExistance>(
       (event, emit) async {
         //check user existance
-        bool result = await repo.checkUserexistance(event.phoneNumber);
-        if (result) {
+        var result = await repo.checkUserexistance(event.phoneNumber);
+        if (result['status'] == 'success') {
           emit(state.copyWith(forgetPasswordStatus: userexist()));
         } else {
-          emit(state.copyWith(forgetPasswordStatus: userdoesnotexist()));
+          emit(state.copyWith(
+              forgetPasswordStatus:
+                  userdoesnotexist(result['message_$defaultLang'])));
         }
       },
     );

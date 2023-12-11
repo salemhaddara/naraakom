@@ -30,7 +30,7 @@ class login extends StatefulWidget {
   State<login> createState() => _loginState();
 }
 
-bool isReset = false;
+bool isResetfalse = false;
 
 class _loginState extends State<login> {
   final formKey = GlobalKey<FormState>();
@@ -38,6 +38,7 @@ class _loginState extends State<login> {
   bool showedError = false;
 
   String phoneNumbercheck = '', passwordcheck = '', fullphoneNumber = '';
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -46,31 +47,36 @@ class _loginState extends State<login> {
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: white,
-      body: BlocProvider(
-        create: (context) => loginbloc(context.read<authRepository>()),
-        child: SafeArea(
-            child: Directionality(
-          textDirection:
-              defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  _loginPhoto(size),
-                  _SignInTitle(size),
-                  _form(size),
-                  _forgetPassword(size, context),
-                  _signinButton(size, context),
-                  _donthaveaccount(size)
-                ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: white,
+        body: BlocProvider(
+          create: (context) => loginbloc(context.read<authRepository>()),
+          child: SafeArea(
+              child: Directionality(
+            textDirection:
+                defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _loginPhoto(size),
+                    _SignInTitle(size),
+                    _form(size),
+                    _forgetPassword(size, context),
+                    _signinButton(size, context),
+                    _donthaveaccount(size)
+                  ],
+                ),
               ),
             ),
-          ),
-        )),
+          )),
+        ),
       ),
     );
   }
@@ -185,11 +191,12 @@ class _loginState extends State<login> {
         Navigated = true;
       }
       if (state.forgetpasswordstatus is userdoesnotexist && !showedError) {
-        showedError = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              showSnackbar(language[defaultLang]['usernotexist'], size));
+          ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+              (state.forgetpasswordstatus as userdoesnotexist).exception,
+              size));
         });
+        showedError = true;
       }
       return GestureDetector(
         onTap: () {

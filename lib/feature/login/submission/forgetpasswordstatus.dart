@@ -10,4 +10,7 @@ class initialStatusForgetPassword extends forgetPasswordStatus {
   const initialStatusForgetPassword();
 }
 
-class userdoesnotexist extends forgetPasswordStatus {}
+class userdoesnotexist extends forgetPasswordStatus {
+  String exception;
+  userdoesnotexist(this.exception);
+}

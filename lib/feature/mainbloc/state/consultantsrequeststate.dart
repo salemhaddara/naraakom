@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
 
@@ -13,7 +15,7 @@ class consultantsrequest_SUCCESS extends consultantsrequeststate {
 }
 
 class consultantsrequest_FAILED extends consultantsrequeststate {
-  Exception exception;
+  String exception;
   consultantsrequest_FAILED({required this.exception});
 }
 

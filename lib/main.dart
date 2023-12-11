@@ -8,6 +8,7 @@ import 'package:naraakom/feature/booking/Repository/bookingappointmentRepo.dart'
 import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/notifications/Repo/notificationsRepo.dart';
 import 'package:naraakom/feature/resetpassword/otpverification.dart';
 import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
@@ -24,6 +25,7 @@ void main() async {
         RepositoryProvider(create: (context) => scheduleRepo()),
         RepositoryProvider(create: (context) => authRepository()),
         RepositoryProvider(create: (context) => bookingappointmentRepo()),
+        RepositoryProvider(create: (context) => notificationsRepo()),
       ],
       child: MaterialApp(
         home: const splash(),

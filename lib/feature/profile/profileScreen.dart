@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/authRepository.dart';
-import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/Wallet/WalletScreen.dart';
 import 'package:naraakom/feature/chats/conversationsScreen.dart';
+import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/profile/profileStatus/profilestatus.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_bloc.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_event.dart';
@@ -163,12 +163,15 @@ class _profileScreenState extends State<profileScreen> {
     return BlocBuilder<profile_bloc, profile_state>(builder: (context, state) {
       if (state.status is logoutSuccess && !isNavigated) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.of(context).pushReplacementNamed(
-            loginRoute,
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: const login(),
+            withNavBar: false,
           );
         });
         isNavigated = true;
       }
+
       if (state.status is logoutfailed && !showedException) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -176,32 +179,39 @@ class _profileScreenState extends State<profileScreen> {
         });
         showedException = true;
       }
-      return InkWell(
-        onTap: () {
-          showedException = true;
-          context.read<profile_bloc>().add(logout());
-        },
-        child: Container(
-          height: 54,
-          width: size.width,
-          decoration: BoxDecoration(
-            color: white,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+      return Material(
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Row(children: [
-            SvgPicture.asset('assets/images/logout.svg'),
-            const SizedBox(
-              width: 10,
+          child: InkWell(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            onTap: () {
+              showedException = true;
+              context.read<profile_bloc>().add(logout());
+            },
+            child: Material(
+              child: Container(
+                height: 54,
+                width: size.width,
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Row(children: [
+                  SvgPicture.asset('assets/images/logout.svg'),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: text400normal(
+                    text: language[defaultLang]['logout'],
+                    color: lightblack,
+                    fontsize: 16,
+                  )),
+                ]),
+              ),
             ),
-            Expanded(
-                child: text400normal(
-              text: language[defaultLang]['logout'],
-              color: lightblack,
-              fontsize: 16,
-            )),
-          ]),
+          ),
         ),
       );
     });

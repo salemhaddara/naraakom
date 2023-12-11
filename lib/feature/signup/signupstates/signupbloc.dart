@@ -5,6 +5,7 @@ import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/feature/signup/signupstates/signupevent.dart';
 import 'package:naraakom/feature/signup/signupstates/signupstate.dart';
 import 'package:naraakom/feature/signup/signupsubmission/signupsubmissionevent.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 class signupbloc extends Bloc<signupevent, signupstate> {
   final authRepository repo;
@@ -32,11 +33,13 @@ class signupbloc extends Bloc<signupevent, signupstate> {
             emit(state.copyWith(formstatus: requiredverification()));
           } else {
             emit(state.copyWith(
-                formstatus: signupsubmissionfailed(response['message'])));
+                formstatus:
+                    signupsubmissionfailed(response['message_$defaultLang'])));
           }
         } else {
           emit(state.copyWith(
-              formstatus: signupsubmissionfailed(response['message'])));
+              formstatus:
+                  signupsubmissionfailed(response['message_$defaultLang'])));
         }
       } catch (e) {
         emit(state.copyWith(formstatus: signupsubmissionfailed(e.toString())));

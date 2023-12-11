@@ -1,8 +1,10 @@
 // ignore_for_file: file_names
+String domainName = 'https://basirah.app/app/api/';
 
-String apiSigupUrl = 'https://basirah.app/app/api/register';
-String apiSigninUrl = 'https://basirah.app/app/api/login';
-String apiOtpVerifiedUrl = 'https://basirah.app/app/api/otp_confirmed';
-String apilogout = 'https://basirah.app/app/api/logout';
-String apicheckUserExistance = 'https://basirah.app/app/api/checkMobile';
-String apiupdatePassword = 'https://basirah.app/app/api/updatePassword';
+String apiSigupUrl = '${domainName}register';
+String apiSigninUrl = '${domainName}login';
+String apiOtpVerifiedUrl = '${domainName}otp_confirmed';
+String apilogout = '${domainName}logout';
+String apicheckUserExistance = '${domainName}checkMobile';
+String apiupdatePassword = '${domainName}updatePassword';
+String apiUserNotifications = '${domainName}userNotifications';

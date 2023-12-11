@@ -1,11 +1,13 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:naraakom/config/httpRequests/httpHelper.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/mainbloc/contentevent.dart';
 import 'package:naraakom/feature/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 import 'state/consultantsrequeststate.dart';
 
@@ -19,15 +21,25 @@ class contentbloc extends Bloc<contentevent, contentstate> {
           emit(state.copyWith(userName: await Preferences.getUserName()));
           //fetch data here
           emit(state.copyWith(requeststate: consultantsrequest_IN_PROGRESS()));
-          List<ConsultantModel> consultants = await repo.fetchConsultants();
-          emit(state.copyWith(
-              consultants: consultants,
-              requeststate:
-                  consultantsrequest_SUCCESS(consultants: consultants)));
+          var response = await repo.fetchConsultants();
+          if (response['status'] == 'success') {
+            List<ConsultantModel> consultants =
+                response['data'] as List<ConsultantModel>;
+            emit(state.copyWith(
+                consultants: consultants,
+                requeststate:
+                    consultantsrequest_SUCCESS(consultants: consultants)));
+          } else {
+            emit(state.copyWith(
+                requeststate: consultantsrequest_FAILED(
+                    exception: (await httpHelper
+                        .returnServerError())['message_$defaultLang'])));
+          }
         } catch (e) {
           emit(state.copyWith(
-              requeststate:
-                  consultantsrequest_FAILED(exception: e as Exception)));
+              requeststate: consultantsrequest_FAILED(
+                  exception: (await httpHelper
+                      .returnServerError())['message_$defaultLang'])));
         }
       },
     );

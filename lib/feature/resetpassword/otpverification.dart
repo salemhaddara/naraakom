@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -169,7 +168,7 @@ class _otpverificationState extends State<otpverification> {
       }
 
       if ((state.formstatus is otpvalidationsuccess && !isNavigated)) {
-        if (isReset) {
+        if (isResetfalse) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacementNamed(context, homePageRoute);
           });
