@@ -3,15 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
+import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
 import 'package:naraakom/feature/home/homecomponents/autoslider.dart';
 import 'package:naraakom/feature/home/homecomponents/popularbar.dart';
-import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
-import 'package:naraakom/feature/mainbloc/contentbloc.dart';
-import 'package:naraakom/feature/mainbloc/contentstate.dart';
-import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/home/mainbloc/contentbloc.dart';
+import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
 import 'package:naraakom/feature/notifications/notificationScreen.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -19,7 +21,7 @@ import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/utils/Models/User.dart';
 import '../categoryViewer/CategoryViewer.dart';
-import '../mainbloc/contentevent.dart';
+import 'mainbloc/contentevent.dart';
 import 'homecomponents/sliderbutton.dart';
 
 // ignore: camel_case_types
@@ -126,40 +128,40 @@ class _homeScreenState extends State<homeScreen> {
       }
       if (state.requeststate is consultantsrequest_SUCCESS) {
         consultants.addAll(state.consultants!.toList());
-        return const Column(
+        return Column(
           children: [
-            // responiveconsultant(
-            //   islarge: false,
-            //   consultant: consultants[0],
-            //   onClick: () {},
-            //   onclicknotlarge: () {
-            //     Future.delayed(Duration.zero, () {
-            //       PersistentNavBarNavigator.pushNewScreen(
-            //         context,
-            //         screen: consultantinfo(
-            //           consultant: consultants[0],
-            //         ),
-            //         withNavBar: false,
-            //         pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            //       );
-            //     });
-            //   },
-            // ),
-            // responiveconsultant(
-            //   islarge: false,
-            //   consultant: consultants[1],
-            //   onClick: () {},
-            //   onclicknotlarge: () {
-            //     PersistentNavBarNavigator.pushNewScreen(
-            //       context,
-            //       screen: consultantinfo(
-            //         consultant: consultants[1],
-            //       ),
-            //       withNavBar: false,
-            //       pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            //     );
-            //   },
-            // ),
+            responiveconsultant(
+              islarge: false,
+              consultant: consultants[0],
+              onClick: () {},
+              onclicknotlarge: () {
+                Future.delayed(Duration.zero, () {
+                  PersistentNavBarNavigator.pushNewScreen(
+                    context,
+                    screen: consultantinfo(
+                      consultant: consultants[0],
+                    ),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                });
+              },
+            ),
+            responiveconsultant(
+              islarge: false,
+              consultant: consultants[1],
+              onClick: () {},
+              onclicknotlarge: () {
+                PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: consultantinfo(
+                    consultant: consultants[1],
+                  ),
+                  withNavBar: false,
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                );
+              },
+            ),
           ],
         );
       }

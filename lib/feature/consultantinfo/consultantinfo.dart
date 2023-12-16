@@ -1,19 +1,21 @@
+// ignore_for_file: non_constant_identifier_names, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:naraakom/core/utils/Models/BookingTime.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/booking/bookingScreen.dart';
-import 'package:naraakom/feature/consultantinfo.dart/DatePickerList.dart';
-import 'package:naraakom/feature/consultantinfo.dart/ReadMoreText.dart';
-import 'package:naraakom/feature/consultantinfo.dart/bookingbloc/bookingEvent.dart';
-import 'package:naraakom/feature/consultantinfo.dart/bookingbloc/bookingState.dart';
-import 'package:naraakom/feature/consultantinfo.dart/bookingbloc/bookingbloc.dart';
-import 'package:naraakom/feature/consultantinfo.dart/specializationsView.dart';
-import 'package:naraakom/feature/consultantinfo.dart/timePicker.dart';
-import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/consultantinfo/bookingTracker/bookingTracker.dart';
+import 'package:naraakom/feature/consultantinfo/bookingbloc/bookingEvent.dart';
+import 'package:naraakom/feature/consultantinfo/bookingbloc/bookingState.dart';
+import 'package:naraakom/feature/consultantinfo/bookingbloc/bookingbloc.dart';
+import 'package:naraakom/feature/consultantinfo/repo/bookingRepository.dart';
+import 'package:naraakom/feature/consultantinfo/widgets/DatePickerList.dart';
+import 'package:naraakom/feature/consultantinfo/widgets/ReadMoreText.dart';
+import 'package:naraakom/feature/consultantinfo/widgets/specializationsView.dart';
+import 'package:naraakom/feature/consultantinfo/widgets/timePicker.dart';
 import 'package:naraakom/feature/reviews/reviewsScreen.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -53,7 +55,7 @@ class _consultantinfoState extends State<consultantinfo> {
     return Scaffold(
         backgroundColor: white,
         body: BlocProvider<bookingbloc>(
-            create: (context) => bookingbloc(context.read<Repository>()),
+            create: (context) => bookingbloc(context.read<bookingRepository>()),
             child: Directionality(
               textDirection:
                   defaultLang == 'en' ? TextDirection.ltr : TextDirection.rtl,
@@ -207,30 +209,35 @@ class _consultantinfoState extends State<consultantinfo> {
 
   _timepicker() {
     return BlocBuilder<bookingbloc, bookingstate>(builder: (context, state) {
-      if (state.timesAvailable != null) {
+      if (state.timesAvailable != null && state.timesAvailable!.isNotEmpty) {
         return TimePicker(
-          strings: state.timesAvailable ?? [],
+          bookingTimes: state.timesAvailable ?? [],
           onTimeSelected: (selectedTime) {
-            // Find the corresponding BookingTime object in the list
             final selectedBookingTime = state.timesAvailable?.firstWhere(
               (bookingTime) => bookingTime.bookingtime == selectedTime,
-              orElse: () =>
-                  BookingTIme(bookingtime: selectedTime, isBooked: true),
             );
-
-            if (!selectedBookingTime!.isBooked) {
-              // The selected time is available, you can store it or perform actions.
-              print('Selected time: $selectedTime');
+            if (!selectedBookingTime!.available) {
               SelectedTime = selectedTime;
-            } else {
-              // The selected time is already booked, display a message or handle as needed.
-              print(
-                  'Selected time is already booked ${selectedBookingTime.bookingtime}');
             }
           },
         );
+      } else if (state.tracker is selectDateLoading) {
+        return Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+              color: cyan,
+            ));
       } else {
-        return Container();
+        return Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: text400normal(
+              text: language[defaultLang]['nobookingtimes'],
+              color: grey,
+              fontsize: 14),
+        );
       }
     });
   }
@@ -242,12 +249,11 @@ class _consultantinfoState extends State<consultantinfo> {
         child: DatePickerList(
           itemCount: 30,
           onDateSelected: (DateTime date) {
-            setState(() {
-              SelectedDate = date;
-            });
-            context.read<bookingbloc>().add(getTimesinSpecificDate(date));
+            context
+                .read<bookingbloc>()
+                .add(getTimesinSpecificDate(date, widget.consultant!.user_id));
           },
-          selectedDate: SelectedDate,
+          selectedDate: state.Selected,
         ),
       );
     });
@@ -257,7 +263,7 @@ class _consultantinfoState extends State<consultantinfo> {
     return Container(
         margin: const EdgeInsets.all(16),
         child: ReadMoreText(
-          text: widget.consultant!.biography,
+          text: widget.consultant!.bio,
         ));
   }
 
@@ -307,7 +313,7 @@ class _consultantinfoState extends State<consultantinfo> {
   _specializations() {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
-        child: specializationsView(texts: widget.consultant!.specializations));
+        child: specializationsView(texts: widget.consultant!.departments));
   }
 
   _consultationPrice(Size size) {
@@ -325,8 +331,7 @@ class _consultantinfoState extends State<consultantinfo> {
           ),
           signinrichtext(
             startText: '${language[defaultLang]['consultationprice']} : ',
-            clickableText:
-                '${widget.consultant!.consultation_rate.floor()} QAR',
+            clickableText: '${widget.consultant!.fees.floor()} QAR',
             onClick: () {},
             fontsize: 18,
           ),
@@ -357,7 +362,7 @@ class _consultantinfoState extends State<consultantinfo> {
                   Expanded(
                       child: text700normal(
                           text:
-                              '${widget.consultant!.experience.floor()} ${language[defaultLang]['years']}',
+                              '${widget.consultant!.experience_yrs} ${language[defaultLang]['years']}',
                           fontsize: 18,
                           color: darkblack)),
                   Expanded(
@@ -456,7 +461,7 @@ class _consultantinfoState extends State<consultantinfo> {
                                 alignment: AlignmentDirectional.centerStart,
                                 child: text400normal(
                                     align: TextAlign.start,
-                                    text: widget.consultant!.category,
+                                    text: widget.consultant!.profile,
                                     fontsize: 16,
                                     color: grey),
                               ),
@@ -472,7 +477,7 @@ class _consultantinfoState extends State<consultantinfo> {
                                         'assets/images/rating.svg'),
                                     text600normal(
                                         align: TextAlign.start,
-                                        text: ' ${widget.consultant!.rating} ',
+                                        text: ' ${widget.consultant!.rate} ',
                                         fontsize: 14,
                                         color: darkblack),
                                     text400normal(

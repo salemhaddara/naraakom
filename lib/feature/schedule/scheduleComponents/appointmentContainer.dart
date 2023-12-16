@@ -83,7 +83,7 @@ class _appointmentContainerState extends State<appointmentContainer> {
                             alignment: AlignmentDirectional.centerStart,
                             child: text400normal(
                                 align: TextAlign.start,
-                                text: widget.schedule.consultant.category,
+                                text: widget.schedule.consultant.profile,
                                 fontsize: 14,
                                 color: lightblack),
                           ),

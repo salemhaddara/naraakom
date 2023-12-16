@@ -134,7 +134,8 @@ Map<String, dynamic> language = {
     'networkError': 'Check Your Internet Connection',
     'serverError': 'unknown Server error',
     'doctorLoginAttempt': 'Not Allowed For You To Sign In Here',
-    'codenotvalid': 'Invalid Confirmation Code'
+    'codenotvalid': 'Invalid Confirmation Code',
+    'nobookingtimes': 'There are no booking times for this day'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -271,6 +272,7 @@ Map<String, dynamic> language = {
     'networkError': 'تحقق من اتصالك بالإنترنت',
     'serverError': 'خطأ في الخادم غير معروف',
     'doctorLoginAttempt': 'غير مسموح لك بتسجيل الدخول هنا',
-    'codenotvalid': 'رمز التأكيد غير صالح'
+    'codenotvalid': 'رمز التأكيد غير صالح',
+    'nobookingtimes': 'لا توجد أوقات حجز لهذا اليوم'
   }
 };

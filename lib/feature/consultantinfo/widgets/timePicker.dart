@@ -1,14 +1,16 @@
+// ignore_for_file: library_private_types_in_public_api, file_names
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/BookingTime.dart';
 
 class TimePicker extends StatefulWidget {
-  final List<BookingTIme> strings;
+  final List<BookingTime> bookingTimes;
   final Function(DateTime) onTimeSelected;
 
   const TimePicker(
-      {Key? key, required this.strings, required this.onTimeSelected})
+      {Key? key, required this.bookingTimes, required this.onTimeSelected})
       : super(key: key);
 
   @override
@@ -27,13 +29,13 @@ class _TimePickerState extends State<TimePicker> {
         spacing: 16.0,
         runSpacing: 16.0,
         alignment: WrapAlignment.start,
-        children: widget.strings.map((string) {
-          final time = string.bookingtime;
+        children: widget.bookingTimes.map((timeElement) {
+          final time = timeElement.bookingtime;
           final isSelected = selectedTime == time;
 
           return GestureDetector(
             onTap: () {
-              if (!string.isBooked) {
+              if (!timeElement.available) {
                 setState(() {
                   selectedTime = time;
                 });
@@ -47,9 +49,7 @@ class _TimePickerState extends State<TimePicker> {
               decoration: BoxDecoration(
                 color: isSelected ? lightcyan : Colors.transparent,
                 border: Border.all(
-                  color: string.isBooked
-                      ? Colors.grey
-                      : Colors.blue, // Highlight available times
+                  color: timeElement.available ? Colors.grey : Colors.blue,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(10),
@@ -62,7 +62,7 @@ class _TimePickerState extends State<TimePicker> {
                     fontWeight: FontWeight.bold,
                     color: isSelected
                         ? Colors.black
-                        : (string.isBooked ? Colors.grey : Colors.black),
+                        : (timeElement.available ? Colors.grey : Colors.black),
                   ),
                 ),
               ),

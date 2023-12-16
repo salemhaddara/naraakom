@@ -4,8 +4,6 @@ abstract class contentevent {}
 
 class ConsultantsRequested extends contentevent {}
 
-class UserDataRequested extends contentevent {}
-
 class SelectCategoryEvent extends contentevent {
   final String selectedCategory;
 

@@ -90,7 +90,9 @@ class _responiveconsultantState extends State<responiveconsultant> {
                               alignment: AlignmentDirectional.centerStart,
                               child: text400normal(
                                   align: TextAlign.start,
-                                  text: widget.consultant.category,
+                                  text: defaultLang == 'en'
+                                      ? widget.consultant.specialitst_title_en
+                                      : widget.consultant.specialitst_title_en,
                                   fontsize: 14,
                                   color: darkblack),
                             ),
@@ -105,7 +107,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
                                   SvgPicture.asset('assets/images/rating.svg'),
                                   text600normal(
                                       align: TextAlign.start,
-                                      text: ' ${widget.consultant.rating} ',
+                                      text: ' ${widget.consultant.rate} ',
                                       fontsize: 12,
                                       color: darkblack),
                                   text400normal(
@@ -137,13 +139,13 @@ class _responiveconsultantState extends State<responiveconsultant> {
                     ),
                     _row(
                         'specialist.svg',
-                        '${widget.consultant.biography.substring(0, 45)}...',
+                        '${widget.consultant.profile.substring(0, 45)}...',
                         false),
                     _row(
                         'money.svg',
                         'A consultant specializing in family counseling and improve relationships',
                         true),
-                    _row('time.svg', widget.consultant.availability, false),
+                    _row('time.svg', widget.consultant.name, false),
                     _button()
                   ],
                 ),
@@ -205,8 +207,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
             Expanded(
                 child: signinrichtext(
               startText: '${language[defaultLang]['consultationprice']} :',
-              clickableText:
-                  '${widget.consultant.consultation_rate.floor()} QAR',
+              clickableText: '${widget.consultant.fees.floor()} QAR',
               onClick: () {},
               fontsize: 14,
             ))

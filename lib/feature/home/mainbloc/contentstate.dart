@@ -2,7 +2,7 @@
 
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
-import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
 
 class contentstate {
   List<ConsultantModel>? consultants = List.empty(growable: true);

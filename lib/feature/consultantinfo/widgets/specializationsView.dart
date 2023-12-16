@@ -1,9 +1,13 @@
+// ignore_for_file: camel_case_types, file_names
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:naraakom/config/theme/colors.dart';
+import 'package:naraakom/core/utils/Models/department.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 class specializationsView extends StatelessWidget {
-  final List<String> texts;
+  final List<department> texts;
 
   const specializationsView({super.key, required this.texts});
 
@@ -20,7 +24,7 @@ class specializationsView extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(8),
           child: Text(
-            text,
+            defaultLang == 'en' ? text.title_en : text.title_ar,
             style: GoogleFonts.nunitoSans(fontSize: 16, color: cyan),
           ),
         );

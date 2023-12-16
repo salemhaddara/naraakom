@@ -1,13 +1,15 @@
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
-import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
+// import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/Conversation.dart';
-import 'package:naraakom/core/utils/Models/Message.dart';
+// import 'package:naraakom/core/utils/Models/Message.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
-import 'package:naraakom/feature/chats/chatsComponents/conversationItem.dart';
+// import 'package:naraakom/feature/chats/chatsComponents/conversationItem.dart';
 
 class conversationsScreen extends StatefulWidget {
   const conversationsScreen({super.key});
@@ -36,44 +38,44 @@ class _conversationsScreenState extends State<conversationsScreen> {
                   const SizedBox(
                     height: 2,
                   ),
-                  Expanded(
-                      child:
-                          //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
-                          ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: 1,
-                              padding: const EdgeInsets.only(top: 0),
-                              itemBuilder: (context, index) {
-                                return ConversationItem(
-                                  onClick: () {},
-                                  conversationInfo: Conversation(
-                                      last_message:
-                                          'Embrace the journey, and let the adventure begin',
-                                      consultant: ConsultantModel(
-                                          name: 'Salem Haddara',
-                                          category: 'Family Consulting',
-                                          availability: '8 AM to 10 PM',
-                                          rating: 5,
-                                          id: 'id4',
-                                          experience: 2,
-                                          consultation_rate: 250,
-                                          visitors: 1000,
-                                          biography: 'later',
-                                          specializations: [],
-                                          bookedTimes: []),
-                                      UserId: 'UserId',
-                                      lastUse: DateTime.now(),
-                                      messages: [
-                                        Message(
-                                            messagetext: '',
-                                            messagesenderId: 'messagesenderId',
-                                            messagereceiverId:
-                                                'messagereceiverId',
-                                            messageTime: DateTime.now(),
-                                            isReaded: true)
-                                      ]),
-                                );
-                              }))
+                  Expanded(child: Container()
+                      //CHECK HERE IF THERE NOTIFICATIONS TODAY OR EARLIER
+                      // ListView.builder(
+                      //     physics: const BouncingScrollPhysics(),
+                      //     itemCount: 1,
+                      //     padding: const EdgeInsets.only(top: 0),
+                      //     itemBuilder: (context, index) {
+                      //       return ConversationItem(
+                      //         onClick: () {},
+                      //         conversationInfo: Conversation(
+                      //             last_message:
+                      //                 'Embrace the journey, and let the adventure begin',
+                      //             consultant: ConsultantModel(
+                      //                 name: 'Salem Haddara',
+                      //                 category: 'Family Consulting',
+                      //                 availability: '8 AM to 10 PM',
+                      //                 rating: 5,
+                      //                 id: 'id4',
+                      //                 experience: 2,
+                      //                 consultation_rate: 250,
+                      //                 visitors: 1000,
+                      //                 biography: 'later',
+                      //                 specializations: [],
+                      //                 bookedTimes: []),
+                      //             UserId: 'UserId',
+                      //             lastUse: DateTime.now(),
+                      //             messages: [
+                      //               Message(
+                      //                   messagetext: '',
+                      //                   messagesenderId: 'messagesenderId',
+                      //                   messagereceiverId:
+                      //                       'messagereceiverId',
+                      //                   messageTime: DateTime.now(),
+                      //                   isReaded: true)
+                      //             ]),
+                      //       );
+                      //     })
+                      )
                 ]))));
   }
 }

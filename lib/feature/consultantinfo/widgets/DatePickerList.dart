@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,7 +23,7 @@ class DatePickerList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: itemCount,
         itemBuilder: (context, index) {
-          final day = DateTime.now().add(Duration(days: index));
+          final day = DateTime.now().add(Duration(days: index + 1));
           final dayName = DateFormat('E').format(day);
           final date = day.day.toString();
           final isSelected =
@@ -37,9 +39,7 @@ class DatePickerList extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected
-                      ? Colors.blue
-                      : Colors.grey, // Highlight selected date
+                  color: isSelected ? Colors.blue : Colors.grey,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(10),

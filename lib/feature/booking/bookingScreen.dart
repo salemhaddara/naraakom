@@ -13,7 +13,7 @@ import 'package:naraakom/feature/booking/bloc/bookingbloc.dart';
 import 'package:naraakom/feature/booking/bloc/bookingevent.dart';
 import 'package:naraakom/feature/booking/bloc/bookingstate.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
-import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
+import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
@@ -755,7 +755,7 @@ class _bookingScreenState extends State<bookingScreen> {
             child: Row(
           children: [
             text600normal(
-              text: '${widget.consultantinfos.consultation_rate.floor()} QAR',
+              text: '${widget.consultantinfos.fees.floor()} QAR',
               color: cyan,
               fontsize: 16,
             )
@@ -791,7 +791,7 @@ class _bookingScreenState extends State<bookingScreen> {
             child: Row(
           children: [
             text400normal(
-              text: widget.consultantinfos.category,
+              text: '${widget.consultantinfos.specialist_id}',
               color: grey,
               fontsize: 16,
             )

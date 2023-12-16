@@ -8,3 +8,5 @@ String apilogout = '${domainName}logout';
 String apicheckUserExistance = '${domainName}checkMobile';
 String apiupdatePassword = '${domainName}updatePassword';
 String apiUserNotifications = '${domainName}userNotifications';
+String apiDoctors = '${domainName}listDoctors';
+String apicheckDoctorAppointment = '${domainName}checkDoctorAppointment';

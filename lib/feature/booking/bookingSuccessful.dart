@@ -12,7 +12,7 @@ import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/consultantinfo.dart/consultantinfo.dart';
+import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
 
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
@@ -164,8 +164,7 @@ class _bookingSuccessfulState extends State<bookingSuccessful> {
                       const Spacer(),
                       Row(children: [
                         text600normal(
-                            text:
-                                '${widget.consultant.consultation_rate.floor()} QAR',
+                            text: '${widget.consultant.fees.floor()} QAR',
                             fontsize: 16,
                             color: cyan),
                         const Spacer()

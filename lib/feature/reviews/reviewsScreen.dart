@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, must_be_immutable
+// ignore_for_file: camel_case_types, must_be_immutable, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -10,7 +10,6 @@ import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/reviews/reviewsComponents/ItemsListView.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class reviewsScreen extends StatefulWidget {
@@ -56,7 +55,7 @@ class _reviewsScreenState extends State<reviewsScreen> {
                       children: [
                         _ratingtitle(),
                         _ratingandratingbar(),
-                        _reviewsnumber()
+                        // _reviewsnumber()
                       ],
                     ),
                   ),
@@ -66,7 +65,7 @@ class _reviewsScreenState extends State<reviewsScreen> {
               _ratingwithlinearbar(
                   language[defaultLang]['consultantrating'], 0.8),
               _ratingwithlinearbar(language[defaultLang]['overallrating'], 0.9),
-              ItemListView(items: widget.consultantinfo.reviews!),
+              // ItemListView(items: widget.consultantinfo.reviews!),
               const SizedBox(
                 height: 50,
               )
@@ -102,21 +101,21 @@ class _reviewsScreenState extends State<reviewsScreen> {
     );
   }
 
-  _reviewsnumber() {
-    return SizedBox(
-      height: 25,
-      child: Row(
-        children: [
-          text400normal(
-              text:
-                  '${language[defaultLang]['basedon']} ${(widget.consultantinfo.reviews?.length) ?? '0'}',
-              color: grey,
-              fontsize: 14),
-          const Spacer()
-        ],
-      ),
-    );
-  }
+  // _reviewsnumber() {
+  //   return SizedBox(
+  //     height: 25,
+  //     child: Row(
+  //       children: [
+  //         text400normal(
+  //             text:
+  //                 '${language[defaultLang]['basedon']} ${(widget.consultantinfo.reviews?.length) ?? '0'}',
+  //             color: grey,
+  //             fontsize: 14),
+  //         const Spacer()
+  //       ],
+  //     ),
+  //   );
+  // }
 
   _ratingandratingbar() {
     return SizedBox(
@@ -124,7 +123,7 @@ class _reviewsScreenState extends State<reviewsScreen> {
       child: Row(
         children: [
           text700normal(
-            text: '${widget.consultantinfo.rating}',
+            text: '${widget.consultantinfo.fees}',
             color: darkblack,
             fontsize: 40,
             align: TextAlign.start,

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:naraakom/feature/mainbloc/Repository/repository.dart';
-import 'package:naraakom/feature/mainbloc/contentbloc.dart';
-import 'package:naraakom/feature/mainbloc/contentevent.dart';
-import 'package:naraakom/feature/mainbloc/contentstate.dart';
-import 'package:naraakom/feature/mainbloc/state/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/home/mainbloc/contentbloc.dart';
+import 'package:naraakom/feature/home/mainbloc/contentevent.dart';
+import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
 import 'package:naraakom/feature/search/searchComponents/CategoriesList.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -21,7 +21,7 @@ import '../../core/widgets/searchbar.dart';
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text600normal.dart';
 import '../../core/widgets/text700normal.dart';
-import '../consultantinfo.dart/consultantinfo.dart';
+import '../consultantinfo/consultantinfo.dart';
 
 class searchScreen extends StatefulWidget {
   const searchScreen({super.key});
@@ -75,7 +75,7 @@ class _searchScreenState extends State<searchScreen> {
               _searchWidget(size),
               _categorieslist(size),
               _searchConsultantsquantity(size),
-              _consultantsList(),
+              // _consultantsList(),
             ],
           ),
         ),
@@ -129,27 +129,27 @@ class _searchScreenState extends State<searchScreen> {
     );
   }
 
-  Widget _consultantsList() {
-    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
-      if (state.requeststate is consultantsrequest_SUCCESS) {
-        context.read<contentbloc>().add(SelectCategoryEvent(selectedCategory));
-      }
-      if (state.requeststate is CategorySelectedState) {
-        filteredList = sortConsultants(
-            ((state.requeststate) as CategorySelectedState).filteredList,
-            selectedFilter);
+  // Widget _consultantsList() {
+  //   return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+  //     if (state.requeststate is consultantsrequest_SUCCESS) {
+  //       context.read<contentbloc>().add(SelectCategoryEvent(selectedCategory));
+  //     }
+  //     if (state.requeststate is CategorySelectedState) {
+  //       filteredList = sortConsultants(
+  //           ((state.requeststate) as CategorySelectedState).filteredList,
+  //           selectedFilter);
 
-        return _returnListView(filteredList!);
-      }
-      if (state.requeststate is SearchState) {
-        filteredList = sortConsultants(
-            ((state.requeststate) as SearchState).searchedconsultants,
-            selectedFilter);
-        return _returnListView(filteredList!);
-      }
-      return Container();
-    });
-  }
+  //       return _returnListView(filteredList!);
+  //     }
+  //     if (state.requeststate is SearchState) {
+  //       filteredList = sortConsultants(
+  //           ((state.requeststate) as SearchState).searchedconsultants,
+  //           selectedFilter);
+  //       return _returnListView(filteredList!);
+  //     }
+  //     return Container();
+  //   });
+  // }
 
   Widget _returnListView(List<ConsultantModel> consutants) {
     return Expanded(
@@ -352,22 +352,22 @@ class _searchScreenState extends State<searchScreen> {
     );
   }
 
-  List<ConsultantModel> sortConsultants(
-    List<ConsultantModel> consultants,
-    int filter,
-  ) {
-    switch (filter) {
-      case 2:
-        consultants.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
-      case 3:
-        consultants
-            .sort((a, b) => a.consultation_rate.compareTo(b.consultation_rate));
-      case 1:
-        consultants
-            .sort((a, b) => b.consultation_rate.compareTo(a.consultation_rate));
-        break;
-    }
-    return consultants;
-  }
+  // List<ConsultantModel> sortConsultants(
+  //   List<ConsultantModel> consultants,
+  //   int filter,
+  // ) {
+  //   switch (filter) {
+  //     case 2:
+  //       consultants.sort((a, b) => b.rating.compareTo(a.rating));
+  //       break;
+  //     case 3:
+  //       consultants
+  //           .sort((a, b) => a.consultation_rate.compareTo(b.consultation_rate));
+  //     case 1:
+  //       consultants
+  //           .sort((a, b) => b.consultation_rate.compareTo(a.consultation_rate));
+  //       break;
+  //   }
+  //   return consultants;
+  // }
 }
