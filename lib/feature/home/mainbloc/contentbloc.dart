@@ -3,10 +3,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/httpRequests/httpHelper.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
+import 'package:naraakom/core/utils/Models/category.dart';
 import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/home/mainbloc/contentevent.dart';
 import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
+import 'package:naraakom/feature/home/mainbloc/state/specialistsrequeststate.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 
 import 'state/consultantsrequeststate.dart';
@@ -43,7 +45,21 @@ class contentbloc extends Bloc<contentevent, contentstate> {
         }
       },
     );
-
+    on<SpecialistsRequested>((event, emit) async {
+      emit(state.copyWith(
+          specialistsrequestTracker: specialistsFetchingLOADING()));
+      var response = await repo.fetchCategories();
+      if (response['status'] == 'success') {
+        List<category> categories = response['data'] as List<category>;
+        emit(state.copyWith(
+            categories: categories,
+            specialistsrequestTracker: specialistsFetchingSUCCESSFUL()));
+      } else {
+        emit(state.copyWith(
+            specialistsrequestTracker:
+                specialistsFetchingFAILED(response['message_$defaultLang'])));
+      }
+    });
     // on<SelectCategoryEvent>((event, emit) {
     //   List<ConsultantModel> list =
     //       state.consultants ?? List.empty(growable: true);

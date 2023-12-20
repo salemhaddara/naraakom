@@ -20,7 +20,6 @@ import '../../core/widgets/inputfield.dart';
 import '../../core/widgets/phoneinput.dart';
 import '../../core/widgets/text400normal.dart';
 import '../../core/widgets/text700normal.dart';
-import '../login/login.dart';
 import 'signupcomponents/siginrichtext.dart';
 import 'signupstates/signupbloc.dart';
 
@@ -49,7 +48,6 @@ class _signupState extends State<signup> {
         systemNavigationBarColor: white,
         systemNavigationBarIconBrightness: Brightness.dark));
     var size = MediaQuery.of(context).size;
-    isResetfalse = true;
 
     return Scaffold(
       backgroundColor: white,

@@ -24,6 +24,7 @@ class bookingRepository {
             'date': formatDate(date)
           }),
           headers: await httpHelper.getHeaderwithToken());
+      print(json.decode(response.body));
       bookingtimes = (BookingTime.parseBookingTimes(response.body, date));
       //remove not active bookingtimes
       bookingtimes.removeWhere((time) => !time.active);
@@ -43,6 +44,6 @@ class bookingRepository {
   }
 
   int getDayIndexFromDate(DateTime date) {
-    return (date.weekday + 6) % 7 + 1;
+    return date.weekday % 7;
   }
 }

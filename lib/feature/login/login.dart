@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +21,7 @@ import 'package:naraakom/feature/login/loginstates/loginevent.dart';
 import 'package:naraakom/feature/login/loginstates/loginstate.dart';
 import 'package:naraakom/feature/login/submission/submissionevent.dart';
 
+import '../../core/utils/Preferences/Preferences.dart';
 import '../../core/widgets/Snackbar.dart';
 
 class login extends StatefulWidget {
@@ -29,8 +30,6 @@ class login extends StatefulWidget {
   @override
   State<login> createState() => _loginState();
 }
-
-bool isResetfalse = false;
 
 class _loginState extends State<login> {
   final formKey = GlobalKey<FormState>();
@@ -184,7 +183,8 @@ class _loginState extends State<login> {
   Widget _forgetPassword(Size size, BuildContext context) {
     return BlocBuilder<loginbloc, loginstate>(builder: (context, state) {
       if (state.forgetpasswordstatus is userexist && !Navigated) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await Preferences.saveAuthOperation('forgetpassword');
           Navigator.of(context).pushReplacementNamed(otpverificationRoute,
               arguments: fullphoneNumber);
         });
@@ -254,7 +254,8 @@ class _loginState extends State<login> {
             )
           : button(
               text: language[defaultLang]['signin'],
-              onTap: () {
+              onTap: () async {
+                await Preferences.saveAuthOperation('signup');
                 if (phoneNumbercheck.isNotEmpty && passwordcheck.isNotEmpty) {
                   if (formKey.currentState!.validate()) {
                     context.read<loginbloc>().add((loginSubmitted()));
@@ -273,7 +274,8 @@ class _loginState extends State<login> {
       child: signuprichtext(
           startText: language[defaultLang]['donthaveaccount'],
           clickableText: language[defaultLang]['signup'],
-          onClick: () {
+          onClick: () async {
+            await Preferences.saveAuthOperation('signup');
             Navigator.pushNamed(context, signupRoute);
           }),
     );

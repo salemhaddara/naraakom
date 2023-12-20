@@ -3,3 +3,5 @@
 abstract class profile_event {}
 
 class logout extends profile_event {}
+
+class getLanguage extends profile_event {}

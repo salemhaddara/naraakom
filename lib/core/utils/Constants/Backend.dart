@@ -10,3 +10,4 @@ String apiupdatePassword = '${domainName}updatePassword';
 String apiUserNotifications = '${domainName}userNotifications';
 String apiDoctors = '${domainName}listDoctors';
 String apicheckDoctorAppointment = '${domainName}checkDoctorAppointment';
+String apiSpecialists = '${domainName}specialists';

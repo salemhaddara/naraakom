@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/config/theme/routes.dart';
+import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:lottie/lottie.dart';
-import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/resetpassword/otpComponents/otpinputField.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
@@ -141,11 +141,6 @@ class _otpverificationState extends State<otpverification> {
               text: language[defaultLang]['verify'],
               width: size.width,
               onTap: () async {
-                // FirebaseAuth auth = FirebaseAuth.instance;
-                // if (auth.currentUser != null) {
-                //   auth.signOut();
-                // }
-                //take the priovided code and send it here
                 if (codeProvided.length == 6) {
                   context
                       .read<otpbloc>()
@@ -168,16 +163,7 @@ class _otpverificationState extends State<otpverification> {
       }
 
       if ((state.formstatus is otpvalidationsuccess && !isNavigated)) {
-        if (isResetfalse) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, homePageRoute);
-          });
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, setnewpassRoute,
-                arguments: phonenumber);
-          });
-        }
+        navigate();
         isNavigated = true;
       }
       return OtpInputFields(
@@ -188,6 +174,19 @@ class _otpverificationState extends State<otpverification> {
             codeProvided = text;
           });
     });
+  }
+
+  navigate() async {
+    if ((await Preferences.getAuthOperation()) == 'signup') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, homePageRoute);
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, setnewpassRoute,
+            arguments: phonenumber);
+      });
+    }
   }
 
   Widget _otpLottie(Size size) {

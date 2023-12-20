@@ -68,7 +68,6 @@ class ConsultantModel {
     final List<dynamic> consultantsData = data['data'];
 
     List<ConsultantModel> consultants = [];
-
     for (var consultantData in consultantsData) {
       consultants.add(
         ConsultantModel(
@@ -77,7 +76,7 @@ class ConsultantModel {
             address: consultantData['address'],
             profile: consultantData['profile'],
             photo: consultantData['photo'],
-            bio: consultantData['bio'],
+            bio: consultantData['bio'] ?? '',
             rate: consultantData['rate'] + 0.0,
             certificate: consultantData['certificate'],
             passport_id: consultantData['passport_id'],
@@ -86,7 +85,7 @@ class ConsultantModel {
             nationality_title_ar: consultantData['nationality_title_ar'],
             city_title_en: consultantData['city_title_en'],
             city_title_ar: consultantData['city_title_ar'],
-            experience_yrs: (consultantData['experience_yrs']),
+            experience_yrs: (consultantData['experience_yrs']) ?? 0,
             country_title_en: consultantData['country_title_en'],
             country_title_ar: consultantData['country_title_ar'],
             fees: double.parse(consultantData['fees']),

@@ -14,6 +14,7 @@ import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/home/mainbloc/contentbloc.dart';
 import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
 import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/mainbloc/state/specialistsrequeststate.dart';
 import 'package:naraakom/feature/notifications/notificationScreen.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -51,9 +52,8 @@ class _homeScreenState extends State<homeScreen> {
       body: BlocProvider<contentbloc>(
         create: (context) {
           return contentbloc(context.read<Repository>())
+            ..add(SpecialistsRequested())
             ..add(ConsultantsRequested());
-          // ..add(UserDataRequested());
-          //let this to import notifications here if there unreaded one
         },
         child: Directionality(
           textDirection:
@@ -122,7 +122,7 @@ class _homeScreenState extends State<homeScreen> {
       }
       if (state.requeststate is consultantsrequest_FAILED) {
         return const Text(
-          'failed',
+          '',
           style: TextStyle(color: Colors.red),
         );
       }
@@ -145,21 +145,6 @@ class _homeScreenState extends State<homeScreen> {
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,
                   );
                 });
-              },
-            ),
-            responiveconsultant(
-              islarge: false,
-              consultant: consultants[1],
-              onClick: () {},
-              onclicknotlarge: () {
-                PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: consultantinfo(
-                    consultant: consultants[1],
-                  ),
-                  withNavBar: false,
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                );
               },
             ),
           ],
@@ -258,68 +243,26 @@ class _homeScreenState extends State<homeScreen> {
   }
 
   Widget _categories(Size size) {
-    String assetprefix = 'assets/images/';
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      color: homebackgrey,
-      child: Column(
-        children: [
-          _categoryRow(
-              size,
-              '${assetprefix}familyconsultant.svg',
-              language[defaultLang]['familyconsultant'],
-              () {
-                _navigateWithCategory(language['en']['familyconsultant'],
-                    language[defaultLang]['familyconsultant']);
-              },
-              '${assetprefix}professionalconsultant.svg',
-              language[defaultLang]['professionalconsultant'],
-              () {
-                _navigateWithCategory(language['en']['professionalconsultant'],
-                    language[defaultLang]['professionalconsultant']);
-              },
-              '${assetprefix}educationnalconsultant.svg',
-              language[defaultLang]['educationnalconsultant'],
-              () {
-                _navigateWithCategory(language['en']['educationnalconsultant'],
-                    language[defaultLang]['educationnalconsultant']);
-              }),
-          _categoryRow(
-            size,
-            '${assetprefix}behaviorconsultant.svg',
-            language[defaultLang]['behaviorconsultant'],
-            () {
-              _navigateWithCategory(language['en']['behaviorconsultant'],
-                  language[defaultLang]['behaviorconsultant']);
-            },
-            '${assetprefix}psychologicalconsultant.svg',
-            language[defaultLang]['psychologicalconsultant'],
-            () {
-              _navigateWithCategory(language['en']['psychologicalconsultant'],
-                  language[defaultLang]['psychologicalconsultant']);
-            },
-            '${assetprefix}humandevelopment.svg',
-            language[defaultLang]['humandevelopment'],
-            () {
-              _navigateWithCategory(language['en']['humandevelopment'],
-                  language[defaultLang]['humandevelopment']);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _categoryRow(Size size, image1, text1, Function onClick1, image2,
-      text2, Function onClick2, image3, text3, Function onClick3) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _categoryContainer(size, image1, text1, onClick1),
-        _categoryContainer(size, image2, text2, onClick2),
-        _categoryContainer(size, image3, text3, onClick3)
-      ],
-    );
+    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
+      if (state.specialistsrequestTracker is specialistsFetchingSUCCESSFUL) {
+        return Container(
+          margin: const EdgeInsets.only(top: 20),
+          color: homebackgrey,
+          child: Wrap(
+              alignment: WrapAlignment.center,
+              children: List.generate(state.categories!.length, (index) {
+                return _categoryContainer(
+                    size,
+                    'assets/images/professionalconsultant.svg',
+                    defaultLang == 'en'
+                        ? state.categories![index].title_en
+                        : state.categories![index].title_ar,
+                    () {});
+              })),
+        );
+      }
+      return Container();
+    });
   }
 
   Widget _categoryContainer(
@@ -329,8 +272,8 @@ class _homeScreenState extends State<homeScreen> {
         onClick();
       },
       child: Container(
-        width: ((size.width / 3) - 30),
-        height: ((size.width / 3) - 30),
+        width: (size.width < 600) ? size.width / 4 : size.width / 7,
+        height: (size.width < 600) ? size.width / 4 : size.width / 7,
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(

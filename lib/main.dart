@@ -7,6 +7,7 @@ import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/feature/booking/Repository/bookingappointmentRepo.dart';
 import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/consultantinfo/repo/bookingRepository.dart';
+import 'package:naraakom/feature/languageSetting/Repo/languageRepo.dart';
 import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
 import 'package:naraakom/feature/notifications/Repo/notificationsRepo.dart';
@@ -28,6 +29,7 @@ void main() async {
         RepositoryProvider(create: (context) => bookingappointmentRepo()),
         RepositoryProvider(create: (context) => notificationsRepo()),
         RepositoryProvider(create: (context) => bookingRepository()),
+        RepositoryProvider(create: (context) => languageRepo()),
       ],
       child: MaterialApp(
         home: const splash(),
@@ -40,7 +42,7 @@ void main() async {
           homePageRoute: (context) => MyNavigationBar(
                 index: 0,
               ),
-          setnewpassRoute: (context) => const setnewpass()
+          setnewpassRoute: (context) => const setnewpass(),
         },
       )));
   await Firebase.initializeApp(

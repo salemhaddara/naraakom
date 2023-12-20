@@ -65,4 +65,14 @@ class Preferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('accesstoken');
   }
+
+  static Future<bool> saveAuthOperation(String operation) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('authoperation', operation);
+  }
+
+  static Future<String?> getAuthOperation() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('authoperation');
+  }
 }

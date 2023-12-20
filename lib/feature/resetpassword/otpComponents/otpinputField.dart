@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:naraakom/config/theme/colors.dart';
@@ -40,43 +42,46 @@ class _OtpInputFieldsState extends State<OtpInputFields> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(6, (index) {
-        return Container(
-          width: 46,
-          height: 47,
-          margin: const EdgeInsets.symmetric(vertical: 30),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            color: lightcyan,
-            border: Border.all(
-              color: widget.isError ? Colors.red : lightcyan,
-              width: 2, // Conditional border color
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: List.generate(6, (index) {
+          return Container(
+            width: 46,
+            height: 47,
+            margin: const EdgeInsets.symmetric(vertical: 30),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: lightcyan,
+              border: Border.all(
+                color: widget.isError ? Colors.red : lightcyan,
+                width: 2, // Conditional border color
+              ),
             ),
-          ),
-          alignment: Alignment.center,
-          child: TextField(
-            controller: _controllers[index],
-            focusNode: _focusNodes[index],
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
-            maxLength: 1,
-            onChanged: (value) {
-              widget.onChange(value); // Call onChange callback
-              if (value.isNotEmpty) {
-                _focusNodes[index].nextFocus();
-                _checkOtpComplete();
-              }
-            },
-            decoration: const InputDecoration(
-              counterText: '',
-              border: InputBorder.none,
+            alignment: Alignment.center,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              maxLength: 1,
+              onChanged: (value) {
+                widget.onChange(value); // Call onChange callback
+                if (value.isNotEmpty) {
+                  _focusNodes[index].nextFocus();
+                  _checkOtpComplete();
+                }
+              },
+              decoration: const InputDecoration(
+                counterText: '',
+                border: InputBorder.none,
+              ),
+              style: GoogleFonts.nunitoSans(fontSize: 22),
             ),
-            style: GoogleFonts.nunitoSans(fontSize: 22),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }

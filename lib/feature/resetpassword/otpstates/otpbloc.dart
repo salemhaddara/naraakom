@@ -4,8 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as authFirebase;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/localisation/translation.dart';
-import 'package:naraakom/feature/login/login.dart';
-
+import 'package:naraakom/core/utils/Preferences/Preferences.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpevent.dart';
 import 'package:naraakom/feature/resetpassword/otpstates/otpstate.dart';
 import 'package:naraakom/feature/resetpassword/otpsubmission/otpsubmission.dart';
@@ -77,7 +76,7 @@ class otpbloc extends Bloc<otpevent, otpstate> {
                 smsCode: state.codeprovided);
 
         await auth.signInWithCredential(credential).then((value) async {
-          if (isResetfalse) {
+          if ((await Preferences.getAuthOperation()) == 'signup') {
             if (await repo.saveOtpConfirmation()) {
               emit(state.copyWith(
                   formstatus: otpvalidationsuccess('Validation Success')));

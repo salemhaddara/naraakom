@@ -62,8 +62,8 @@ class _responiveconsultantState extends State<responiveconsultant> {
                         child: ClipRRect(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
-                          child: Image.asset(
-                            'assets/images/sample.jpg',
+                          child: Image.network(
+                            widget.consultant.profile,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -92,7 +92,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
                                   align: TextAlign.start,
                                   text: defaultLang == 'en'
                                       ? widget.consultant.specialitst_title_en
-                                      : widget.consultant.specialitst_title_en,
+                                      : widget.consultant.specialitst_title_ar,
                                   fontsize: 14,
                                   color: darkblack),
                             ),
@@ -113,7 +113,7 @@ class _responiveconsultantState extends State<responiveconsultant> {
                                   text400normal(
                                       align: TextAlign.start,
                                       text:
-                                          '(${widget.consultant.visitors} Visitors)',
+                                          '(${widget.consultant.visitors} ${language[defaultLang]['visitors']})',
                                       fontsize: 12,
                                       color: darkblack),
                                 ],

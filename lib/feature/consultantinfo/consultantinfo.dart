@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/core/widgets/button.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/booking/bookingScreen.dart';
@@ -43,7 +44,7 @@ DateTime? SelectedTime;
 
 class _consultantinfoState extends State<consultantinfo> {
   List notifications = List.empty(growable: true);
-
+  bool showedError = false;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -52,6 +53,7 @@ class _consultantinfoState extends State<consultantinfo> {
         systemNavigationBarColor: white,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
+    showedError = false;
     return Scaffold(
         backgroundColor: white,
         body: BlocProvider<bookingbloc>(
@@ -90,7 +92,7 @@ class _consultantinfoState extends State<consultantinfo> {
                                 _datepicker(),
                                 _title(
                                     language[defaultLang]['selecttime'], size),
-                                _timepicker(),
+                                _timepicker(size, context),
                                 _spacer(10, size),
                                 _reviews(size)
                               ]),
@@ -207,9 +209,11 @@ class _consultantinfoState extends State<consultantinfo> {
     );
   }
 
-  _timepicker() {
+  _timepicker(Size size, BuildContext scaffoldContext) {
     return BlocBuilder<bookingbloc, bookingstate>(builder: (context, state) {
-      if (state.timesAvailable != null && state.timesAvailable!.isNotEmpty) {
+      if (state.tracker is selectDateSuccess &&
+          state.timesAvailable != null &&
+          state.timesAvailable!.isNotEmpty) {
         return TimePicker(
           bookingTimes: state.timesAvailable ?? [],
           onTimeSelected: (selectedTime) {
@@ -230,6 +234,12 @@ class _consultantinfoState extends State<consultantinfo> {
               color: cyan,
             ));
       } else {
+        if (state.tracker is selectDateFailed && !showedError) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+                (state.tracker as selectDateFailed).exception, size));
+          });
+        }
         return Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.symmetric(vertical: 10),
@@ -249,6 +259,7 @@ class _consultantinfoState extends State<consultantinfo> {
         child: DatePickerList(
           itemCount: 30,
           onDateSelected: (DateTime date) {
+            showedError = false;
             context
                 .read<bookingbloc>()
                 .add(getTimesinSpecificDate(date, widget.consultant!.user_id));
@@ -433,8 +444,8 @@ class _consultantinfoState extends State<consultantinfo> {
                           child: ClipRRect(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(13)),
-                            child: Image.asset(
-                              'assets/images/sample.jpg',
+                            child: Image.network(
+                              widget.consultant!.profile,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -461,7 +472,11 @@ class _consultantinfoState extends State<consultantinfo> {
                                 alignment: AlignmentDirectional.centerStart,
                                 child: text400normal(
                                     align: TextAlign.start,
-                                    text: widget.consultant!.profile,
+                                    text: defaultLang == 'ar'
+                                        ? widget
+                                            .consultant!.specialitst_title_ar
+                                        : widget
+                                            .consultant!.specialitst_title_en,
                                     fontsize: 16,
                                     color: grey),
                               ),

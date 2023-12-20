@@ -31,7 +31,7 @@ class _ReadMoreTextState extends State<ReadMoreText> {
                 startText: isExpanded
                     ? text
                     : (text.length > 180 ? text.substring(0, 180) : text),
-                clickableText: ' Read More',
+                clickableText: (text.length > 180) ? ' Read More' : '',
                 onClick: () {
                   setState(() {
                     isExpanded = !isExpanded;
@@ -44,7 +44,7 @@ class _ReadMoreTextState extends State<ReadMoreText> {
             children: [
               signinrichtext(
                 startText: text,
-                clickableText: ' Read Less',
+                clickableText: (text.length > 180) ? ' Read Less' : '',
                 onClick: () {
                   setState(() {
                     isExpanded = !isExpanded;

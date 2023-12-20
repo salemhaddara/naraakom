@@ -21,6 +21,7 @@ class authRepository {
         body: json.encode({
           'mobile': mobile,
           'password': password,
+          'user_type': 1,
         }),
         headers: await httpHelper.getHeaderwithOutToken(),
       );
@@ -72,6 +73,7 @@ class authRepository {
         body: json.encode(user.toJson()),
         headers: await httpHelper.getHeaderwithOutToken(),
       );
+      print(json.decode(response.body));
       return json.decode(response.body);
     } on SocketException {
       return httpHelper.returnNetworkError();
@@ -119,7 +121,7 @@ class authRepository {
         Uri.parse(apilogout),
         headers: await httpHelper.getHeaderwithToken(),
       );
-      print(response.body);
+
       return json.decode(response.body);
     } on SocketException {
       return httpHelper.returnNetworkError();
@@ -146,6 +148,7 @@ class authRepository {
           ),
           headers: await httpHelper.getHeaderwithOutToken());
       var response = json.decode(result.body);
+      print(response);
       if (response['checked'] == 0) {
         return {'status': 'success', 'message_$defaultLang': 'found'};
       } else {

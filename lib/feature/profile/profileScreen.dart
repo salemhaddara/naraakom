@@ -10,6 +10,7 @@ import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
 import 'package:naraakom/feature/Wallet/WalletScreen.dart';
 import 'package:naraakom/feature/chats/conversationsScreen.dart';
+import 'package:naraakom/feature/languageSetting/languageSetting.dart';
 import 'package:naraakom/feature/login/login.dart';
 import 'package:naraakom/feature/profile/profileStatus/profilestatus.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_bloc.dart';
@@ -33,6 +34,7 @@ class profileScreen extends StatefulWidget {
 class _profileScreenState extends State<profileScreen> {
   bool isNavigated = false;
   bool showedException = false;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -41,121 +43,136 @@ class _profileScreenState extends State<profileScreen> {
         systemNavigationBarColor: white,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
+
     return Scaffold(
       backgroundColor: homebackgrey,
       body: BlocProvider(
-          create: (context) => profile_bloc(context.read<authRepository>()),
-          child: Directionality(
-            textDirection:
-                defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-            child: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    backgroundColor: cyan,
-                    expandedHeight: size.height * 0.08,
-                    centerTitle: false,
-                    title: text700normal(
-                      text: language[defaultLang]['myaccount'],
-                      color: white,
-                      fontsize: 22,
-                    ),
-                    bottom: const PreferredSize(
-                      preferredSize: Size.fromHeight(0),
-                      child: SizedBox(),
-                    ),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
+          create: (context) =>
+              profile_bloc(context.read<authRepository>())..add(getLanguage()),
+          child: BlocBuilder<profile_bloc, profile_state>(
+              builder: (context, state) {
+            return Directionality(
+              textDirection: state.chosenLanguage == 'ar'
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
+              child: NestedScrollView(
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      backgroundColor: cyan,
+                      expandedHeight: size.height * 0.08,
+                      centerTitle: false,
+                      title: text700normal(
+                        text: language[defaultLang]['myaccount'],
+                        color: white,
+                        fontsize: 22,
+                      ),
+                      bottom: const PreferredSize(
+                        preferredSize: Size.fromHeight(0),
+                        child: SizedBox(),
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: _buildHomeTopBar(size),
                       ),
                     ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: _buildHomeTopBar(size),
-                    ),
-                  ),
-                ];
-              },
-              body: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: <Widget>[
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        _accountTitle(language[defaultLang]['Personalization']),
-                        _accountTile(
-                          size,
-                          'profile.svg',
-                          language[defaultLang]['Profile'],
-                          true,
-                          false,
-                          () {},
-                        ),
-                        _accountTile(
-                          size,
-                          'language.svg',
-                          language[defaultLang]['Language'],
-                          false,
-                          false,
-                          () {},
-                        ),
-                        _accountTile(
-                          size,
-                          'wallet.svg',
-                          language[defaultLang]['Wallet'],
-                          false,
-                          false,
-                          () {
+                  ];
+                },
+                body: CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          _accountTitle(
+                              language[defaultLang]['Personalization']),
+                          _accountTile(
+                            size,
+                            'profile.svg',
+                            language[defaultLang]['Profile'],
+                            true,
+                            false,
+                            () {},
+                          ),
+                          _accountTile(
+                            size,
+                            'language.svg',
+                            language[defaultLang]['Language'],
+                            false,
+                            false,
+                            () {
+                              PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: const languageSetting(),
+                                withNavBar: false,
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            },
+                          ),
+                          _accountTile(
+                            size,
+                            'wallet.svg',
+                            language[defaultLang]['Wallet'],
+                            false,
+                            false,
+                            () {
+                              PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: const WalletScreen(),
+                                withNavBar: false,
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            },
+                          ),
+                          _chatTile(size, 'chats.svg',
+                              language[defaultLang]['Chats'], false, true, () {
                             PersistentNavBarNavigator.pushNewScreen(
                               context,
-                              screen: const WalletScreen(),
+                              screen: const conversationsScreen(),
                               withNavBar: false,
                               pageTransitionAnimation:
                                   PageTransitionAnimation.cupertino,
                             );
-                          },
-                        ),
-                        _chatTile(size, 'chats.svg',
-                            language[defaultLang]['Chats'], false, true, () {
-                          PersistentNavBarNavigator.pushNewScreen(
-                            context,
-                            screen: const conversationsScreen(),
-                            withNavBar: false,
-                            pageTransitionAnimation:
-                                PageTransitionAnimation.cupertino,
-                          );
-                        }, false),
-                        _accountTitle(language[defaultLang]['About']),
-                        _accountTile(
-                            size,
-                            'help.svg',
-                            language[defaultLang]['Help Center'],
-                            true,
-                            false,
-                            () {}),
-                        _accountTile(
-                            size,
-                            'terms.svg',
-                            language[defaultLang]['Terms of use'],
-                            false,
-                            false,
-                            () {}),
-                        _accountTile(
-                            size,
-                            'privacypolicy.svg',
-                            language[defaultLang]['Privacy Policy'],
-                            false,
-                            true,
-                            () {}),
-                        _logoutbutton(size)
-                      ],
+                          }, false),
+                          _accountTitle(language[defaultLang]['About']),
+                          _accountTile(
+                              size,
+                              'help.svg',
+                              language[defaultLang]['Help Center'],
+                              true,
+                              false,
+                              () {}),
+                          _accountTile(
+                              size,
+                              'terms.svg',
+                              language[defaultLang]['Terms of use'],
+                              false,
+                              false,
+                              () {}),
+                          _accountTile(
+                              size,
+                              'privacypolicy.svg',
+                              language[defaultLang]['Privacy Policy'],
+                              false,
+                              true,
+                              () {}),
+                          _logoutbutton(size)
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )),
+            );
+          })),
     );
   }
 

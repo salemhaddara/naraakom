@@ -33,6 +33,7 @@ class _phoneinputState extends State<phoneinput> {
               borderRadius: const BorderRadius.all(Radius.circular(13))),
         ),
         IntlPhoneField(
+          textAlign: defaultLang == 'ar' ? TextAlign.right : TextAlign.left,
           keyboardType: TextInputType.number,
           inputFormatters: [NumericTextInputFormatter()],
           onChanged: (text) {

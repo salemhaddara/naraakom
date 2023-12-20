@@ -135,7 +135,9 @@ Map<String, dynamic> language = {
     'serverError': 'unknown Server error',
     'doctorLoginAttempt': 'Not Allowed For You To Sign In Here',
     'codenotvalid': 'Invalid Confirmation Code',
-    'nobookingtimes': 'There are no booking times for this day'
+    'nobookingtimes': 'There are no booking times for this day',
+    'language': 'Language',
+    'changelanguage': 'Change Language'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -273,6 +275,8 @@ Map<String, dynamic> language = {
     'serverError': 'خطأ في الخادم غير معروف',
     'doctorLoginAttempt': 'غير مسموح لك بتسجيل الدخول هنا',
     'codenotvalid': 'رمز التأكيد غير صالح',
-    'nobookingtimes': 'لا توجد أوقات حجز لهذا اليوم'
+    'nobookingtimes': 'لا توجد أوقات حجز لهذا اليوم',
+    'language': 'اللغة',
+    'changelanguage': 'تغيير اللغة'
   }
 };
