@@ -16,6 +16,7 @@ import 'package:naraakom/feature/resetpassword/setnewpass.dart';
 import 'package:naraakom/feature/schedulebloc/scheduleRepo.dart';
 import 'package:naraakom/feature/signup/signup.dart';
 import 'package:naraakom/feature/splash/splash.dart';
+import 'package:naraakom/feature/termsandConditions/Repo/termsAndConditionsRepo.dart';
 import 'package:naraakom/firebase_options.dart';
 
 void main() async {
@@ -30,6 +31,7 @@ void main() async {
         RepositoryProvider(create: (context) => notificationsRepo()),
         RepositoryProvider(create: (context) => bookingRepository()),
         RepositoryProvider(create: (context) => languageRepo()),
+        RepositoryProvider(create: (context) => termsAndConditionsRepo()),
       ],
       child: MaterialApp(
         home: const splash(),

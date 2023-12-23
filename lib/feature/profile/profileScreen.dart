@@ -17,6 +17,7 @@ import 'package:naraakom/feature/profile/profilestates/profile_bloc.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_event.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_state.dart';
 import 'package:naraakom/feature/splash/splash.dart';
+import 'package:naraakom/feature/termsandConditions/termsAndconditions.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../config/localisation/translation.dart';
@@ -52,9 +53,8 @@ class _profileScreenState extends State<profileScreen> {
           child: BlocBuilder<profile_bloc, profile_state>(
               builder: (context, state) {
             return Directionality(
-              textDirection: state.chosenLanguage == 'ar'
-                  ? TextDirection.rtl
-                  : TextDirection.ltr,
+              textDirection:
+                  defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               child: NestedScrollView(
                 headerSliverBuilder:
                     (BuildContext context, bool innerBoxIsScrolled) {
@@ -155,8 +155,15 @@ class _profileScreenState extends State<profileScreen> {
                               'terms.svg',
                               language[defaultLang]['Terms of use'],
                               false,
-                              false,
-                              () {}),
+                              false, () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: const termsandconditionsScreen(),
+                              withNavBar: false,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          }),
                           _accountTile(
                               size,
                               'privacypolicy.svg',

@@ -137,7 +137,9 @@ Map<String, dynamic> language = {
     'codenotvalid': 'Invalid Confirmation Code',
     'nobookingtimes': 'There are no booking times for this day',
     'language': 'Language',
-    'changelanguage': 'Change Language'
+    'changelanguage': 'Change Language',
+    'termofservice': 'Terms of Service',
+    'updated': 'Updated',
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -277,6 +279,8 @@ Map<String, dynamic> language = {
     'codenotvalid': 'رمز التأكيد غير صالح',
     'nobookingtimes': 'لا توجد أوقات حجز لهذا اليوم',
     'language': 'اللغة',
-    'changelanguage': 'تغيير اللغة'
+    'changelanguage': 'تغيير اللغة',
+    'termofservice': 'شروط الخدمة',
+    'updated': 'آخر تحديث',
   }
 };
