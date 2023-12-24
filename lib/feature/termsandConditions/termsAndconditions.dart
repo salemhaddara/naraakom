@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/config/theme/colors.dart';
+import 'package:naraakom/core/widgets/Snackbar.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
@@ -25,6 +26,8 @@ class termsandconditionsScreen extends StatefulWidget {
 }
 
 class _termsandconditionsScreenState extends State<termsandconditionsScreen> {
+  bool showedException = false;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -41,6 +44,13 @@ class _termsandconditionsScreenState extends State<termsandconditionsScreen> {
         child: SafeArea(
           child: BlocBuilder<termsAndconditions_bloc, termsAndconditions_State>(
               builder: (context, state) {
+            if (state.tracker is termsRequestFailed) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScaffoldMessenger.of(context).showSnackBar(showSnackbar(
+                    (state.tracker as termsRequestFailed).exception, size));
+              });
+              showedException = true;
+            }
             return Directionality(
               textDirection:
                   defaultLang == 'ar' ? TextDirection.rtl : TextDirection.ltr,

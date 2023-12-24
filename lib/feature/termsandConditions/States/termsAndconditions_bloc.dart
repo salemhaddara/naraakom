@@ -22,8 +22,7 @@ class termsAndconditions_bloc
         if (response['status'] == 'success') {
           emit(
             termsAndconditions_State(
-              termsAndconditions_TEXT: response['data']
-                  ['terms_and_conditions_$defaultLang'],
+              termsAndconditions_TEXT: response['data']['content_$defaultLang'],
               lastUpdate: response['data']['time'],
               tracker: termsRequestSuccess(),
             ),

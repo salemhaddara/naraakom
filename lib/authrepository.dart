@@ -148,7 +148,6 @@ class authRepository {
           ),
           headers: await httpHelper.getHeaderwithOutToken());
       var response = json.decode(result.body);
-      print(response);
       if (response['checked'] == 0) {
         return {'status': 'success', 'message_$defaultLang': 'found'};
       } else {
