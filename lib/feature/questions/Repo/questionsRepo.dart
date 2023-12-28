@@ -6,12 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:naraakom/config/httpRequests/httpHelper.dart';
 import 'package:naraakom/core/utils/Constants/Backend.dart';
 
-class termsAndConditionsRepo {
-  Future<Map<String, dynamic>> getTermsAndConditions() async {
+class questionsRepo {
+  Future<Map<String, dynamic>> getAllQuestions() async {
     try {
-      var response = await http.post(Uri.parse(apimobilePrivacyPolicy),
+      var response = await http.post(Uri.parse(apihelpCenter),
           headers: await httpHelper.getHeaderwithToken());
-      print(json.decode(response.body));
+
       return json.decode(response.body);
     } on SocketException {
       return httpHelper.returnNetworkError();

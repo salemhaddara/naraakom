@@ -12,10 +12,12 @@ import 'package:naraakom/feature/Wallet/WalletScreen.dart';
 import 'package:naraakom/feature/chats/conversationsScreen.dart';
 import 'package:naraakom/feature/languageSetting/languageSetting.dart';
 import 'package:naraakom/feature/login/login.dart';
+import 'package:naraakom/feature/personalDetails/personalDetails.dart';
 import 'package:naraakom/feature/profile/profileStatus/profilestatus.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_bloc.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_event.dart';
 import 'package:naraakom/feature/profile/profilestates/profile_state.dart';
+import 'package:naraakom/feature/questions/questionsScreen.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/feature/termsandConditions/termsAndconditions.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -98,7 +100,15 @@ class _profileScreenState extends State<profileScreen> {
                             language[defaultLang]['Profile'],
                             true,
                             false,
-                            () {},
+                            () {
+                              PersistentNavBarNavigator.pushNewScreen(
+                                context,
+                                screen: const personalDetails(),
+                                withNavBar: false,
+                                pageTransitionAnimation:
+                                    PageTransitionAnimation.cupertino,
+                              );
+                            },
                           ),
                           _accountTile(
                             size,
@@ -169,8 +179,15 @@ class _profileScreenState extends State<profileScreen> {
                               'privacypolicy.svg',
                               language[defaultLang]['Privacy Policy'],
                               false,
-                              true,
-                              () {}),
+                              true, () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: const questionsScreen(),
+                              withNavBar: false,
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          }),
                           _logoutbutton(size)
                         ],
                       ),

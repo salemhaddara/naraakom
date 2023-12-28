@@ -28,6 +28,9 @@ class loginbloc extends Bloc<loginevent, loginstate> {
           await Preferences.saveUserId(response['user']['id']);
           await Preferences.saveUserName(user.name);
           await Preferences.saveAccessToken(response['access_token']);
+          await Preferences.saveEmailAddress(user.email);
+          await Preferences.savePassword(user.password);
+          await Preferences.savePhoneNumber(user.mobile);
           if (response['user']['otp_confirmed'] == 0) {
             emit(state.copyWith(formstatus: requiredValidation(user.mobile)));
           } else {

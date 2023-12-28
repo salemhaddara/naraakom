@@ -16,8 +16,9 @@ class Repository {
     try {
       var response = await http.post(Uri.parse(apiDoctors),
           headers: await httpHelper.getHeaderwithToken());
+      print(response.body);
       consultants.addAll(ConsultantModel.parseConsultantModels(response.body));
-
+      print('no error in it');
       return {'status': 'success', 'data': consultants};
     } on SocketException {
       return httpHelper.returnNetworkError();
