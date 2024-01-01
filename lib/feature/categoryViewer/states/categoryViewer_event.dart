@@ -11,3 +11,8 @@ class performSearch extends categoryViewer_event {
   String searchText;
   performSearch(this.searchText);
 }
+
+class performSorting extends categoryViewer_event {
+  int sort;
+  performSorting({required this.sort});
+}

@@ -10,6 +10,8 @@ import 'package:naraakom/feature/categoryViewer/states/categoryViewer_state.dart
 import 'package:naraakom/feature/categoryViewer/tracker/category_requestTracker.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 
+import '../../../core/utils/Constants/categoriesFilters.dart';
+
 class categoryViewer_bloc
     extends Bloc<categoryViewer_event, categoryViewer_state> {
   categoryViewerRepo repo;
@@ -44,6 +46,24 @@ class categoryViewer_bloc
                   .toList()));
         } else {
           emit(state.copyWith(showedconsultants: state.consultants));
+        }
+      },
+    );
+    on<performSorting>(
+      (event, emit) {
+        switch (event.sort) {
+          case HIGHEST_PRICE:
+            state.consultants!.sort((e1, e2) => e1.fees.compareTo(e2.fees));
+            emit(state.copyWith(consultants: state.consultants));
+            break;
+          case HIGHEST_RATE:
+            state.consultants!.sort((e1, e2) => e2.rate.compareTo(e1.rate));
+            emit(state.copyWith(consultants: state.consultants));
+            break;
+          case LOWEST_PRICE:
+            state.consultants!.sort((e1, e2) => e2.fees.compareTo(e1.fees));
+            emit(state.copyWith(consultants: state.consultants));
+            break;
         }
       },
     );

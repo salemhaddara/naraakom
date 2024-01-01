@@ -15,7 +15,7 @@ class categoryViewerRepo {
             {'specialist_id': specialistId},
           ),
           headers: await httpHelper.getHeaderwithToken());
-      print(response.body);
+
       return json.decode(response.body);
     } on SocketException {
       return httpHelper.returnNetworkError();
