@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 
+import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/core/utils/Models/department.dart';
+import 'package:naraakom/feature/splash/splash.dart';
 
 class ConsultantModel {
   String name,
@@ -21,7 +23,8 @@ class ConsultantModel {
       city_title_ar,
       country_title_en,
       country_title_ar,
-      bio;
+      bio,
+      availability;
   double fees, rate;
   String date_birth;
   int visitors,
@@ -62,7 +65,8 @@ class ConsultantModel {
       required this.country_id,
       required this.doctor_verified,
       required this.bio,
-      required this.departments});
+      required this.departments,
+      required this.availability});
   static List<ConsultantModel> parseConsultantModels(String jsonString) {
     final Map<String, dynamic> data = json.decode(jsonString);
     final List<dynamic> consultantsData = data['data'];
@@ -99,9 +103,32 @@ class ConsultantModel {
             doctor_verified: consultantData['doctor_verified'],
             specialitst_title_ar: consultantData['specialitst_title_ar'],
             specialitst_title_en: consultantData['specialitst_title_en'],
-            departments: department.parseDepartments(jsonString)),
+            departments: department.parseDepartments(jsonString),
+            availability: concatAvailability(
+              convertTimeFormat(
+                  consultantData['startHour']['start_from'] ?? ''),
+              convertTimeFormat(consultantData['toHour']['end_to'] ?? ''),
+            )),
       );
     }
     return consultants;
+  }
+
+  static concatAvailability(String fromHour, String toHour) {
+    return '${language[defaultLang]['from']} $fromHour ${language[defaultLang]['to']} $toHour';
+  }
+
+  static String convertTimeFormat(String timeString) {
+    List<String> timeParts = timeString.split(':');
+    int hour = int.parse(timeParts[0]);
+    int minute = int.parse(timeParts[1]);
+
+    String amPm = hour < 12 ? 'AM' : 'PM';
+
+    hour = hour % 12;
+    if (hour == 0) {
+      hour = 12;
+    }
+    return '$hour:${minute.toString().padLeft(2, '0')} $amPm';
   }
 }

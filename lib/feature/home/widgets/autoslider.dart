@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:naraakom/config/localisation/translation.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/home/homecomponents/sliderbutton.dart';
+import 'package:naraakom/feature/home/widgets/sliderbutton.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../config/theme/colors.dart';

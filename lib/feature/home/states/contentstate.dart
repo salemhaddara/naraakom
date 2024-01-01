@@ -3,8 +3,8 @@
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/User.dart';
 import 'package:naraakom/core/utils/Models/category.dart';
-import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
-import 'package:naraakom/feature/home/mainbloc/state/specialistsrequeststate.dart';
+import 'package:naraakom/feature/home/tracker/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/tracker/specialistsrequeststate.dart';
 
 class contentstate {
   List<ConsultantModel>? consultants = List.empty(growable: true);

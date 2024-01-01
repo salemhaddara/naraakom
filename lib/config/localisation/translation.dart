@@ -140,6 +140,10 @@ Map<String, dynamic> language = {
     'changelanguage': 'Change Language',
     'termofservice': 'Terms of Service',
     'updated': 'Updated',
+    'specialized': 'Specialised',
+    'in': ' in ',
+    'from': 'from',
+    'to': 'to'
   },
   'ar': {
     'signin': 'تسجيل الدخول ',
@@ -282,5 +286,9 @@ Map<String, dynamic> language = {
     'changelanguage': 'تغيير اللغة',
     'termofservice': 'شروط الخدمة',
     'updated': 'آخر تحديث',
+    'specialized': 'متخصص',
+    'in': ' في ',
+    'from': 'من',
+    'to': 'إلى'
   }
 };

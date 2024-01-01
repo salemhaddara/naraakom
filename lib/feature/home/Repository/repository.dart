@@ -14,11 +14,9 @@ class Repository {
   Future<Map<String, dynamic>> fetchConsultants() async {
     List<ConsultantModel> consultants = [];
     try {
-      var response = await http.post(Uri.parse(apiDoctors),
+      var response = await http.post(Uri.parse(apipopularDoctors),
           headers: await httpHelper.getHeaderwithToken());
-      print(response.body);
       consultants.addAll(ConsultantModel.parseConsultantModels(response.body));
-      print('no error in it');
       return {'status': 'success', 'data': consultants};
     } on SocketException {
       return httpHelper.returnNetworkError();

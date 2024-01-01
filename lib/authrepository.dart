@@ -26,7 +26,6 @@ class authRepository {
         headers: await httpHelper.getHeaderwithOutToken(),
       );
       var result = json.decode(response.body);
-      print(result);
       if (result['user_type'] != 1) {
         httpHelper.returnDoctorLoginAttempt();
       }
@@ -37,7 +36,7 @@ class authRepository {
     } on SocketException {
       return httpHelper.returnNetworkError();
     } catch (e) {
-      return httpHelper.returnNetworkError();
+      return httpHelper.returnServerError();
     }
   }
 

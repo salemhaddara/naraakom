@@ -5,13 +5,13 @@ import 'package:naraakom/config/httpRequests/httpHelper.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
 import 'package:naraakom/core/utils/Models/category.dart';
 import 'package:naraakom/core/utils/Preferences/Preferences.dart';
-import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
-import 'package:naraakom/feature/home/mainbloc/contentevent.dart';
-import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
-import 'package:naraakom/feature/home/mainbloc/state/specialistsrequeststate.dart';
+import 'package:naraakom/feature/home/Repository/repository.dart';
+import 'package:naraakom/feature/home/states/contentevent.dart';
+import 'package:naraakom/feature/home/states/contentstate.dart';
+import 'package:naraakom/feature/home/tracker/specialistsrequeststate.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 
-import 'state/consultantsrequeststate.dart';
+import '../tracker/consultantsrequeststate.dart';
 
 class contentbloc extends Bloc<contentevent, contentstate> {
   final Repository repo;
@@ -74,24 +74,6 @@ class contentbloc extends Bloc<contentevent, contentstate> {
     //   emit(state.copyWith(
     //       requeststate:
     //           CategorySelectedState(event.selectedCategory, filteredList)));
-    // });
-    // on<SearchtextChangedEvent>((event, emit) {
-    //   List<ConsultantModel> list =
-    //       state.consultants ?? List.empty(growable: true);
-    //   List<ConsultantModel> filteredList = list.where((item) {
-    //     return item.category == event.selectedCategory;
-    //   }).toList();
-    //   if (event.selectedCategory == 'all') {
-    //     filteredList.clear();
-    //     filteredList.addAll(list);
-    //   }
-    //   if (event.text != null && event.text!.isNotEmpty) {
-    //     filteredList = filteredList.where((element) {
-    //       return (element.name.toLowerCase()).contains((event.text!));
-    //     }).toList();
-    //   }
-    //   emit(state.copyWith(
-    //       requeststate: SearchState(event.selectedCategory, filteredList)));
     // });
   }
 }

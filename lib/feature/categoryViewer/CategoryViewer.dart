@@ -8,31 +8,32 @@ import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/searchbar.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
+import 'package:naraakom/feature/categoryViewer/Repo/categoryViewerRepo.dart';
+import 'package:naraakom/feature/categoryViewer/states/categoryViewer_bloc.dart';
+import 'package:naraakom/feature/categoryViewer/states/categoryViewer_event.dart';
+import 'package:naraakom/feature/categoryViewer/states/categoryViewer_state.dart';
+import 'package:naraakom/feature/categoryViewer/tracker/category_requestTracker.dart';
 import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
-import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
-import 'package:naraakom/feature/home/mainbloc/contentbloc.dart';
-import 'package:naraakom/feature/home/mainbloc/contentevent.dart';
-import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
-import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
+import '../../core/utils/Constants/categoriesFilters.dart';
 import '../../core/utils/Models/ConsultantModel.dart';
 import '../../core/widgets/text700normal.dart';
 
 class categoryViewer extends StatefulWidget {
-  String category;
+  int specialistId;
   String title;
-  categoryViewer({super.key, required this.category, required this.title});
+  categoryViewer({
+    super.key,
+    required this.specialistId,
+    required this.title,
+  });
 
   @override
   State<categoryViewer> createState() => _categoryViewerState();
 }
-
-int HIGHEST_PRICE = 1;
-int HIGHEST_RATE = 2;
-int LOWEST_PRICE = 3;
 
 class _categoryViewerState extends State<categoryViewer> {
   int selectedFilter = 0;
@@ -44,11 +45,11 @@ class _categoryViewerState extends State<categoryViewer> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Scaffold(
       backgroundColor: homebackgrey,
-      body: BlocProvider<contentbloc>(
+      body: BlocProvider<categoryViewer_bloc>(
         create: (context) {
-          return contentbloc(context.read<Repository>())
-            ..add(ConsultantsRequested())
-            ..add(SelectCategoryEvent(widget.category));
+          return categoryViewer_bloc(context.read<categoryViewerRepo>())
+            ..add(fetchSpecificConsultantsRequest(
+                specialist_id: widget.specialistId));
         },
         child: Directionality(
           textDirection:
@@ -84,7 +85,10 @@ class _categoryViewerState extends State<categoryViewer> {
               ];
             },
             body: Column(
-              children: [_searchWidget(size), _consultantsList()],
+              children: [
+                _searchWidget(size),
+                _consultantsList(),
+              ],
             ),
           ),
         ),
@@ -93,19 +97,15 @@ class _categoryViewerState extends State<categoryViewer> {
   }
 
   Widget _searchWidget(Size size) {
-    return BlocBuilder<contentbloc, contentstate>(
+    return BlocBuilder<categoryViewer_bloc, categoryViewer_state>(
       builder: (context, state) {
-        if (state.requeststate is SearchState) {
-          filteredList =
-              ((state.requeststate) as SearchState).searchedconsultants;
-        }
         return Row(children: [
           searchbar(
               hint: language[defaultLang]['searchbyconsultantname'],
               onChanged: (onChanged) {
                 context
-                    .read<contentbloc>()
-                    .add(SearchtextChangedEvent(onChanged, widget.category));
+                    .read<categoryViewer_bloc>()
+                    .add(performSearch(onChanged ?? ''));
               }),
           Container(
             height: 34,
@@ -115,9 +115,6 @@ class _categoryViewerState extends State<categoryViewer> {
             child: GestureDetector(
               onTap: () async {
                 await _showSorting(size);
-                context.read<contentbloc>()
-                  ..add(ConsultantsRequested())
-                  ..add(SelectCategoryEvent(widget.category));
               },
               child: SvgPicture.asset(
                 'assets/images/iconfilter.svg',
@@ -129,41 +126,21 @@ class _categoryViewerState extends State<categoryViewer> {
     );
   }
 
-  // Widget _consultantsList() {
-  //   return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
-  //     if (state.requeststate is consultantsrequest_SUCCESS) {
-  //       context.read<contentbloc>().add(SelectCategoryEvent(widget.category));
-  //     }
-  //     if (state.requeststate is CategorySelectedState) {
-  //       filteredList =
-  //           ((state.requeststate) as CategorySelectedState).filteredList;
-  //       return _returnListView(filteredList!);
-  //     }
-  //     if (state.requeststate is SearchState) {
-  //       filteredList =
-  //           ((state.requeststate) as SearchState).searchedconsultants;
-  //       return _returnListView(filteredList!);
-  //     }
-  //     return Container();
-  //   });
-  // }
   Widget _consultantsList() {
-    return BlocBuilder<contentbloc, contentstate>(builder: (context, state) {
-      if (state.requeststate is consultantsrequest_SUCCESS) {
-        context.read<contentbloc>().add(SelectCategoryEvent(widget.category));
+    return BlocBuilder<categoryViewer_bloc, categoryViewer_state>(
+        builder: (context, state) {
+      if (state.tracker is categoryRequestSuccess) {
+        return _returnListView(state.showedconsultants ?? []);
       }
-      if (state.requeststate is CategorySelectedState) {
-        filteredList = sortConsultants(
-            ((state.requeststate) as CategorySelectedState).filteredList,
-            selectedFilter);
-
-        return _returnListView(filteredList!);
-      }
-      if (state.requeststate is SearchState) {
-        filteredList = sortConsultants(
-            ((state.requeststate) as SearchState).searchedconsultants,
-            selectedFilter);
-        return _returnListView(filteredList!);
+      if (state.tracker is categoryRequestLoading) {
+        return Expanded(
+            child: Container(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 6,
+            color: cyan,
+          ),
+        ));
       }
       return Container();
     });

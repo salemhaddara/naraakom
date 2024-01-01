@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types,file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,25 +9,24 @@ import 'package:naraakom/core/widgets/responsiveconsultant.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
+import 'package:naraakom/feature/categoryViewer/CategoryViewer.dart';
 import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
-import 'package:naraakom/feature/home/homecomponents/autoslider.dart';
-import 'package:naraakom/feature/home/homecomponents/popularbar.dart';
-import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
-import 'package:naraakom/feature/home/mainbloc/contentbloc.dart';
-import 'package:naraakom/feature/home/mainbloc/contentstate.dart';
-import 'package:naraakom/feature/home/mainbloc/state/consultantsrequeststate.dart';
-import 'package:naraakom/feature/home/mainbloc/state/specialistsrequeststate.dart';
+import 'package:naraakom/feature/home/widgets/autoslider.dart';
+import 'package:naraakom/feature/home/widgets/popularbar.dart';
+import 'package:naraakom/feature/home/Repository/repository.dart';
+import 'package:naraakom/feature/home/states/contentbloc.dart';
+import 'package:naraakom/feature/home/states/contentstate.dart';
+import 'package:naraakom/feature/home/tracker/consultantsrequeststate.dart';
+import 'package:naraakom/feature/home/tracker/specialistsrequeststate.dart';
 import 'package:naraakom/feature/notifications/notificationScreen.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
 import '../../core/utils/Models/User.dart';
-import '../categoryViewer/CategoryViewer.dart';
-import 'mainbloc/contentevent.dart';
-import 'homecomponents/sliderbutton.dart';
+import 'states/contentevent.dart';
+import 'widgets/sliderbutton.dart';
 
-// ignore: camel_case_types
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
 
@@ -33,7 +34,6 @@ class homeScreen extends StatefulWidget {
   State<homeScreen> createState() => _homeScreenState();
 }
 
-// ignore: camel_case_types
 class _homeScreenState extends State<homeScreen> {
   int yourActiveIndex = 0;
   String name = '';
@@ -256,8 +256,19 @@ class _homeScreenState extends State<homeScreen> {
                     'assets/images/professionalconsultant.svg',
                     defaultLang == 'en'
                         ? state.categories![index].title_en
-                        : state.categories![index].title_ar,
-                    () {});
+                        : state.categories![index].title_ar, () {
+                  PersistentNavBarNavigator.pushNewScreen(
+                    context,
+                    screen: categoryViewer(
+                      specialistId: state.categories![index].id,
+                      title: defaultLang == 'en'
+                          ? state.categories![index].title_en
+                          : state.categories![index].title_ar,
+                    ),
+                    withNavBar: false,
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  );
+                });
               })),
         );
       }
@@ -428,20 +439,6 @@ class _homeScreenState extends State<homeScreen> {
             ],
           ),
         ),
-      );
-    });
-  }
-
-  _navigateWithCategory(String category, String title) {
-    Future.delayed(Duration.zero, () {
-      PersistentNavBarNavigator.pushNewScreen(
-        context,
-        screen: categoryViewer(
-          category: category,
-          title: title,
-        ),
-        withNavBar: true,
-        pageTransitionAnimation: PageTransitionAnimation.cupertino,
       );
     });
   }

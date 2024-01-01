@@ -13,3 +13,5 @@ String apicheckDoctorAppointment = '${domainName}checkDoctorAppointment';
 String apiSpecialists = '${domainName}specialists';
 String apimobilePrivacyPolicy = '${domainName}mobilePrivacyPolicy';
 String apihelpCenter = '${domainName}helpCenter';
+String apipopularDoctors = '${domainName}popularDoctors';
+String apispecialistListDoctors = '${domainName}specialistListDoctors';

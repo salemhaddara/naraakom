@@ -1,6 +1,9 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:naraakom/config/localisation/translation.dart';
+import 'package:naraakom/core/utils/Models/department.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/utils/Models/ConsultantModel.dart';
@@ -28,8 +31,11 @@ class responiveconsultant extends StatefulWidget {
 
 // ignore: camel_case_types
 class _responiveconsultantState extends State<responiveconsultant> {
+  String specializations = '';
   @override
   Widget build(BuildContext context) {
+    specializations =
+        _returnPhraseSpecializations(widget.consultant.departments);
     return Container(
       margin: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Material(
@@ -139,13 +145,12 @@ class _responiveconsultantState extends State<responiveconsultant> {
                     ),
                     _row(
                         'specialist.svg',
-                        '${widget.consultant.profile.substring(0, 45)}...',
+                        (specializations.length > 45)
+                            ? '${specializations.substring(0, 45)}...'
+                            : specializations,
                         false),
-                    _row(
-                        'money.svg',
-                        'A consultant specializing in family counseling and improve relationships',
-                        true),
-                    _row('time.svg', widget.consultant.name, false),
+                    _row('money.svg', '', true),
+                    _row('time.svg', widget.consultant.availability, false),
                     _button()
                   ],
                 ),
@@ -154,6 +159,31 @@ class _responiveconsultantState extends State<responiveconsultant> {
         ),
       ),
     );
+  }
+
+  String _returnPhraseSpecializations(List<department> departments) {
+    String text =
+        '${language[defaultLang]['specialized']}${language[defaultLang]['in']}';
+    int i = 0;
+
+    for (var specialization in departments) {
+      if (i != (departments.length - 1)) {
+        if (defaultLang == 'en') {
+          text = '$text,${specialization.title_en}';
+        } else {
+          text = '$text,${specialization.title_ar}';
+        }
+      } else {
+        if (defaultLang == 'en') {
+          text =
+              '$text ${language[defaultLang]['and']} ${specialization.title_en}';
+        } else {
+          text =
+              '$text ${language[defaultLang]['and']} ${specialization.title_ar}';
+        }
+      }
+    }
+    return text;
   }
 
   _button() {

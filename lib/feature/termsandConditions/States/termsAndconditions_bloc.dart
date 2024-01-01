@@ -23,7 +23,8 @@ class termsAndconditions_bloc
           emit(
             termsAndconditions_State(
               termsAndconditions_TEXT: response['data']['content_$defaultLang'],
-              lastUpdate: response['data']['time'],
+              lastUpdate:
+                  convertUpdatedAtToDate(response['data']['updated_at']),
               tracker: termsRequestSuccess(),
             ),
           );
@@ -38,5 +39,13 @@ class termsAndconditions_bloc
         }
       },
     );
+  }
+  String convertUpdatedAtToDate(String updatedAt) {
+    DateTime updatedAtDateTime = DateTime.parse(updatedAt);
+
+    String formattedDate =
+        '${updatedAtDateTime.day}/${updatedAtDateTime.month}/${updatedAtDateTime.year}';
+
+    return formattedDate;
   }
 }

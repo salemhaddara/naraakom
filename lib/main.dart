@@ -5,11 +5,12 @@ import 'package:naraakom/authRepository.dart';
 import 'package:naraakom/config/theme/routes.dart';
 import 'package:naraakom/core/widgets/MyNavigationBar.dart';
 import 'package:naraakom/feature/booking/Repository/bookingappointmentRepo.dart';
+import 'package:naraakom/feature/categoryViewer/Repo/categoryViewerRepo.dart';
 import 'package:naraakom/feature/chooseLang/chooseLangScreen.dart';
 import 'package:naraakom/feature/consultantinfo/repo/bookingRepository.dart';
 import 'package:naraakom/feature/languageSetting/Repo/languageRepo.dart';
 import 'package:naraakom/feature/login/login.dart';
-import 'package:naraakom/feature/home/mainbloc/Repository/repository.dart';
+import 'package:naraakom/feature/home/Repository/repository.dart';
 import 'package:naraakom/feature/notifications/Repo/notificationsRepo.dart';
 import 'package:naraakom/feature/personalDetails/Repo/personalDetailsRepo.dart';
 import 'package:naraakom/feature/questions/Repo/questionsRepo.dart';
@@ -36,6 +37,7 @@ void main() async {
         RepositoryProvider(create: (context) => termsAndConditionsRepo()),
         RepositoryProvider(create: (context) => personalDetailsRepo()),
         RepositoryProvider(create: (context) => questionsRepo()),
+        RepositoryProvider(create: (context) => categoryViewerRepo()),
       ],
       child: MaterialApp(
         home: const splash(),
