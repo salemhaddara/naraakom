@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:naraakom/core/utils/Models/User.dart';
 
 class ReviewModel {

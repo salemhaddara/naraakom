@@ -13,6 +13,8 @@ import 'package:naraakom/feature/booking/bloc/bookingbloc.dart';
 import 'package:naraakom/feature/booking/bloc/bookingevent.dart';
 import 'package:naraakom/feature/booking/bloc/bookingstate.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
+import 'package:naraakom/feature/booking/bookingWidgets/schema.dart';
+import 'package:naraakom/feature/booking/bookingWidgets/schemaCase.dart';
 import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
 import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -21,7 +23,8 @@ import '../../config/theme/colors.dart';
 import '../../core/widgets/inputfield.dart';
 import '../../core/widgets/phoneinput.dart';
 import '../../core/widgets/text400normal.dart';
-import '../PaymentMethod/paymentmethod.dart';
+import 'PaymentMethod/paymentmethod.dart';
+import 'bookingWidgets/topBar.dart';
 
 class bookingScreen extends StatefulWidget {
   ConsultantModel consultantinfos;
@@ -35,7 +38,12 @@ class _bookingScreenState extends State<bookingScreen> {
   String? calltype;
   int shemaIndex = 0;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String emailcheck = '', namecheck = '';
+  String emailcheck = '',
+      namecheck = '',
+      phoneNumberCheck = '',
+      phoneNumber = '',
+      ageCheck = '',
+      caseDescriptionCheck = '';
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -77,7 +85,7 @@ class _bookingScreenState extends State<bookingScreen> {
                             else if (state.index == 1)
                               _schemacontactInfo(size, context)
                             else if (state.index == 2)
-                              _schemaCase(size, context)
+                              _schemaCase()
                             else if (state.index == 3)
                               _schemapaymentInfo(size, context)
                           ],
@@ -88,6 +96,15 @@ class _bookingScreenState extends State<bookingScreen> {
                 ]),
               ))),
     );
+  }
+
+  _schemaCase() {
+    //put bloc Builder Here and control it using codes in schemaCase Widget
+    return schemaCase(
+        ageChanged: (ageChanged) {},
+        caseDescriptionChanged: (caseDescriptionChanged) {},
+        onSubmit: () {},
+        onCancel: () {});
   }
 
   _schemapaymentInfo(Size size, BuildContext context) {
@@ -150,260 +167,7 @@ class _bookingScreenState extends State<bookingScreen> {
   }
 
   _schema(int index, Size size) {
-    return Container(
-      width: size.width,
-      height: 60,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      margin: const EdgeInsets.only(top: 16, bottom: 10),
-      child: Row(children: [
-        Expanded(
-            child: Column(
-          children: [
-            if (index == 0)
-              SvgPicture.asset(
-                'assets/images/phone.svg',
-                height: 24,
-                width: 24,
-              )
-            else if (index > 0)
-              SvgPicture.asset(
-                'assets/images/done.svg',
-                height: 24,
-                width: 24,
-              )
-            else
-              SvgPicture.asset(
-                'assets/images/phonegrey.svg',
-                height: 24,
-                width: 24,
-              ),
-            const Spacer(),
-            text400normal(
-                text: language[defaultLang]['calltype'],
-                fontsize: 14,
-                color: index >= 0 ? cyan : grey)
-          ],
-        )),
-        Container(
-          height: 1,
-          width: 20,
-          color: grey,
-        ),
-        Expanded(
-            child: Column(
-          children: [
-            if (index == 1)
-              SvgPicture.asset(
-                'assets/images/contactinfo.svg',
-                height: 24,
-                width: 24,
-              )
-            else if (index > 1)
-              SvgPicture.asset(
-                'assets/images/done.svg',
-                height: 24,
-                width: 24,
-              )
-            else
-              SvgPicture.asset(
-                'assets/images/contactinfogrey.svg',
-                height: 24,
-                width: 24,
-              ),
-            const Spacer(),
-            text400normal(
-              text: language[defaultLang]['contactinfo'],
-              fontsize: 13,
-              color: index >= 1 ? cyan : grey,
-              align: TextAlign.center,
-            ),
-          ],
-        )),
-        Container(
-          height: 1,
-          width: 20,
-          color: grey,
-        ),
-        Expanded(
-            child: Column(
-          children: [
-            if (index == 2)
-              SvgPicture.asset(
-                'assets/images/case.svg',
-                height: 24,
-                width: 24,
-              )
-            else if (index > 2)
-              SvgPicture.asset(
-                'assets/images/done.svg',
-                height: 24,
-                width: 24,
-              )
-            else
-              SvgPicture.asset(
-                'assets/images/casegrey.svg',
-                height: 24,
-                width: 24,
-              ),
-            const Spacer(),
-            text400normal(
-              text: language[defaultLang]['case'],
-              fontsize: 14,
-              color: index >= 2 ? cyan : grey,
-            )
-          ],
-        )),
-        Container(
-          height: 1,
-          width: 20,
-          color: grey,
-        ),
-        Expanded(
-            child: Column(
-          children: [
-            if (index == 3)
-              SvgPicture.asset(
-                'assets/images/payment.svg',
-                height: 24,
-                width: 24,
-              )
-            else if (index > 3)
-              SvgPicture.asset(
-                'assets/images/done.svg',
-                height: 24,
-                width: 24,
-              )
-            else
-              SvgPicture.asset(
-                'assets/images/paymentgrey.svg',
-                height: 24,
-                width: 24,
-              ),
-            const Spacer(),
-            text400normal(
-              text: language[defaultLang]['payment'],
-              fontsize: 14,
-              color: index >= 3 ? cyan : grey,
-            )
-          ],
-        )),
-      ]),
-    );
-  }
-
-  _schemaCase(Size size, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      child: Form(
-          child: Column(
-        children: [
-          _notice(size),
-          _schemaCaseAgeTitle(size),
-          _schemaCaseAgeInputField(size),
-          _schemaCaseDescriptionTitle(size),
-          _schemaCaseInputField(size),
-          _schemaCaseContinueButton(size, context),
-          _schemaCaseCancelButton(size, context)
-        ],
-      )),
-    );
-  }
-
-  _notice(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: text400normal(
-          text: language[defaultLang]['additionalinformation'],
-          color: grey,
-          fontsize: 14),
-    );
-  }
-
-  Widget _schemaCaseAgeTitle(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.only(top: 10, bottom: 10),
-      child: text400normal(
-        text: language[defaultLang]['age'],
-        color: lightblack,
-        fontsize: 14,
-      ),
-    );
-  }
-
-  Widget _schemaCaseAgeInputField(Size size) {
-    return InputField(
-      hint: '',
-      isPassword: false,
-      validator: (email) {
-        if (email!.isEmpty) {
-          return null;
-        }
-
-        return null;
-      },
-      initialState: false,
-      onChanged: (text) {},
-    );
-  }
-
-  Widget _schemaCaseDescriptionTitle(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.only(top: 10, bottom: 10),
-      child: text400normal(
-        text: language[defaultLang]['case'],
-        color: lightblack,
-        fontsize: 14,
-      ),
-    );
-  }
-
-  Widget _schemaCaseInputField(Size size) {
-    return InputField(
-      hint: '',
-      isPassword: false,
-      height: 108,
-      validator: (email) {
-        if (email!.isEmpty) {
-          return null;
-        }
-
-        return null;
-      },
-      initialState: false,
-      onChanged: (text) {},
-    );
-  }
-
-  Widget _schemaCaseContinueButton(Size size, BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(top: 25, bottom: 16),
-        child: button(
-            text: language[defaultLang]['proceedtopayment'],
-            width: size.width,
-            onTap: () {
-              context
-                  .read<bookingAppointmentbloc>()
-                  .add(bookingSchemaIndexChanged());
-            }));
-  }
-
-  Widget _schemaCaseCancelButton(Size size, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context
-            .read<bookingAppointmentbloc>()
-            .add(bookingSchemaCancelInvoked());
-      },
-      child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
-          child: text600normal(
-              text: language[defaultLang]['cancel'],
-              color: cyan,
-              fontsize: 16)),
-    );
+    return schemaBooking(size: size, index: index);
   }
 
   _schemacontactInfo(Size size, BuildContext context) {
@@ -426,7 +190,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemacontactInfoemailTitle(Size size) {
+  _schemacontactInfoemailTitle(Size size) {
     return Container(
       width: size.width,
       margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -438,7 +202,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemacontactInfoemailInputField(Size size) {
+  _schemacontactInfoemailInputField(Size size) {
     return InputField(
       hint: '',
       color: homebackgrey,
@@ -465,7 +229,7 @@ class _bookingScreenState extends State<bookingScreen> {
     return emailRegExp.hasMatch(email);
   }
 
-  Widget __schemacontactInfoContinueButton(Size size, BuildContext context) {
+  __schemacontactInfoContinueButton(Size size, BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 25, bottom: 16),
         child: button(
@@ -478,11 +242,16 @@ class _bookingScreenState extends State<bookingScreen> {
                 context
                     .read<bookingAppointmentbloc>()
                     .add(bookingSchemaIndexChanged());
+                context.read<bookingAppointmentbloc>().add(submitContactInfo(
+                      phoneNumber: phoneNumber,
+                      name: namecheck,
+                      email: emailcheck,
+                    ));
               }
             }));
   }
 
-  Widget __schemacontactInfoCancelButton(Size size, BuildContext context) {
+  __schemacontactInfoCancelButton(Size size, BuildContext context) {
     return GestureDetector(
       onTap: () {
         context
@@ -498,7 +267,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemacontactInfophoneNumberTitle(Size size) {
+  _schemacontactInfophoneNumberTitle(Size size) {
     return Container(
       width: size.width,
       margin: const EdgeInsets.only(top: 26, bottom: 10),
@@ -510,14 +279,17 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemacontactInfophoneInputField(Size size) {
+  _schemacontactInfophoneInputField(Size size) {
     return phoneinput(
       color: homebackgrey,
-      onChanged: (text) {},
+      onChanged: (text) {
+        phoneNumberCheck = text.number;
+        phoneNumber = text.completeNumber;
+      },
     );
   }
 
-  Widget _schemacontactInfonameTitle(Size size) {
+  _schemacontactInfonameTitle(Size size) {
     return Container(
       width: size.width,
       margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -529,7 +301,7 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  Widget _schemacontactInfonameField(Size size) {
+  _schemacontactInfonameField(Size size) {
     return InputField(
       hint: '',
       isPassword: false,
@@ -791,7 +563,9 @@ class _bookingScreenState extends State<bookingScreen> {
             child: Row(
           children: [
             text400normal(
-              text: '${widget.consultantinfos.specialist_id}',
+              text: defaultLang == 'ar'
+                  ? widget.consultantinfos.specialitst_title_ar
+                  : widget.consultantinfos.specialitst_title_en,
               color: grey,
               fontsize: 16,
             )
@@ -802,35 +576,9 @@ class _bookingScreenState extends State<bookingScreen> {
   }
 
   _topbar(Size size) {
-    return Material(
-        elevation: 1,
-        borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
-        child: Container(
-            width: size.width,
-            decoration: BoxDecoration(
-                color: white,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24))),
-            padding: const EdgeInsets.all(16),
-            child: Row(children: [
-              Container(
-                margin: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                child: text600normal(
-                  text: '${language[defaultLang]['confirmbooking']}/',
-                  fontsize: 20,
-                  color: lightblack,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: text400normal(
-                  text: widget.consultantinfos.name,
-                  fontsize: 20,
-                  color: lightblack,
-                ),
-              ),
-            ])));
+    return topBarBooking(
+      size: size,
+      consultantinfos: widget.consultantinfos,
+    );
   }
 }

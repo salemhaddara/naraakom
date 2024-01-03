@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 abstract class PaymentMethod {
   String paymentName;
   String paymentHolderName;
@@ -12,7 +14,10 @@ class Paypal extends PaymentMethod {
     required this.email,
     required String paymentName,
     required String paymentHolderName,
-  }) : super(paymentName: paymentName, paymentHolderName: paymentHolderName);
+  }) : super(
+          paymentName: paymentName,
+          paymentHolderName: paymentHolderName,
+        );
 }
 
 class QNB extends PaymentMethod {
@@ -23,7 +28,10 @@ class QNB extends PaymentMethod {
     required String paymentName,
     required String paymentHolderName,
     required this.expiryDate,
-  }) : super(paymentName: paymentName, paymentHolderName: paymentHolderName);
+  }) : super(
+          paymentName: paymentName,
+          paymentHolderName: paymentHolderName,
+        );
 }
 
 class QIB extends PaymentMethod {
@@ -34,5 +42,8 @@ class QIB extends PaymentMethod {
     required String paymentName,
     required String paymentHolderName,
     required this.expiryDate,
-  }) : super(paymentName: paymentName, paymentHolderName: paymentHolderName);
+  }) : super(
+          paymentName: paymentName,
+          paymentHolderName: paymentHolderName,
+        );
 }

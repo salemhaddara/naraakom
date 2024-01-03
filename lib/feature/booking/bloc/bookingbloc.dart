@@ -12,8 +12,7 @@ class bookingAppointmentbloc
     on<bookingSchemaIndexChanged>(
       (event, emit) {
         int index = repo.handleContinueButton(state.index);
-        print('${state.index}(STATE INDEX )');
-        print('$index,thiis is the index');
+
         emit(state.copywith(index: index));
       },
     );
@@ -22,6 +21,17 @@ class bookingAppointmentbloc
         int index = repo.handleCancelButton(state.index);
         emit(state.copywith(index: index));
       },
+    );
+    on<submitContactInfo>(
+      (event, emit) {
+        emit(state.copywith(
+            name: event.name,
+            email: event.email,
+            phoneNumber: event.phoneNumber));
+      },
+    );
+    on<submitPaymentMethod>(
+      (event, emit) {},
     );
   }
 }

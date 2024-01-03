@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, camel_case_types
+
 class bookingappointmentRepo {
   int handleContinueButton(int index) {
     if (index < 3) {
