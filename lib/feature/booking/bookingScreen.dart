@@ -13,6 +13,7 @@ import 'package:naraakom/feature/booking/bloc/bookingbloc.dart';
 import 'package:naraakom/feature/booking/bloc/bookingevent.dart';
 import 'package:naraakom/feature/booking/bloc/bookingstate.dart';
 import 'package:naraakom/feature/booking/bookingSuccessful.dart';
+import 'package:naraakom/feature/booking/bookingWidgets/contactInfo.dart';
 import 'package:naraakom/feature/booking/bookingWidgets/schema.dart';
 import 'package:naraakom/feature/booking/bookingWidgets/schemaCase.dart';
 import 'package:naraakom/feature/consultantinfo/consultantinfo.dart';
@@ -20,8 +21,6 @@ import 'package:naraakom/feature/splash/splash.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../config/localisation/translation.dart';
 import '../../config/theme/colors.dart';
-import '../../core/widgets/inputfield.dart';
-import '../../core/widgets/phoneinput.dart';
 import '../../core/widgets/text400normal.dart';
 import 'PaymentMethod/paymentmethod.dart';
 import 'bookingWidgets/topBar.dart';
@@ -85,7 +84,7 @@ class _bookingScreenState extends State<bookingScreen> {
                             else if (state.index == 1)
                               _schemacontactInfo(size, context)
                             else if (state.index == 2)
-                              _schemaCase()
+                              _schemaCase(context)
                             else if (state.index == 3)
                               _schemapaymentInfo(size, context)
                           ],
@@ -98,13 +97,27 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
-  _schemaCase() {
-    //put bloc Builder Here and control it using codes in schemaCase Widget
+  _schemaCase(BuildContext context) {
     return schemaCase(
-        ageChanged: (ageChanged) {},
-        caseDescriptionChanged: (caseDescriptionChanged) {},
-        onSubmit: () {},
-        onCancel: () {});
+      ageChanged: (ageChanged) {
+        ageCheck = ageChanged;
+      },
+      caseDescriptionChanged: (caseDescriptionChanged) {
+        caseDescriptionCheck = caseDescriptionChanged;
+      },
+      onSubmit: () {
+        context.read<bookingAppointmentbloc>().add(bookingSchemaIndexChanged());
+        context.read<bookingAppointmentbloc>().add(submitCaseInfo(
+              age: ageCheck,
+              caseDescription: caseDescriptionCheck,
+            ));
+      },
+      onCancel: () {
+        context
+            .read<bookingAppointmentbloc>()
+            .add(bookingSchemaCancelInvoked());
+      },
+    );
   }
 
   _schemapaymentInfo(Size size, BuildContext context) {
@@ -171,153 +184,40 @@ class _bookingScreenState extends State<bookingScreen> {
   }
 
   _schemacontactInfo(Size size, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              _schemacontactInfonameTitle(size),
-              _schemacontactInfonameField(size),
-              _schemacontactInfoemailTitle(size),
-              _schemacontactInfoemailInputField(size),
-              _schemacontactInfophoneNumberTitle(size),
-              _schemacontactInfophoneInputField(size),
-              __schemacontactInfoContinueButton(size, context),
-              __schemacontactInfoCancelButton(size, context)
-            ],
-          )),
-    );
-  }
-
-  _schemacontactInfoemailTitle(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.only(top: 10, bottom: 10),
-      child: text400normal(
-        text: language[defaultLang]['email'],
-        color: lightblack,
-        fontsize: 14,
-      ),
-    );
-  }
-
-  _schemacontactInfoemailInputField(Size size) {
-    return InputField(
-      hint: '',
-      color: homebackgrey,
-      isPassword: false,
-      validator: (email) {
-        if (email!.isEmpty) {
-          return null;
-        }
-        if (!isValidEmail(email)) {
-          return language[defaultLang]['enteravalidemail'];
-        }
-        return null;
+    return contactInfo(
+      formKey: formKey,
+      onEmailChanged: (onEmailChanged) {
+        emailcheck = onEmailChanged;
       },
-      initialState: false,
-      onChanged: (text) {
-        emailcheck = '$text';
+      size: size,
+      onPhoneNumberChanged: (onPhoneNumberChanged) {
+        phoneNumberCheck = onPhoneNumberChanged;
       },
-    );
-  }
-
-  bool isValidEmail(String email) {
-    RegExp emailRegExp =
-        RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
-    return emailRegExp.hasMatch(email);
-  }
-
-  __schemacontactInfoContinueButton(Size size, BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(top: 25, bottom: 16),
-        child: button(
-            text: language[defaultLang]['continue'],
-            width: size.width,
-            onTap: () {
-              if (formKey.currentState!.validate() &&
-                  emailcheck.isNotEmpty &&
-                  namecheck.isNotEmpty) {
-                context
-                    .read<bookingAppointmentbloc>()
-                    .add(bookingSchemaIndexChanged());
-                context.read<bookingAppointmentbloc>().add(submitContactInfo(
-                      phoneNumber: phoneNumber,
-                      name: namecheck,
-                      email: emailcheck,
-                    ));
-              }
-            }));
-  }
-
-  __schemacontactInfoCancelButton(Size size, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+      onCompletePhoneNumberChanged: (onCompletePhoneNumberChanged) {
+        phoneNumber = onCompletePhoneNumberChanged;
+      },
+      onNameChanged: (onNameChanged) {
+        namecheck = onNameChanged;
+      },
+      onContinueClicked: (isFormValid) {
+        if (isFormValid &&
+            emailcheck.isNotEmpty &&
+            namecheck.isNotEmpty &&
+            phoneNumberCheck.isNotEmpty) {
+          context
+              .read<bookingAppointmentbloc>()
+              .add(bookingSchemaIndexChanged());
+          context.read<bookingAppointmentbloc>().add(submitContactInfo(
+                phoneNumber: phoneNumber,
+                name: namecheck,
+                email: emailcheck,
+              ));
+        }
+      },
+      onCancelClicked: () {
         context
             .read<bookingAppointmentbloc>()
             .add(bookingSchemaCancelInvoked());
-      },
-      child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 16),
-          child: text600normal(
-              text: language[defaultLang]['cancel'],
-              color: cyan,
-              fontsize: 16)),
-    );
-  }
-
-  _schemacontactInfophoneNumberTitle(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.only(top: 26, bottom: 10),
-      child: text400normal(
-        text: language[defaultLang]['phonenumber'],
-        color: lightblack,
-        fontsize: 14,
-      ),
-    );
-  }
-
-  _schemacontactInfophoneInputField(Size size) {
-    return phoneinput(
-      color: homebackgrey,
-      onChanged: (text) {
-        phoneNumberCheck = text.number;
-        phoneNumber = text.completeNumber;
-      },
-    );
-  }
-
-  _schemacontactInfonameTitle(Size size) {
-    return Container(
-      width: size.width,
-      margin: const EdgeInsets.only(top: 10, bottom: 10),
-      child: text400normal(
-        text: language[defaultLang]['name'],
-        color: lightblack,
-        fontsize: 14,
-      ),
-    );
-  }
-
-  _schemacontactInfonameField(Size size) {
-    return InputField(
-      hint: '',
-      isPassword: false,
-      color: homebackgrey,
-      validator: (name) {
-        if (name!.isEmpty) {
-          return null;
-        }
-        if (name.length < 3) {
-          return language[defaultLang]['namerror'];
-        }
-        return null;
-      },
-      initialState: false,
-      onChanged: (text) {
-        namecheck = '$text';
       },
     );
   }

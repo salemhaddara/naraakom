@@ -124,13 +124,6 @@ class schemaCase extends StatelessWidget {
             onTap: () {
               if (ageCheck.isNotEmpty && caseDescriptionCheck.isNotEmpty) {
                 onSubmit();
-                // context
-                //     .read<bookingAppointmentbloc>()
-                //     .add(bookingSchemaIndexChanged());
-                // context.read<bookingAppointmentbloc>().add(submitCaseInfo(
-                //       age: ageCheck,
-                //       caseDescription: caseDescriptionCheck,
-                //     ));
               }
             }));
   }
@@ -139,9 +132,6 @@ class schemaCase extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         onCancel();
-        // context
-        //     .read<bookingAppointmentbloc>()
-        //     .add(bookingSchemaCancelInvoked());
       },
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 16),

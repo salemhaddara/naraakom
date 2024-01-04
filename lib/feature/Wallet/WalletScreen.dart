@@ -7,7 +7,7 @@ import 'package:naraakom/config/theme/colors.dart';
 import 'package:naraakom/core/widgets/text400normal.dart';
 import 'package:naraakom/core/widgets/text600normal.dart';
 import 'package:naraakom/core/widgets/text700normal.dart';
-import 'package:naraakom/feature/PaymentMethod/paymentmethod.dart';
+import 'package:naraakom/feature/booking/PaymentMethod/paymentmethod.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
