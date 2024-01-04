@@ -120,6 +120,45 @@ class _bookingScreenState extends State<bookingScreen> {
     );
   }
 
+  _schemacontactInfo(Size size, BuildContext context) {
+    return contactInfo(
+      formKey: formKey,
+      onEmailChanged: (onEmailChanged) {
+        emailcheck = onEmailChanged;
+      },
+      size: size,
+      onPhoneNumberChanged: (onPhoneNumberChanged) {
+        phoneNumberCheck = onPhoneNumberChanged;
+      },
+      onCompletePhoneNumberChanged: (onCompletePhoneNumberChanged) {
+        phoneNumber = onCompletePhoneNumberChanged;
+      },
+      onNameChanged: (onNameChanged) {
+        namecheck = onNameChanged;
+      },
+      onContinueClicked: (isFormValid) {
+        if (isFormValid &&
+            emailcheck.isNotEmpty &&
+            namecheck.isNotEmpty &&
+            phoneNumberCheck.isNotEmpty) {
+          context
+              .read<bookingAppointmentbloc>()
+              .add(bookingSchemaIndexChanged());
+          context.read<bookingAppointmentbloc>().add(submitContactInfo(
+                phoneNumber: phoneNumber,
+                name: namecheck,
+                email: emailcheck,
+              ));
+        }
+      },
+      onCancelClicked: () {
+        context
+            .read<bookingAppointmentbloc>()
+            .add(bookingSchemaCancelInvoked());
+      },
+    );
+  }
+
   _schemapaymentInfo(Size size, BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -181,45 +220,6 @@ class _bookingScreenState extends State<bookingScreen> {
 
   _schema(int index, Size size) {
     return schemaBooking(size: size, index: index);
-  }
-
-  _schemacontactInfo(Size size, BuildContext context) {
-    return contactInfo(
-      formKey: formKey,
-      onEmailChanged: (onEmailChanged) {
-        emailcheck = onEmailChanged;
-      },
-      size: size,
-      onPhoneNumberChanged: (onPhoneNumberChanged) {
-        phoneNumberCheck = onPhoneNumberChanged;
-      },
-      onCompletePhoneNumberChanged: (onCompletePhoneNumberChanged) {
-        phoneNumber = onCompletePhoneNumberChanged;
-      },
-      onNameChanged: (onNameChanged) {
-        namecheck = onNameChanged;
-      },
-      onContinueClicked: (isFormValid) {
-        if (isFormValid &&
-            emailcheck.isNotEmpty &&
-            namecheck.isNotEmpty &&
-            phoneNumberCheck.isNotEmpty) {
-          context
-              .read<bookingAppointmentbloc>()
-              .add(bookingSchemaIndexChanged());
-          context.read<bookingAppointmentbloc>().add(submitContactInfo(
-                phoneNumber: phoneNumber,
-                name: namecheck,
-                email: emailcheck,
-              ));
-        }
-      },
-      onCancelClicked: () {
-        context
-            .read<bookingAppointmentbloc>()
-            .add(bookingSchemaCancelInvoked());
-      },
-    );
   }
 
   _schemaCallType(Size size, BuildContext context) {
